@@ -14,11 +14,11 @@
 
 #pragma once
 
-#include <bsoncxx/builder/stream/value_context-fwd.hpp>
+#include <bsoncxx/builder/stream/value_context-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/builder/stream/array_context.hpp>
-#include <bsoncxx/builder/stream/closed_context.hpp>
+#include <bsoncxx/builder/stream/closed_context.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/stdx/type_traits.hpp>
 

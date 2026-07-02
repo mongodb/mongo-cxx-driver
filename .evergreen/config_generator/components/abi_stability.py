@@ -1,16 +1,14 @@
-from config_generator.components.funcs.install_c_driver import InstallCDriver
-
-from config_generator.etc.distros import find_large_distro
-from config_generator.etc.function import Function, merge_defns
-from config_generator.etc.utils import bash_exec
+from itertools import product
 
 from shrub.v3.evg_build_variant import BuildVariant
 from shrub.v3.evg_command import EvgCommandType, git_get_project, s3_put
 from shrub.v3.evg_task import EvgTask, EvgTaskRef
 from shrub.v3.evg_task_group import EvgTaskGroup
 
-from itertools import product
-
+from config_generator.components.funcs.install_c_driver import InstallCDriver
+from config_generator.etc.distros import find_large_distro
+from config_generator.etc.function import Function, merge_defns
+from config_generator.etc.utils import bash_exec
 
 TAG = 'abi-stability'
 
@@ -33,11 +31,10 @@ class AbiComplianceCheck(Function):
     commands = [
         bash_exec(
             command_type=EvgCommandType.SETUP,
-            script='mongo-cxx-driver/.evergreen/scripts/abi-compliance-check-setup.sh'
+            script='mongo-cxx-driver/.evergreen/scripts/abi-compliance-check-setup.sh',
         ),
         bash_exec(
-            command_type=EvgCommandType.TEST,
-            script='mongo-cxx-driver/.evergreen/scripts/abi-compliance-check-test.sh'
+            command_type=EvgCommandType.TEST, script='mongo-cxx-driver/.evergreen/scripts/abi-compliance-check-test.sh'
         ),
         s3_put(
             command_type=EvgCommandType.SYSTEM,
@@ -46,7 +43,7 @@ class AbiComplianceCheck(Function):
             bucket='mciuploads',
             content_type='text/html',
             display_name='ABI Compliance Check (Stable): ',
-            local_files_include_filter='cxx-abi/compat_reports/**/compat_report.html',
+            local_files_include_filter=['cxx-abi/*.html'],
             permissions='public-read',
             remote_file='mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-compliance-check/abi/',
         ),
@@ -57,7 +54,7 @@ class AbiComplianceCheck(Function):
             bucket='mciuploads',
             content_type='text/plain',
             display_name='ABI Compliance Check (Stable): ',
-            local_files_include_filter='cxx-abi/logs/**/log.txt',
+            local_files_include_filter=['cxx-abi/**/*.log', 'cxx-abi/**/log.txt'],
             permissions='public-read',
             remote_file='mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-compliance-check/abi/',
         ),
@@ -68,7 +65,7 @@ class AbiComplianceCheck(Function):
             bucket='mciuploads',
             content_type='text/html',
             display_name='ABI Compliance Check (Unstable): ',
-            local_files_include_filter='cxx-noabi/compat_reports/**/compat_report.html',
+            local_files_include_filter=['cxx-noabi/*.html'],
             permissions='public-read',
             remote_file='mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-compliance-check/noabi/',
         ),
@@ -79,7 +76,7 @@ class AbiComplianceCheck(Function):
             bucket='mciuploads',
             content_type='text/plain',
             display_name='ABI Compliance Check (Unstable): ',
-            local_files_include_filter='cxx-noabi/logs/**/log.txt',
+            local_files_include_filter=['cxx-noabi/**/*.log', 'cxx-noabi/**/log.txt'],
             permissions='public-read',
             remote_file='mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-compliance-check/noabi/',
         ),
@@ -91,11 +88,11 @@ class Abidiff(Function):
     commands = [
         bash_exec(
             command_type=EvgCommandType.SETUP,
-            script='mongo-cxx-driver/.evergreen/scripts/abidiff-setup.sh'
+            script='mongo-cxx-driver/.evergreen/scripts/abidiff-setup.sh',
         ),
         bash_exec(
             command_type=EvgCommandType.TEST,
-            script='mongo-cxx-driver/.evergreen/scripts/abidiff-test.sh'
+            script='mongo-cxx-driver/.evergreen/scripts/abidiff-test.sh',
         ),
         s3_put(
             command_type=EvgCommandType.SYSTEM,
@@ -104,7 +101,7 @@ class Abidiff(Function):
             bucket='mciuploads',
             content_type='text/plain',
             display_name='abidiff (Stable): ',
-            local_files_include_filter='cxx-abi/*.txt',
+            local_files_include_filter=['cxx-abi/*.txt'],
             permissions='public-read',
             remote_file='mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abidiff/abi/',
         ),
@@ -115,7 +112,7 @@ class Abidiff(Function):
             bucket='mciuploads',
             content_type='text/plain',
             display_name='abidiff (Unstable): ',
-            local_files_include_filter='cxx-noabi/*.txt',
+            local_files_include_filter=['cxx-noabi/*.txt'],
             permissions='public-read',
             remote_file='mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abidiff/noabi/',
         ),
@@ -126,7 +123,7 @@ class AbiProhibitedSymbols(Function):
     name = 'abi-prohibited-symbols'
     commands = bash_exec(
         command_type=EvgCommandType.TEST,
-        script='mongo-cxx-driver/.evergreen/scripts/abi-prohibited-symbols-test.sh'
+        script='mongo-cxx-driver/.evergreen/scripts/abi-prohibited-symbols-test.sh',
     )
 
 
@@ -145,9 +142,9 @@ def generate_tasks():
 
     for func, (polyfill, cxx_standard) in product(funcs, MATRIX):
         if func is Abidiff:
-            distro_name = 'ubuntu2204'  # Clang 12, libabigail is not available on RHEL distros.
+            distro_name = 'ubuntu2204'  # Clang 14, libabigail is not available on RHEL distros.
         else:
-            distro_name = 'rhel95'  # Clang 19.
+            distro_name = 'rhel95'  # Clang 20.
 
         distro = find_large_distro(distro_name)
 
@@ -182,17 +179,18 @@ def task_groups():
         EvgTaskGroup(
             name=f'tg-{TAG}-{polyfill}-cxx{cxx_standard}',
             max_hosts=-1,
-            setup_group_can_fail_task=True,
+            setup_task_can_fail_task=True,
             setup_task=[
                 git_get_project(directory='mongo-cxx-driver'),
-                InstallCDriver.call(),
+                InstallCDriver.call(vars={'SKIP_INSTALL_LIBMONGOCRYPT': 1}),
                 bash_exec(
+                    command_type=EvgCommandType.SETUP,
                     env={
                         'cxx_standard': f'{cxx_standard}',
                         'polyfill': polyfill,
                     },
                     include_expansions_in_env=['distro_id'],
-                    script='mongo-cxx-driver/.evergreen/scripts/abi-stability-setup.sh'
+                    script='mongo-cxx-driver/.evergreen/scripts/abi-stability-setup.sh',
                 ),
                 s3_put(
                     command_type=EvgCommandType.SETUP,
@@ -201,14 +199,16 @@ def task_groups():
                     bucket='mciuploads',
                     content_type='text/plain',
                     display_name='ABI Stability Setup: ',
-                    local_files_include_filter='*.log',
+                    local_files_include_filter=['*.log'],
                     permissions='public-read',
                     remote_file='mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-stability-setup/',
                 ),
             ],
             tasks=[task.name for task in TASKS if polyfill in task.name and f'cxx{cxx_standard}' in task.name],
             teardown_task_can_fail_task=True,
-            teardown_task=[bash_exec(script='rm -rf *'),],
+            teardown_task=[
+                bash_exec(script='rm -rf *'),
+            ],
         )
         for polyfill, cxx_standard in MATRIX
     ]
@@ -217,11 +217,8 @@ def task_groups():
 def variants():
     return [
         BuildVariant(
-            name=f'abi-stability',
-            display_name=f'ABI Stability Checks',
-            tasks=[
-                EvgTaskRef(name=f'tg-{TAG}-{polyfill}-cxx{cxx_standard}')
-                for polyfill, cxx_standard in MATRIX
-            ],
+            name='abi-stability',
+            display_name='ABI Stability Checks',
+            tasks=[EvgTaskRef(name=f'tg-{TAG}-{polyfill}-cxx{cxx_standard}') for polyfill, cxx_standard in MATRIX],
         )
     ]

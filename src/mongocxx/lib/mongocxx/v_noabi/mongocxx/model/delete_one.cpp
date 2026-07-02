@@ -14,33 +14,27 @@
 
 #include <mongocxx/model/delete_one.hpp>
 
+//
+
+#include <mongocxx/v1/bulk_write.hh>
+
+#include <utility>
+
+#include <bsoncxx/document/value.hpp>
+
 namespace mongocxx {
 namespace v_noabi {
 namespace model {
 
-delete_one::delete_one(bsoncxx::v_noabi::document::view_or_value filter) : _filter(std::move(filter)) {}
-
-bsoncxx::v_noabi::document::view_or_value const& delete_one::filter() const {
-    return _filter;
-}
-
-delete_one& delete_one::collation(bsoncxx::v_noabi::document::view_or_value collation) {
-    _collation = collation;
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& delete_one::collation() const {
-    return _collation;
-}
-
-delete_one& delete_one::hint(mongocxx::v_noabi::hint index_hint) {
-    _hint = std::move(index_hint);
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const& delete_one::hint() const {
-    return _hint;
-}
+delete_one::delete_one(v1::bulk_write::delete_one op)
+    : _filter{bsoncxx::v_noabi::from_v1(std::move(v1::bulk_write::delete_one::internal::filter(op)))},
+      _collation{[&]() -> decltype(_collation) {
+          if (auto& opt = v1::bulk_write::delete_one::internal::collation(op)) {
+              return bsoncxx::v_noabi::from_v1(std::move(*opt));
+          }
+          return {};
+      }()},
+      _hint{std::move(v1::bulk_write::delete_one::internal::hint(op))} {}
 
 } // namespace model
 } // namespace v_noabi

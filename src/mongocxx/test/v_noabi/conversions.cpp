@@ -1,0 +1,55 @@
+// Copyright 2009-present MongoDB, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#include <mongocxx/read_preference.hpp>
+
+#include <mongocxx/conversions.hh>
+
+#include <bsoncxx/test/catch.hh>
+
+namespace {
+using namespace mongocxx;
+
+TEST_CASE("v_noabi::conversions::read_mode_t_from_read_mode works", "[v_noabi::conversions]") {
+    REQUIRE(
+        v_noabi::conversions::read_mode_t_from_read_mode(read_preference::read_mode::k_primary) == MONGOC_READ_PRIMARY);
+    REQUIRE(
+        v_noabi::conversions::read_mode_t_from_read_mode(read_preference::read_mode::k_primary_preferred) ==
+        MONGOC_READ_PRIMARY_PREFERRED);
+    REQUIRE(
+        v_noabi::conversions::read_mode_t_from_read_mode(read_preference::read_mode::k_secondary) ==
+        MONGOC_READ_SECONDARY);
+    REQUIRE(
+        v_noabi::conversions::read_mode_t_from_read_mode(read_preference::read_mode::k_secondary_preferred) ==
+        MONGOC_READ_SECONDARY_PREFERRED);
+    REQUIRE(
+        v_noabi::conversions::read_mode_t_from_read_mode(read_preference::read_mode::k_nearest) == MONGOC_READ_NEAREST);
+}
+
+TEST_CASE("v_noabi::conversions::read_mode_from_read_mode_t works", "[v_noabi::conversions]") {
+    REQUIRE(
+        v_noabi::conversions::read_mode_from_read_mode_t(MONGOC_READ_PRIMARY) == read_preference::read_mode::k_primary);
+    REQUIRE(
+        v_noabi::conversions::read_mode_from_read_mode_t(MONGOC_READ_PRIMARY_PREFERRED) ==
+        read_preference::read_mode::k_primary_preferred);
+    REQUIRE(
+        v_noabi::conversions::read_mode_from_read_mode_t(MONGOC_READ_SECONDARY) ==
+        read_preference::read_mode::k_secondary);
+    REQUIRE(
+        v_noabi::conversions::read_mode_from_read_mode_t(MONGOC_READ_SECONDARY_PREFERRED) ==
+        read_preference::read_mode::k_secondary_preferred);
+    REQUIRE(
+        v_noabi::conversions::read_mode_from_read_mode_t(MONGOC_READ_NEAREST) == read_preference::read_mode::k_nearest);
+}
+} // namespace

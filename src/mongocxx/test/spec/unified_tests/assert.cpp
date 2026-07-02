@@ -12,11 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "assert.hh"
+#include "./assert.hh"
 
 //
 
 #include <bsoncxx/v1/detail/macros.hpp>
+
+#include <bsoncxx/test/v_noabi/to_string.hh>
+
+#include <mongocxx/test/v_noabi/client_helpers.hh>
 
 #include <iomanip>
 #include <numeric>
@@ -29,9 +33,6 @@
 #include <bsoncxx/types/bson_value/value.hpp>
 
 #include <bsoncxx/test/catch.hh>
-#include <bsoncxx/test/to_string.hh>
-
-#include <mongocxx/test/client_helpers.hh>
 
 using namespace bsoncxx;
 using namespace mongocxx;
@@ -161,7 +162,8 @@ void special_operator(types::bson_value::view actual, document::view expected, e
         REQUIRE(actual.type() == bsoncxx::type::k_binary);
 
         auto expected_bytes = test_util::convert_hex_string_to_bytes(op.get_value().get_string());
-        decltype(expected_bytes) actual_bytes(actual.get_binary().bytes, actual.get_binary().size);
+        decltype(expected_bytes) actual_bytes(
+            actual.get_binary().bytes, actual.get_binary().bytes + actual.get_binary().size);
 
         REQUIRE(actual_bytes == expected_bytes);
     } else {

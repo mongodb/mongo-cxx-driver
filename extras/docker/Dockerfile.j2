@@ -1,3 +1,6 @@
+# Allow setting the "default" container image registry to use for image short names (e.g. to Amazon ECR).
+ARG default_search_registry=docker.io
+
 FROM {{ base_image }} AS builder
 
 ARG MONGOCXX_VERSION={{ mongocxx_version }}

@@ -131,7 +131,7 @@ foreach(source ${mongocxx_examples_sources})
     set(extra_libs "")
     set(add_to_run_examples ON)
 
-    if (${source} MATCHES "pool")
+    if (${source} MATCHES "pool|change_streams_examples")
         list(APPEND extra_libs Threads::Threads)
     endif()
 

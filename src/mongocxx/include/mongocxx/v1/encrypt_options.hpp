@@ -1,0 +1,250 @@
+// Copyright 2009-present MongoDB, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#pragma once
+
+#include <mongocxx/v1/encrypt_options-fwd.hpp> // IWYU pragma: export
+
+//
+
+#include <mongocxx/v1/detail/prelude.hpp>
+
+#include <bsoncxx/v1/types/value-fwd.hpp>
+#include <bsoncxx/v1/types/view-fwd.hpp>
+
+#include <mongocxx/v1/range_options-fwd.hpp>
+#include <mongocxx/v1/text_options-fwd.hpp>
+
+#include <bsoncxx/v1/stdx/optional.hpp>
+#include <bsoncxx/v1/stdx/string_view.hpp>
+
+#include <mongocxx/v1/config/export.hpp>
+
+#include <cstdint>
+#include <string>
+
+namespace mongocxx {
+namespace v1 {
+
+///
+/// Options related to explicit encryption for In-Use Encryption.
+///
+/// Supported fields include:
+/// - `algorithm`
+/// - `contention_factor` ("contentionFactor")
+/// - `key_alt_name` ("keyAltName")
+/// - `key_id` ("keyId")
+/// - `query_type` ("queryType")
+/// - `range_opts` ("rangeOpts")
+/// - `text_opts` ("textOpts")
+///
+/// @see
+/// - [Fields and Encryption Types (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/csfle/fundamentals/encryption-algorithms/)
+/// - [Encrypted Fields and Enabled Queries (MongoDB Manual)](https://mongodb.com/docs/manual/core/queryable-encryption/fundamentals/encrypt-and-query/)
+/// - [Encryption Schemas](https://www.mongodb.com/docs/manual/core/csfle/fundamentals/create-schema/)
+///
+class encrypt_options {
+    // This class implements `EncryptOpts`:
+    //  - https://specifications.readthedocs.io/en/latest/client-side-encryption/client-side-encryption/
+
+   private:
+    class impl;
+    void* _impl;
+
+   public:
+    ///
+    /// An encryption algorithm.
+    ///
+    /// @see
+    /// - [Fields and Encryption Types (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/csfle/fundamentals/encryption-algorithms/)
+    ///
+    enum class encryption_algorithm : std::uint8_t {
+        k_deterministic, ///< "AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic"
+        k_random,        ///< "AEAD_AES_256_CBC_HMAC_SHA_512-Random"
+        k_indexed,       ///< "Indexed"
+        k_unindexed,     ///< "Unindexed"
+        k_range,         ///< "Range"
+
+        ///
+        /// "TextPreview"
+        ///
+        /// @attention This feature is experimental! It is not ready for use!
+        ///
+        k_textPreview,
+    };
+
+    ///
+    /// A query type.
+    ///
+    /// @see
+    /// - [Supported Operations for Queryable Encryption (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/queryable-encryption/reference/supported-operations/)
+    ///
+    enum class encryption_query_type : std::uint8_t {
+        k_equality, ///< "equalty"
+        k_range,    ///< "range"
+
+        ///
+        /// "prefixPreview"
+        ///
+        /// @attention This feature is experimental! It is not ready for use!
+        ///
+        k_prefixPreview,
+
+        ///
+        /// "suffixPreview"
+        ///
+        /// @attention This feature is experimental! It is not ready for use!
+        ///
+        k_suffixPreview,
+
+        ///
+        /// "substringPreview"
+        ///
+        /// @attention This feature is experimental! It is not ready for use!
+        ///
+        k_substringPreview,
+    };
+
+    ///
+    /// Destroy this object.
+    ///
+    /// @warning Invalidates all associated views.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() ~encrypt_options();
+
+    ///
+    /// Move constructor.
+    ///
+    /// @par Postconditions:
+    /// - `other` is in an assign-or-destroy-only state.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() encrypt_options(encrypt_options&& other) noexcept;
+
+    ///
+    /// Move assignment.
+    ///
+    /// @par Postconditions:
+    /// - `other` is in an assign-or-destroy-only state.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(encrypt_options&) operator=(encrypt_options&& other) noexcept;
+
+    ///
+    /// Copy construction.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() encrypt_options(encrypt_options const& other);
+
+    ///
+    /// Copy assignment.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(encrypt_options&) operator=(encrypt_options const& other);
+
+    ///
+    /// Default initialization.
+    ///
+    /// @par Postconditions:
+    /// - All supported fields are "unset" or zero-initialized.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() encrypt_options();
+
+    ///
+    /// Set the "keyId" field.
+    ///
+    /// @param v A @ref bsoncxx::v1::types::binary_subtype::k_uuid.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(encrypt_options&) key_id(bsoncxx::v1::types::value v);
+
+    ///
+    /// Return the current "keyId" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view>) key_id() const;
+
+    ///
+    /// Set the "keyAltName" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(encrypt_options&) key_alt_name(std::string v);
+
+    ///
+    /// Return the "keyAltName" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view>) key_alt_name() const;
+
+    ///
+    /// Set the "algorithm" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(encrypt_options&) algorithm(encryption_algorithm v);
+
+    ///
+    /// Return the current "algorithm" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<encryption_algorithm>) algorithm() const;
+
+    ///
+    /// Set the "contentionFactor" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(encrypt_options&) contention_factor(std::int64_t v);
+
+    ///
+    /// Return the current "contentionFactor" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<std::int64_t>) contention_factor() const;
+
+    ///
+    /// Set the "queryType" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(encrypt_options&) query_type(encryption_query_type v);
+
+    ///
+    /// Return the current "queryType" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<encryption_query_type>) query_type() const;
+
+    ///
+    /// Set the "rangeOpts" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(encrypt_options&) range_opts(v1::range_options v);
+
+    ///
+    /// Return the current "rangeOpts" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::range_options>) range_opts() const;
+
+    ///
+    /// Set the "textOpts" field.
+    ///
+    /// @attention This feature is experimental! It is not ready for use!
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(encrypt_options&) text_opts(v1::text_options v);
+
+    ///
+    /// Return the current "textOpts" field.
+    ///
+    /// @attention This feature is experimental! It is not ready for use!
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::text_options>) text_opts() const;
+
+    class internal;
+
+   private:
+    /* explicit(false) */ encrypt_options(void* impl);
+};
+
+} // namespace v1
+} // namespace mongocxx
+
+#include <mongocxx/v1/detail/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v1::encrypt_options.
+///

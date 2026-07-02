@@ -1,14 +1,14 @@
+from shrub.v3.evg_command import EvgCommandType
+
 from config_generator.etc.function import Function
 from config_generator.etc.utils import bash_exec
-
-from shrub.v3.evg_command import EvgCommandType
 
 
 class StopMongod(Function):
     name = 'stop_mongod'
     commands = bash_exec(
         command_type=EvgCommandType.SYSTEM,
-        script='''\
+        script="""\
             set -o errexit
             set -o pipefail
             if cd drivers-evergreen-tools/.evergreen/orchestration 2>/dev/null; then
@@ -17,7 +17,7 @@ class StopMongod(Function):
                     mongo-orchestration stop
                 fi
             fi
-        '''
+        """,
     )
 
 

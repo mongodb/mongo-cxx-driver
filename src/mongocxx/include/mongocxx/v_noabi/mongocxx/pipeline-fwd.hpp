@@ -26,7 +26,7 @@ class pipeline;
 
 namespace mongocxx {
 
-using ::mongocxx::v_noabi::pipeline;
+using v_noabi::pipeline;
 
 } // namespace mongocxx
 

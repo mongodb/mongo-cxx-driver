@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/uri-fwd.hpp> // IWYU pragma: export
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -26,7 +28,7 @@ class uri;
 
 namespace mongocxx {
 
-using ::mongocxx::v_noabi::uri;
+using v_noabi::uri;
 
 } // namespace mongocxx
 
@@ -35,4 +37,7 @@ using ::mongocxx::v_noabi::uri;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::uri.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/uri-fwd.hpp
 ///

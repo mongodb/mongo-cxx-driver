@@ -14,12 +14,19 @@
 
 #pragma once
 
-#include <mongocxx/result/rewrap_many_datakey-fwd.hpp>
+#include <mongocxx/result/rewrap_many_datakey-fwd.hpp> // IWYU pragma: export
 
-#include <bsoncxx/document/value.hpp>
+//
+
+#include <mongocxx/v1/rewrap_many_datakey_result.hpp> // IWYU pragma: export
+
+#include <utility>
+
+#include <bsoncxx/document/value.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <bsoncxx/stdx/optional.hpp>
 
-#include <mongocxx/bulk_write.hpp>
+#include <mongocxx/bulk_write.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <mongocxx/result/bulk_write.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -32,24 +39,61 @@ namespace result {
 ///
 class rewrap_many_datakey {
    public:
+    ///
+    /// @deprecated For internal use only.
+    ///
     rewrap_many_datakey() = default;
 
-    explicit MONGOCXX_ABI_EXPORT_CDECL() rewrap_many_datakey(
-        mongocxx::v_noabi::result::bulk_write bulk_write_result_doc);
+    ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() rewrap_many_datakey(v1::rewrap_many_datakey_result opts);
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    explicit MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() operator v1::rewrap_many_datakey_result() const;
+
+    ///
+    /// @deprecated For internal use only.
+    ///
+    explicit rewrap_many_datakey(v_noabi::result::bulk_write bulk_write_result_doc)
+        : _result{std::move(bulk_write_result_doc)} {}
 
     ///
     /// Returns the bulk write result for this rewrap_many_datakey operation.
     ///
     /// @return The raw bulk write result.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::result::bulk_write> const&)
-    result();
+    bsoncxx::v_noabi::stdx::optional<v_noabi::result::bulk_write> const& result() {
+        return _result;
+    }
 
    private:
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::result::bulk_write> _result;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::result::bulk_write> _result;
 };
 
 } // namespace result
+} // namespace v_noabi
+} // namespace mongocxx
+
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::result::rewrap_many_datakey from_v1(v1::rewrap_many_datakey_result v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::rewrap_many_datakey_result to_v1(v_noabi::result::rewrap_many_datakey const& v) {
+    return v1::rewrap_many_datakey_result{v};
+}
+
 } // namespace v_noabi
 } // namespace mongocxx
 
@@ -58,4 +102,7 @@ class rewrap_many_datakey {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::result::rewrap_many_datakey.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/rewrap_many_datakey_result.hpp
 ///

@@ -14,9 +14,9 @@
 
 #pragma once
 
-#include <string>
+#include <string> // IWYU pragma: keep: backward compatibility, to be removed.
 
-#include <mongocxx/options/tls.hpp>
+#include <mongocxx/options/tls.hpp> // IWYU pragma: export
 
 #include <mongocxx/config/prelude.hpp>
 

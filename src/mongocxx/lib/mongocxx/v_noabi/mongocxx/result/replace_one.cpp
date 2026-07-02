@@ -14,36 +14,23 @@
 
 #include <mongocxx/result/replace_one.hpp>
 
+//
+
+#include <mongocxx/v1/replace_one_result.hh>
+
+#include <utility>
+
+#include <mongocxx/result/bulk_write.hpp>
+
 namespace mongocxx {
 namespace v_noabi {
 namespace result {
 
-replace_one::replace_one(result::bulk_write result) : _result(std::move(result)) {}
+replace_one::replace_one(v1::replace_one_result opts)
+    : _result{std::move(v1::replace_one_result::internal::result(opts))} {}
 
-result::bulk_write const& replace_one::result() const {
-    return _result;
-}
-
-std::int32_t replace_one::matched_count() const {
-    return _result.matched_count();
-}
-
-std::int32_t replace_one::modified_count() const {
-    return _result.modified_count();
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::element> replace_one::upserted_id() const {
-    if (_result.upserted_ids().size() == 0) {
-        return bsoncxx::v_noabi::stdx::nullopt;
-    }
-    return _result.upserted_ids()[0];
-}
-
-bool operator==(replace_one const& lhs, replace_one const& rhs) {
-    return lhs.result() == rhs.result();
-}
-bool operator!=(replace_one const& lhs, replace_one const& rhs) {
-    return !(lhs == rhs);
+replace_one::operator v1::replace_one_result() const {
+    return v1::replace_one_result::internal::make(v_noabi::to_v1(_result));
 }
 
 } // namespace result

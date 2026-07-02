@@ -13,39 +13,3 @@
 // limitations under the License.
 
 #include <bsoncxx/types.hpp>
-
-namespace bsoncxx {
-namespace v_noabi {
-
-#define BSONCXX_ENUM(name, val) constexpr type types::b_##name::type_id;
-#include <bsoncxx/enums/type.hpp>
-#undef BSONCXX_ENUM
-
-std::string to_string(type rhs) {
-    switch (static_cast<uint8_t>(rhs)) {
-#define BSONCXX_ENUM(name, val) \
-    case val:                   \
-        return (#name);         \
-        break;
-#include <bsoncxx/enums/type.hpp>
-#undef BSONCXX_ENUM
-        default:
-            return "?";
-    }
-}
-
-std::string to_string(binary_sub_type rhs) {
-    switch (static_cast<uint8_t>(rhs)) {
-#define BSONCXX_ENUM(name, val) \
-    case val:                   \
-        return (#name);         \
-        break;
-#include <bsoncxx/enums/binary_sub_type.hpp>
-#undef BSONCXX_ENUM
-        default:
-            return "?";
-    }
-}
-
-} // namespace v_noabi
-} // namespace bsoncxx

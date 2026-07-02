@@ -16,10 +16,10 @@
 
 #include <string>
 
-#include <bsoncxx/string/view_or_value-fwd.hpp>
+#include <bsoncxx/string/view_or_value-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/stdx/string_view.hpp>
-#include <bsoncxx/view_or_value.hpp>
+#include <bsoncxx/view_or_value.hpp> // IWYU pragma: export
 
 #include <bsoncxx/config/prelude.hpp>
 
@@ -38,17 +38,17 @@ namespace string {
 /// - a constructor overload for std::string by l-value reference
 /// - a safe c_str() operation to return null-terminated c-style strings.
 ///
-class view_or_value : public bsoncxx::v_noabi::view_or_value<stdx::string_view, std::string> {
+class view_or_value : public v_noabi::view_or_value<stdx::string_view, std::string> {
    public:
     ///
     /// Forward all bsoncxx::v_noabi::view_or_value constructors.
     ///
-    using bsoncxx::v_noabi::view_or_value<stdx::string_view, std::string>::view_or_value;
+    using v_noabi::view_or_value<stdx::string_view, std::string>::view_or_value;
 
     ///
     /// Default constructor, equivalent to using an empty string.
     ///
-    BSONCXX_ABI_EXPORT_CDECL() view_or_value() = default;
+    view_or_value() = default;
 
     ///
     /// Construct a string::view_or_value using a null-terminated const char *.
@@ -57,8 +57,7 @@ class view_or_value : public bsoncxx::v_noabi::view_or_value<stdx::string_view, 
     ///
     /// @param str A null-terminated string
     ///
-    view_or_value(char const* str)
-        : bsoncxx::v_noabi::view_or_value<stdx::string_view, std::string>(stdx::string_view(str)) {}
+    view_or_value(char const* str) : v_noabi::view_or_value<stdx::string_view, std::string>(stdx::string_view(str)) {}
 
     ///
     /// Allow construction with an l-value reference to a std::string. The resulting
@@ -71,7 +70,7 @@ class view_or_value : public bsoncxx::v_noabi::view_or_value<stdx::string_view, 
     /// @param str A std::string l-value reference.
     ///
     view_or_value(std::string const& str)
-        : bsoncxx::v_noabi::view_or_value<stdx::string_view, std::string>(stdx::string_view(str)) {}
+        : v_noabi::view_or_value<stdx::string_view, std::string>(stdx::string_view(str)) {}
 
     ///
     /// Return a string_view_or_value that is guaranteed to hold a null-terminated
@@ -83,7 +82,7 @@ class view_or_value : public bsoncxx::v_noabi::view_or_value<stdx::string_view, 
     ///
     /// @return A new view_or_value object.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(view_or_value) terminated() const;
+    BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(view_or_value) terminated() const;
 
     ///
     /// Call data() on this view_or_value's string_view. This method is not
@@ -92,7 +91,7 @@ class view_or_value : public bsoncxx::v_noabi::view_or_value<stdx::string_view, 
     ///
     /// @return A char const* of this string.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(char const*) data() const;
+    BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(char const*) data() const;
 };
 
 ///
@@ -130,8 +129,8 @@ inline bool operator!=(char const* lhs, view_or_value const& rhs) {
 namespace bsoncxx {
 namespace string {
 
-using ::bsoncxx::v_noabi::string::operator==;
-using ::bsoncxx::v_noabi::string::operator!=;
+using v_noabi::string::operator==;
+using v_noabi::string::operator!=;
 
 } // namespace string
 } // namespace bsoncxx

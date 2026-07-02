@@ -14,39 +14,30 @@
 
 #include <mongocxx/events/server_changed_event.hpp>
 
+//
+
+#include <mongocxx/v1/events/server_description_changed.hh>
+
+#include <mongocxx/events/server_description.hpp>
+
 #include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {
 namespace events {
 
-server_changed_event::server_changed_event(void const* event) : _event(event) {}
-
-server_changed_event::~server_changed_event() = default;
-
-bsoncxx::v_noabi::stdx::string_view server_changed_event::host() const {
-    return libmongoc::apm_server_changed_get_host(static_cast<mongoc_apm_server_changed_t const*>(_event))->host;
-}
-
-std::uint16_t server_changed_event::port() const {
-    return libmongoc::apm_server_changed_get_host(static_cast<mongoc_apm_server_changed_t const*>(_event))->port;
-}
-
-bsoncxx::v_noabi::oid const server_changed_event::topology_id() const {
-    bson_oid_t boid;
-    libmongoc::apm_server_changed_get_topology_id(static_cast<mongoc_apm_server_changed_t const*>(_event), &boid);
-
-    return bsoncxx::v_noabi::oid{reinterpret_cast<char const*>(boid.bytes), sizeof(boid.bytes)};
-}
+server_changed_event::server_changed_event(void const* event)
+    : _event{v1::events::server_description_changed::internal::make(
+          static_cast<mongoc_apm_server_changed_t const*>(event))} {}
 
 server_description const server_changed_event::previous_description() const {
     return server_description{libmongoc::apm_server_changed_get_previous_description(
-        static_cast<mongoc_apm_server_changed_t const*>(_event))};
+        v1::events::server_description_changed::internal::as_mongoc(_event))};
 }
 
 server_description const server_changed_event::new_description() const {
-    return server_description{
-        libmongoc::apm_server_changed_get_new_description(static_cast<mongoc_apm_server_changed_t const*>(_event))};
+    return server_description{libmongoc::apm_server_changed_get_new_description(
+        v1::events::server_description_changed::internal::as_mongoc(_event))};
 }
 
 } // namespace events

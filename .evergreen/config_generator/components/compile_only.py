@@ -1,14 +1,11 @@
-from config_generator.components.funcs.compile import Compile
-from config_generator.components.funcs.install_uv import InstallUV
-from config_generator.components.funcs.install_c_driver import InstallCDriver
-from config_generator.components.funcs.setup import Setup
-
-from config_generator.etc.distros import compiler_to_vars, find_large_distro, make_distro_str
-
 from shrub.v3.evg_build_variant import BuildVariant
 from shrub.v3.evg_command import KeyValueParam, expansions_update
 from shrub.v3.evg_task import EvgTask, EvgTaskRef
 
+from config_generator.components.funcs.compile import Compile
+from config_generator.components.funcs.install_c_driver import InstallCDriver
+from config_generator.components.funcs.setup import Setup
+from config_generator.etc.distros import compiler_to_vars, find_large_distro, make_distro_str
 
 TAG = 'compile-only'
 
@@ -19,7 +16,6 @@ MATRIX = [
     # C++ standard and compiler coverage
 
     ('rhel80',     'clang',    [11, 17, 20,   ]), # Clang  7 (max: C++20)
-    ('ubuntu2004', 'clang-10', [11, 17, 20,   ]), # Clang 10 (max: C++20)
     ('rhel84',     'clang',    [11, 17, 20,   ]), # Clang 11 (max: C++20)
     ('ubuntu2204', 'clang-12', [11, 17, 20, 23]), # Clang 12 (max: C++23)
     ('rhel90',     'clang',    [11, 17, 20, 23]), # Clang 13 (max: C++23)
@@ -29,16 +25,16 @@ MATRIX = [
     ('rhel94',     'clang',    [11, 17, 20, 23]), # Clang 17 (max: C++23)
     ('rhel95',     'clang',    [11, 17, 20, 23]), # Clang 19 (max: C++23)
 
-    ('rhel76',     'gcc',    [11, 14,       ]), # GCC  4.8 (max: C++14)
-    ('rhel80',     'gcc',    [11, 17, 20,   ]), # GCC  8.2 (max: C++20)
-    ('debian10',   'gcc-8',  [11, 17, 20,   ]), # GCC  8.3 (max: C++20)
-    ('rhel84',     'gcc',    [11, 17, 20,   ]), # GCC  8.4 (max: C++20)
-    ('ubuntu2004', 'gcc-9',  [11, 17, 20,   ]), # GCC  9.4 (max: C++20)
-    ('debian11',   'gcc-10', [11, 17, 20,   ]), # GCC 10.2 (max: C++20)
-    ('rhel90',     'gcc',    [11, 17, 20, 23]), # GCC 11.2 (max: C++23)
-    ('rhel92',     'gcc',    [11, 17, 20, 23]), # GCC 11.3 (max: C++23)
-    ('rhel94',     'gcc',    [11, 17, 20, 23]), # GCC 11.4 (max: C++23)
-    ('rhel95',     'gcc',    [11, 17, 20, 23]), # GCC 11.5 (max: C++23)
+    ('rhel7.9',         'gcc',    [11, 14,       ]), # GCC  4.8 (max: C++14)
+    ('rhel80',          'gcc',    [11, 17, 20,   ]), # GCC  8.2 (max: C++20)
+    ('rhel84',          'gcc',    [11, 17, 20,   ]), # GCC  8.4 (max: C++20)
+    ('debian11-latest', 'gcc-10', [11, 17, 20,   ]), # GCC 10.2 (max: C++20)
+    ('rhel90',          'gcc',    [11, 17, 20, 23]), # GCC 11.2 (max: C++23)
+    ('rhel92',          'gcc',    [11, 17, 20, 23]), # GCC 11.3 (max: C++23)
+    ('rhel94',          'gcc',    [11, 17, 20, 23]), # GCC 11.4 (max: C++23)
+    ('rhel95',          'gcc',    [11, 17, 20, 23]), # GCC 11.5 (max: C++23)
+    ('debian12-latest', 'gcc',    [11, 17, 20, 23]), # GCC 12.2 (max: C++23)
+    ('ubuntu2404',      'gcc-13', [11, 17, 20, 23]), # GCC 13.3 (max: C++23)
 
     ('windows-vsCurrent', 'vs2015x64', [11, 14,             'latest']), # Max: C++14
     ('windows-vsCurrent', 'vs2017x64', [11, 14, 17, 20,     'latest']), # Max: C++20
@@ -47,8 +43,10 @@ MATRIX = [
 
     # Other coverage.
 
-    ('ubuntu2004-arm64', 'gcc',   [11, 17]), # Clang 10
-    ('ubuntu2004-arm64', 'clang', [11, 17]), # Clang 10
+    ('ubuntu2204-arm64', 'gcc',   [11, 17]), # GCC 11.4
+    ('ubuntu2404-arm64', 'gcc',   [11, 17]), # GCC 13.3
+    ('ubuntu2204-arm64', 'clang', [11, 17]), # Clang 14
+    ('ubuntu2404-arm64', 'clang', [11, 17]), # Clang 18
 
     ('rhel8-power',   None, [11, 17]),
     ('rhel8-zseries', None, [11, 17]),
@@ -96,12 +94,11 @@ def tasks():
             commands += [
                 Setup.call(),
                 InstallCDriver.call(),
-                InstallUV.call(),
                 Compile.call(
                     build_type=build_type,
                     compiler=compiler,
                     vars=compile_vars,
-                )
+                ),
             ]
 
             yield EvgTask(
@@ -110,6 +107,7 @@ def tasks():
                 run_on=distro.name,
                 patchable=patchable,
                 commands=commands,
+                disable=(True if distro_name == 'rhel7.9' else None),  # DEVPROD-18187
             )
 
 
@@ -126,9 +124,7 @@ def variants():
 
     distros = sorted(list({entry[0] for entry in MATRIX}))
     batched = [distro for distro in distros if distro in limited_distros]
-    tasks = [
-        EvgTaskRef(name=f'.{TAG} .{distro}', batchtime=one_day) for distro in batched
-    ] + [
+    tasks = [EvgTaskRef(name=f'.{TAG} .{distro}', batchtime=one_day) for distro in batched] + [
         EvgTaskRef(name=f'.{TAG}' + ''.join(f' !.{distro}' for distro in batched))
     ]
 

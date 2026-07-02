@@ -27,14 +27,14 @@ enum class error_code : std::int32_t;
 
 namespace mongocxx {
 
-using ::mongocxx::v_noabi::error_code;
+using v_noabi::error_code;
 
 } // namespace mongocxx
 
 namespace std {
 
 template <>
-struct is_error_code_enum<::mongocxx::v_noabi::error_code>;
+struct is_error_code_enum<mongocxx::v_noabi::error_code>;
 
 } // namespace std
 

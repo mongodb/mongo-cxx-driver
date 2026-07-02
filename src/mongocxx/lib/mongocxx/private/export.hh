@@ -14,10 +14,9 @@
 
 #pragma once
 
-#include <mongocxx/v1/config/export.hpp>
+#include <mongocxx/v1/config/export.hpp> // IWYU pragma: export
 
-// See src/bsoncxx/lib/bsoncxx/private/export.hh for an explanation of
-// the purpose of this header.
+// See bsoncxx/private/export.hh.
 
 #if defined(MONGOCXX_TESTING)
 #define MONGOCXX_ABI_EXPORT_TESTING MONGOCXX_ABI_EXPORT

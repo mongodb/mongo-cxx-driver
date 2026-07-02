@@ -14,14 +14,14 @@
 
 #pragma once
 
-#include <bsoncxx/builder/basic/document-fwd.hpp>
+#include <bsoncxx/builder/basic/document-fwd.hpp> // IWYU pragma: export
 
 //
 
-#include <bsoncxx/builder/basic/array-fwd.hpp>
+#include <bsoncxx/builder/basic/array-fwd.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 
-#include <bsoncxx/builder/basic/impl.hpp>
-#include <bsoncxx/builder/basic/kvp.hpp>
+#include <bsoncxx/builder/basic/impl.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <bsoncxx/builder/basic/kvp.hpp>  // IWYU pragma: keep: backward compatibility, to be removed.
 #include <bsoncxx/builder/basic/sub_document.hpp>
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/document/value.hpp>
@@ -66,7 +66,7 @@ class document : public sub_document {
     ///
     /// @return A view of the BSON document.
     ///
-    bsoncxx::v_noabi::document::view view() const {
+    v_noabi::document::view view() const {
         return _core.view_document();
     }
 
@@ -76,7 +76,7 @@ class document : public sub_document {
     ///
     /// @return A view of the current builder contents.
     ///
-    operator bsoncxx::v_noabi::document::view() const {
+    operator v_noabi::document::view() const {
         return view();
     }
 
@@ -89,7 +89,7 @@ class document : public sub_document {
     ///  After calling extract() it is illegal to call any methods
     ///  on this class, unless it is subsequently moved into.
     ///
-    bsoncxx::v_noabi::document::value extract() {
+    v_noabi::document::value extract() {
         return _core.extract_document();
     }
 
@@ -115,7 +115,7 @@ class document : public sub_document {
 ///   A bsoncxx::v_noabi::document::value containing the elements.
 ///
 template <typename... Args>
-bsoncxx::v_noabi::document::value make_document(Args&&... args) {
+v_noabi::document::value make_document(Args&&... args) {
     document document;
     document.append(std::forward<Args>(args)...);
     return document.extract();
@@ -130,7 +130,7 @@ namespace bsoncxx {
 namespace builder {
 namespace basic {
 
-using ::bsoncxx::v_noabi::builder::basic::make_document;
+using v_noabi::builder::basic::make_document;
 
 } // namespace basic
 } // namespace builder

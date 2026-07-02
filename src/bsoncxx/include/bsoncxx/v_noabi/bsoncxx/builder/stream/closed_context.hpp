@@ -15,7 +15,7 @@
 #pragma once
 
 #include <bsoncxx/builder/core-fwd.hpp>
-#include <bsoncxx/builder/stream/closed_context-fwd.hpp>
+#include <bsoncxx/builder/stream/closed_context-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/config/prelude.hpp>
 

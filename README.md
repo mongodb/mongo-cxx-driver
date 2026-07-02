@@ -1,4 +1,4 @@
-# MongoDB C++ Driver 
+# MongoDB C++ Driver
 [![codecov](https://codecov.io/gh/mongodb/mongo-cxx-driver/branch/master/graph/badge.svg)](https://codecov.io/gh/mongodb/mongo-cxx-driver)
 [![Documentation](https://img.shields.io/badge/docs-doxygen-blue.svg)](https://mongocxx.org/api/mongocxx-v3/)
 [![Documentation](https://img.shields.io/badge/docs-mongocxx-green.svg)](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/)
@@ -25,14 +25,18 @@ git clone -b releases/stable https://github.com/mongodb/mongo-cxx-driver.git
 > [!IMPORTANT]
 > Relevant bug fixes will be backported from the current major version to the previous major version for a period of one year after the new major version is released.
 
-| Version     | ABI Stability   | Development Stability       | Development Status |
+| Version     | Soversion       | Development Stability       | Development Status |
 | :---------: | :-------------: | :-------------------------: | :----------------: |
 | master      | N/A             | _Do not use in production!_ | Active             |
-| 4.0.0       | None            | Ready for Use               | Bug Fixes Only     |
-| 3.11.0      | None            | Ready for Use               | Bug Fixes Only     |
-| 3.10.2      | None            | Ready for Use               | Not Supported      |
+| 4.4.0       | 1               | Ready for Use               | Bug Fixes Only     |
+| 4.3.1       | None            | Ready for Use               | Not Supported      |
+| ...         | ...             | ...                         | ...                |
+| 4.0.0       | None            | Ready for Use               | Not Supported      |
+| 3.11.1      | None            | Ready for Use               | Not Supported      |
 | ...         | ...             | ...                         | ...                |
 | 3.0.0       | None            | Ready for Use               | Not Supported      |
+
+This project uses [Semantic Versioning](https://semver.org/).
 
 ## MongoDB Server Compatibility
 

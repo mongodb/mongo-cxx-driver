@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/client_session-fwd.hpp> // IWYU pragma: export
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -29,7 +31,7 @@ class client_session;
 namespace mongocxx {
 namespace options {
 
-using ::mongocxx::v_noabi::options::client_session;
+using v_noabi::options::client_session;
 
 } // namespace options
 } // namespace mongocxx
@@ -39,4 +41,7 @@ using ::mongocxx::v_noabi::options::client_session;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::options::client.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/client_session-fwd.hpp
 ///

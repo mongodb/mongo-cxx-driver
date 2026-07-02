@@ -19,14 +19,14 @@
 namespace mongocxx {
 namespace v_noabi {
 
-class MONGOCXX_ABI_EXPORT bulk_write_exception;
+class MONGOCXX_ABI_EXPORT_UNSTABLE bulk_write_exception;
 
 } // namespace v_noabi
 } // namespace mongocxx
 
 namespace mongocxx {
 
-using ::mongocxx::v_noabi::bulk_write_exception;
+using v_noabi::bulk_write_exception;
 
 } // namespace mongocxx
 

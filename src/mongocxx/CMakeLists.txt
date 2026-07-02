@@ -20,16 +20,26 @@ set(MONGOCXX_VERSION_NO_EXTRA ${MONGOCXX_VERSION_MAJOR}.${MONGOCXX_VERSION_MINOR
 set(MONGOCXX_VERSION ${MONGOCXX_VERSION_NO_EXTRA}${MONGOCXX_VERSION_EXTRA} CACHE INTERNAL "")
 message(STATUS "mongocxx version: $CACHE{MONGOCXX_VERSION}")
 
+set(MONGOCXX_SOVERSION "1" CACHE STRING "The ABI version number for the mongocxx library.")
+message(STATUS "mongocxx soversion: ${MONGOCXX_SOVERSION}")
+
+cmake_dependent_option(MONGOCXX_ENABLE_UNSTABLE_ABI "Enable building with unstable ABI symbols." ON "BSONCXX_ENABLE_UNSTABLE_ABI" OFF)
+mark_as_advanced(MONGOCXX_ENABLE_UNSTABLE_ABI) # For internal use only.
+
 option(MONGOCXX_ENABLE_SSL "Enable SSL - if the underlying C driver offers it" ON)
 option(MONGOCXX_ENABLE_SLOW_TESTS "Run slow tests when invoking the the test target" OFF)
 
 option(MONGOCXX_API_OVERRIDE_DEFAULT_ABI "The default ABI namespace to use for root namespace redeclarations" OFF)
-mark_as_advanced(MONGOCXX_API_OVERRIDE_DEFAULT_ABI)
+mark_as_advanced(MONGOCXX_API_OVERRIDE_DEFAULT_ABI) # For internal use only.
 if(MONGOCXX_API_OVERRIDE_DEFAULT_ABI)
     message(WARNING "MONGOCXX_API_OVERRIDE_DEFAULT_ABI is an experimental feature")
 endif ()
 
 set(MONGOCXX_OUTPUT_BASENAME "mongocxx" CACHE STRING "Output mongocxx library base name")
+set(mongocxx_basename "${MONGOCXX_OUTPUT_BASENAME}")
+if (NOT MONGOCXX_SOVERSION STREQUAL "_noabi")
+    set(mongocxx_basename "${MONGOCXX_OUTPUT_BASENAME}${MONGOCXX_SOVERSION}")
+endif()
 
 if(TARGET mongoc_shared OR TARGET mongoc_static)
     message(STATUS "Using mongoc targets imported via add_subdirectory() without version checks")
@@ -61,7 +71,7 @@ include(MongocxxUtil)
 set(mongocxx_target_list "")
 
 if(MONGOCXX_BUILD_SHARED)
-    mongocxx_add_library(mongocxx_shared "${MONGOCXX_OUTPUT_BASENAME}" SHARED)
+    mongocxx_add_library(mongocxx_shared "${mongocxx_basename}" SHARED)
     target_link_libraries(mongocxx_shared PUBLIC bsoncxx_shared)
     list(APPEND mongocxx_target_list mongocxx_shared)
 
@@ -73,7 +83,7 @@ if(MONGOCXX_BUILD_SHARED)
 endif()
 
 if(MONGOCXX_BUILD_STATIC)
-    mongocxx_add_library(mongocxx_static "${MONGOCXX_OUTPUT_BASENAME}-static" STATIC)
+    mongocxx_add_library(mongocxx_static "${mongocxx_basename}-static" STATIC)
     target_link_libraries(mongocxx_static PUBLIC bsoncxx_static)
     list(APPEND mongocxx_target_list mongocxx_static)
 endif()
@@ -141,7 +151,7 @@ if(1)
 ///
 /// @warning For internal use only!
 ///
-        ]]
+]]
         )
         generate_export_header(${TARGET}
             BASE_NAME MONGOCXX_ABI

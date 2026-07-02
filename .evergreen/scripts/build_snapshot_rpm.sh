@@ -22,7 +22,6 @@ set -o errexit
 # limitations under the License.
 #
 
-
 for arg in "$@"; do
   if [ "$arg" = "-h" ]; then
     echo "Usage: ./.evergreen/build_snapshot_rpm.sh"
@@ -58,7 +57,7 @@ fi
 
 if [ -f "${spec_file}" ]; then
   echo "Found old spec file (${spec_file})...removing"
-  rm -f  ${spec_file}
+  rm -f ${spec_file}
 fi
 cp "$(pwd)/.evergreen/${package}.spec" ..
 if [ -f .evergreen/spec.patch ]; then
@@ -119,7 +118,11 @@ echo "Building source RPM ..."
 rpmbuild -bs ${spec_file}
 echo "Building binary RPMs ..."
 mock_result=$(readlink -f ../mock-result)
-sudo mock --resultdir="${mock_result}" --use-bootstrap-image --isolation=simple -r ${config} --no-clean --no-cleanup-after --rebuild ~/rpmbuild/SRPMS/${package}-${snapshot_version}*.src.rpm || ( cd "${mock_result}" ; cat *.log ; exit 1 )
+sudo mock --resultdir="${mock_result}" --use-bootstrap-image --isolation=simple -r ${config} --no-clean --no-cleanup-after --rebuild ~/rpmbuild/SRPMS/${package}-${snapshot_version}*.src.rpm || (
+  cd "${mock_result}"
+  cat *.log
+  exit 1
+)
 sudo mock -r ${config} --use-bootstrap-image --isolation=simple --copyin "${mock_result}" /tmp
 
 sudo mock -r ${config} --use-bootstrap-image --isolation=simple --cwd "/tmp/${build_dir}" --chroot -- /bin/sh -c "(
@@ -155,4 +158,7 @@ if [ ! -e "${mock_root}/tmp/${build_dir}/documentation_examples" ]; then
 fi
 
 sudo mock -r ${config} --use-bootstrap-image --isolation=simple --clean
-(cd "${mock_result}" ; tar zcvf ../rpm.tar.gz *.rpm)
+(
+  cd "${mock_result}"
+  tar zcvf ../rpm.tar.gz *.rpm
+)

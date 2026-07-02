@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/auto_encryption_options-fwd.hpp> // IWYU pragma: export
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -29,7 +31,7 @@ class auto_encryption;
 namespace mongocxx {
 namespace options {
 
-using ::mongocxx::v_noabi::options::auto_encryption;
+using v_noabi::options::auto_encryption;
 
 } // namespace options
 } // namespace mongocxx
@@ -39,4 +41,7 @@ using ::mongocxx::v_noabi::options::auto_encryption;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::options::auto_encryption.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/auto_encryption_options-fwd.hpp
 ///

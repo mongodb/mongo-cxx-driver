@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/bulk_write-fwd.hpp> // IWYU pragma: export
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -29,7 +31,7 @@ class update_many;
 namespace mongocxx {
 namespace model {
 
-using ::mongocxx::v_noabi::model::update_many;
+using v_noabi::model::update_many;
 
 } // namespace model
 } // namespace mongocxx
@@ -39,4 +41,7 @@ using ::mongocxx::v_noabi::model::update_many;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::model::update_many.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/bulk_write-fwd.hpp
 ///

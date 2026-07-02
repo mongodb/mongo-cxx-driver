@@ -1,20 +1,18 @@
+from typing import Mapping
+
+from shrub.v3.evg_command import EvgCommandType, KeyValueParam, expansions_update
+
 from config_generator.etc.distros import compiler_to_vars
 from config_generator.etc.function import Function
 from config_generator.etc.utils import bash_exec
 
-from shrub.v3.evg_command import EvgCommandType, KeyValueParam, expansions_update
-
-from typing import Mapping
-
-
-# If updating mongoc_version_minimum, also update:
+# If updating mongoc_version_minimum to a new release (not pinning to an unreleased commit), also update:
 # - BSON_REQUIRED_VERSION and MONGOC_REQUIRED_VERSION in CMakeLists.txt
 # - the version of pkg:github/mongodb/mongo-c-driver in etc/purls.txt
 # - the default value of --c-driver-build-ref in etc/make_release.py
-# Only MONGOC_DOWNLOAD_VERSION needs to be updated when pinning to an unreleased commit.
 # If pinning to an unreleased commit, create a "Blocked" JIRA ticket with
 # a "depends on" link to the appropriate C Driver version release ticket.
-MONGOC_VERSION_MINIMUM = '2.0.0'
+MONGOC_VERSION_MINIMUM = '2.3.1'
 
 
 class InstallCDriver(Function):
@@ -22,9 +20,7 @@ class InstallCDriver(Function):
     commands = [
         expansions_update(
             command_type=EvgCommandType.SETUP,
-            updates=[
-                KeyValueParam(key='mongoc_version_minimum', value=MONGOC_VERSION_MINIMUM)
-            ]
+            updates=[KeyValueParam(key='mongoc_version_minimum', value=MONGOC_VERSION_MINIMUM)],
         ),
         bash_exec(
             command_type=EvgCommandType.SETUP,
@@ -33,7 +29,7 @@ class InstallCDriver(Function):
                 'CC': '${cc_compiler}',
                 'CXX': '${cxx_compiler}',
             },
-            script='mongo-cxx-driver/.evergreen/scripts/install-c-driver.sh'
+            script='mongo-cxx-driver/.evergreen/scripts/install-c-driver.sh',
         ),
     ]
 

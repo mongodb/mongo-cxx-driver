@@ -14,12 +14,24 @@
 
 #pragma once
 
-#include <mongocxx/options/bulk_write-fwd.hpp>
+#include <mongocxx/options/bulk_write-fwd.hpp> // IWYU pragma: export
 
+//
+
+#include <bsoncxx/v1/document/value.hpp>
+#include <bsoncxx/v1/types/value.hpp>
+
+#include <mongocxx/v1/bulk_write.hpp> // IWYU pragma: export
+
+#include <utility>
+
+#include <bsoncxx/document/view.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/types/bson_value/view.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
 
+#include <mongocxx/read_concern.hpp>
 #include <mongocxx/write_concern.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -38,7 +50,46 @@ class bulk_write {
     /// as this is the only safe choice. If you want an unordered update, you must call
     /// ordered(false) to switch to unordered mode.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() bulk_write();
+    bulk_write() = default;
+
+    ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() bulk_write(v1::bulk_write::options opts);
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    explicit operator v1::bulk_write::options() const {
+        using bsoncxx::v_noabi::to_v1;
+        using mongocxx::v_noabi::to_v1;
+
+        v1::bulk_write::options ret;
+
+        ret.ordered(_ordered);
+
+        if (_read_concern) {
+            ret.read_concern(to_v1(*_read_concern));
+        }
+
+        if (_write_concern) {
+            ret.write_concern(to_v1(*_write_concern));
+        }
+
+        if (_bypass_document_validation) {
+            ret.bypass_document_validation(*_bypass_document_validation);
+        }
+
+        if (_let) {
+            ret.let(bsoncxx::v1::document::value{to_v1(_let->view())});
+        }
+
+        if (_comment) {
+            ret.comment(bsoncxx::v1::types::value{to_v1(_comment->view())});
+        }
+
+        return ret;
+    }
 
     ///
     /// Sets whether the writes must be executed in order by the server.
@@ -52,17 +103,53 @@ class bulk_write {
     ///   reported after attempting all operations.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bulk_write&) ordered(bool ordered);
+    bulk_write& ordered(bool ordered) {
+        _ordered = ordered;
+        return *this;
+    }
 
     ///
     /// Gets the current value of the ordered option.
     ///
     /// @return The value of the ordered option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bool) ordered() const;
+    bool ordered() const {
+        return _ordered;
+    }
+
+    ///
+    /// Sets the read_concern for this operation.
+    ///
+    /// @param rc
+    ///   The new read_concern.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called. This facilitates
+    ///   method chaining.
+    ///
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/read-concern/
+    ///
+    bulk_write& read_concern(v_noabi::read_concern rc) {
+        _read_concern = std::move(rc);
+        return *this;
+    }
+
+    ///
+    /// The current read_concern for this operation.
+    ///
+    /// @return
+    ///   The current read_concern.
+    ///
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/read-concern/
+    ///
+    bsoncxx::v_noabi::stdx::optional<v_noabi::read_concern> const& read_concern() const {
+        return _read_concern;
+    }
 
     ///
     /// Sets the write_concern for this operation.
@@ -71,13 +158,16 @@ class bulk_write {
     ///   The new write_concern.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/write-concern/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bulk_write&) write_concern(mongocxx::v_noabi::write_concern wc);
+    bulk_write& write_concern(v_noabi::write_concern wc) {
+        _write_concern = std::move(wc);
+        return *this;
+    }
 
     ///
     /// The current write_concern for this operation.
@@ -88,8 +178,9 @@ class bulk_write {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/write-concern/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const&)
-    write_concern() const;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> const& write_concern() const {
+        return _write_concern;
+    }
 
     ///
     /// Set whether or not to bypass document validation for this operation.
@@ -98,11 +189,13 @@ class bulk_write {
     ///   Whether or not to bypass document validation.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bulk_write&)
-    bypass_document_validation(bool bypass_document_validation);
+    bulk_write& bypass_document_validation(bool bypass_document_validation) {
+        _bypass_document_validation = bypass_document_validation;
+        return *this;
+    }
 
     ///
     /// The current setting for bypassing document validation for this operation.
@@ -110,8 +203,9 @@ class bulk_write {
     /// @return
     ///  The current document validation bypass setting.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bool> const)
-    bypass_document_validation() const;
+    bsoncxx::v_noabi::stdx::optional<bool> const bypass_document_validation() const {
+        return _bypass_document_validation;
+    }
 
     ///
     /// Set the value of the let option.
@@ -120,10 +214,13 @@ class bulk_write {
     ///   The new let option.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bulk_write&) let(bsoncxx::v_noabi::document::view_or_value let);
+    bulk_write& let(bsoncxx::v_noabi::document::view_or_value let) {
+        _let = std::move(let);
+        return *this;
+    }
 
     ///
     /// Gets the current value of the let option.
@@ -131,8 +228,9 @@ class bulk_write {
     /// @return
     ///  The current let option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const)
-    let() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const let() const {
+        return _let;
+    }
 
     ///
     /// Set the value of the comment option.
@@ -141,11 +239,13 @@ class bulk_write {
     ///   The new comment option.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bulk_write&)
-    comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
+    bulk_write& comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment) {
+        _comment = std::move(comment);
+        return *this;
+    }
 
     ///
     /// Gets the current value of the comment option.
@@ -153,13 +253,16 @@ class bulk_write {
     /// @return
     ///  The current comment option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<
-                              bsoncxx::v_noabi::types::bson_value::view_or_value> const)
-    comment() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const comment() const {
+        return _comment;
+    }
+
+    class internal;
 
    private:
-    bool _ordered;
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> _write_concern;
+    bool _ordered = true;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::read_concern> _read_concern;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> _write_concern;
     bsoncxx::v_noabi::stdx::optional<bool> _bypass_document_validation;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _let;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
@@ -169,9 +272,32 @@ class bulk_write {
 } // namespace v_noabi
 } // namespace mongocxx
 
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::options::bulk_write from_v1(v1::bulk_write::options v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::bulk_write::options to_v1(v_noabi::options::bulk_write const& v) {
+    return v1::bulk_write::options{v};
+}
+
+} // namespace v_noabi
+} // namespace mongocxx
+
 #include <mongocxx/config/postlude.hpp>
 
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::options::bulk_write.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/bulk_write.hpp
 ///

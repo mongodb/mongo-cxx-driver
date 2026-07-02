@@ -16,7 +16,7 @@
 
 #include <bsoncxx/builder/basic/sub_array-fwd.hpp>
 
-#include <bsoncxx/builder/basic/helpers.hpp>
+#include <bsoncxx/builder/basic/helpers.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <bsoncxx/builder/concatenate.hpp>
 #include <bsoncxx/builder/core.hpp>
 

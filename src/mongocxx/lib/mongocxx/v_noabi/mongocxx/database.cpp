@@ -12,423 +12,495 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/database.hh>
+
+//
+
+#include <mongocxx/v1/change_stream.hh>
+#include <mongocxx/v1/collection.hh>
+#include <mongocxx/v1/cursor.hh>
+#include <mongocxx/v1/database.hh>
+#include <mongocxx/v1/gridfs/bucket.hh>
+#include <mongocxx/v1/read_concern.hh>
+#include <mongocxx/v1/read_preference.hh>
+#include <mongocxx/v1/write_concern.hh>
+
+#include <cstddef>
+#include <cstdint>
+#include <string>
 #include <utility>
+#include <vector>
 
-#include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/builder/basic/kvp.hpp>
-#include <bsoncxx/builder/concatenate.hpp>
-#include <bsoncxx/string/to_string.hpp>
+#include <bsoncxx/array/view.hpp>
+#include <bsoncxx/document/value.hpp>
+#include <bsoncxx/document/view_or_value.hpp>
+#include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/stdx/string_view.hpp>
+#include <bsoncxx/string/view_or_value.hpp>
 
-#include <mongocxx/client.hpp>
-#include <mongocxx/database.hpp>
+#include <mongocxx/change_stream.hpp>
+#include <mongocxx/collection.hpp>
+#include <mongocxx/cursor.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
+#include <mongocxx/gridfs/bucket.hpp>
+#include <mongocxx/options/gridfs/bucket.hpp>
 
+#include <mongocxx/client_session.hh>
+#include <mongocxx/database.hh>
+#include <mongocxx/mongoc_error.hh>
+#include <mongocxx/options/aggregate.hh>
+#include <mongocxx/options/change_stream.hh>
+#include <mongocxx/pipeline.hh>
+#include <mongocxx/read_concern.hh>
+#include <mongocxx/read_preference.hh>
+#include <mongocxx/scoped_bson.hh>
+#include <mongocxx/write_concern.hh>
+
+#include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/make_unique.hh>
 
-#include <mongocxx/private/bson.hh>
-#include <mongocxx/private/client.hh>
-#include <mongocxx/private/client_session.hh>
-#include <mongocxx/private/database.hh>
 #include <mongocxx/private/mongoc.hh>
-#include <mongocxx/private/mongoc_error.hh>
-#include <mongocxx/private/pipeline.hh>
-#include <mongocxx/private/read_concern.hh>
-#include <mongocxx/private/read_preference.hh>
-
-using bsoncxx::v_noabi::builder::concatenate;
-using bsoncxx::v_noabi::builder::basic::kvp;
-using bsoncxx::v_noabi::builder::basic::make_document;
 
 namespace mongocxx {
 namespace v_noabi {
 
 namespace {
 
-class collection_names {
-   public:
-    explicit collection_names(char** names) {
-        _names = names;
+template <typename Database>
+Database& check_moved_from(Database& db) {
+    if (!db) {
+        throw v_noabi::logic_error{v_noabi::error_code::k_invalid_database_object};
     }
-
-    ~collection_names() {
-        bson_strfreev(_names);
-    }
-
-    collection_names(collection_names&&) noexcept = delete;
-    collection_names& operator=(collection_names&&) noexcept = delete;
-
-    collection_names(collection_names const&) = delete;
-    collection_names& operator=(collection_names const&) = delete;
-
-    char const* operator[](std::size_t const i) const {
-        return _names[i];
-    }
-
-    bool operator!() const {
-        return _names == nullptr;
-    }
-
-   private:
-    char** _names;
-};
+    return db;
+}
 
 } // namespace
 
-using namespace libbson;
-
-database::database() noexcept = default;
-
-database::database(database&&) noexcept = default;
-database& database::operator=(database&&) noexcept = default;
-
-database::~database() = default;
-
-database::database(mongocxx::v_noabi::client const& client, bsoncxx::v_noabi::string::view_or_value name)
-    : _impl(bsoncxx::make_unique<impl>(
-          libmongoc::client_get_database(client._get_impl().client_t, name.terminated().data()),
-          &client._get_impl(),
-          name.terminated().data())) {}
-
-database::database(database const& d) {
-    if (d) {
-        _impl = bsoncxx::make_unique<impl>(d._get_impl());
+database::database(database const& other) {
+    if (other) {
+        _db = check_moved_from(other)._db;
     }
 }
 
-database& database::operator=(database const& d) {
-    if (!d) {
-        _impl.reset();
-    } else if (!*this) {
-        _impl = bsoncxx::make_unique<impl>(d._get_impl());
-    } else {
-        *_impl = d._get_impl();
+// NOLINTNEXTLINE(cert-oop54-cpp): handled by v1::database.
+database& database::operator=(database const& other) {
+    if (this != &other) {
+        if (!other) {
+            _db = v1::database{};
+        } else {
+            _db = check_moved_from(other)._db;
+        }
     }
-
     return *this;
 }
 
-database::operator bool() const noexcept {
-    return static_cast<bool>(_impl);
+namespace {
+
+v_noabi::cursor aggregate_impl(
+    v1::database& db,
+    v_noabi::pipeline const& pipeline,
+    bson_t const* opts,
+    v_noabi::options::aggregate const& aggregate_opts) {
+    auto const& rp_opt = aggregate_opts.read_preference();
+    auto const read_prefs = rp_opt ? v_noabi::read_preference::internal::as_mongoc(*rp_opt) : nullptr;
+
+    return v1::cursor::internal::make(
+        libmongoc::database_aggregate(
+            v1::database::internal::as_mongoc(check_moved_from(db)),
+            to_scoped_bson_view(pipeline.view_array()).bson(),
+            opts,
+            read_prefs));
 }
 
-cursor
-database::_aggregate(client_session const* session, pipeline const& pipeline, options::aggregate const& options) {
-    scoped_bson_t stages(bsoncxx::v_noabi::document::view(pipeline._impl->view_array()));
+} // namespace
 
-    bsoncxx::v_noabi::builder::basic::document b;
-
-    options.append(b);
-
-    if (session) {
-        b.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
-    }
-
-    scoped_bson_t options_bson(b.view());
-
-    ::mongoc_read_prefs_t const* rp_ptr = nullptr;
-
-    if (options.read_preference()) {
-        rp_ptr = options.read_preference()->_impl->read_preference_t;
-    }
-
-    return cursor(libmongoc::database_aggregate(_get_impl().database_t, stages.bson(), options_bson.bson(), rp_ptr));
+v_noabi::cursor database::aggregate(v_noabi::pipeline const& pipeline, v_noabi::options::aggregate const& options) {
+    scoped_bson doc;
+    v_noabi::options::aggregate::internal::append_to(options, doc);
+    return aggregate_impl(_db, pipeline, doc.bson(), options);
 }
 
-cursor database::aggregate(pipeline const& pipeline, options::aggregate const& options) {
-    return _aggregate(nullptr, pipeline, options);
+v_noabi::cursor database::aggregate(
+    v_noabi::client_session const& session,
+    v_noabi::pipeline const& pipeline,
+    v_noabi::options::aggregate const& options) {
+    scoped_bson doc;
+    v_noabi::options::aggregate::internal::append_to(options, doc);
+    v_noabi::client_session::internal::append_to(session, doc);
+    return aggregate_impl(_db, pipeline, doc.bson(), options);
 }
 
-cursor database::aggregate(client_session const& session, pipeline const& pipeline, options::aggregate const& options) {
-    return _aggregate(&session, pipeline, options);
+namespace {
+
+v_noabi::cursor list_collections_impl(v1::database& db, bson_t const* opts) {
+    return v1::cursor::internal::make(
+        libmongoc::database_find_collections_with_opts(v1::database::internal::as_mongoc(check_moved_from(db)), opts));
 }
 
-cursor database::_list_collections(client_session const* session, bsoncxx::v_noabi::document::view_or_value filter) {
-    bsoncxx::v_noabi::builder::basic::document options_builder;
-    options_builder.append(kvp("filter", filter));
+} // namespace
 
-    if (session) {
-        options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
-    }
+v_noabi::cursor database::list_collections(bsoncxx::v_noabi::document::view_or_value filter) {
+    scoped_bson doc{BCON_NEW("filter", BCON_DOCUMENT(to_scoped_bson_view(filter).bson()))};
 
-    scoped_bson_t options_bson(options_builder.extract());
-
-    return libmongoc::database_find_collections_with_opts(_get_impl().database_t, options_bson.bson());
+    return list_collections_impl(_db, doc.bson());
 }
 
-cursor database::list_collections(bsoncxx::v_noabi::document::view_or_value filter) {
-    return _list_collections(nullptr, filter);
-}
-
-cursor database::list_collections(client_session const& session, bsoncxx::v_noabi::document::view_or_value filter) {
-    return _list_collections(&session, filter);
-}
-
-std::vector<std::string> database::_list_collection_names(
-    client_session const* session,
+v_noabi::cursor database::list_collections(
+    v_noabi::client_session const& session,
     bsoncxx::v_noabi::document::view_or_value filter) {
-    bsoncxx::v_noabi::builder::basic::document options_builder;
-    options_builder.append(kvp("filter", filter));
+    scoped_bson doc{BCON_NEW("filter", BCON_DOCUMENT(to_scoped_bson_view(filter).bson()))};
 
-    if (session) {
-        options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
-    }
+    v_noabi::client_session::internal::append_to(session, doc);
 
-    scoped_bson_t options_bson(options_builder.extract());
-
-    bson_error_t error;
-    collection_names names(
-        libmongoc::database_get_collection_names_with_opts(_get_impl().database_t, options_bson.bson(), &error));
-
-    if (!names) {
-        throw_exception<operation_exception>(error);
-    }
-
-    std::vector<std::string> _names;
-    for (std::size_t i = 0; names[i]; ++i) {
-        _names.emplace_back(names[i]);
-    }
-
-    return _names;
+    return list_collections_impl(_db, doc.bson());
 }
+
+namespace {
+
+std::vector<std::string> list_collection_names_impl(v1::database& db, bson_t const* opts) {
+    struct names_deleter {
+        void operator()(char** ptr) const noexcept {
+            bson_strfreev(ptr);
+        }
+    };
+
+    using names_type = std::unique_ptr<char*, names_deleter>;
+
+    bson_error_t error = {};
+
+    if (auto const names = names_type{libmongoc::database_get_collection_names_with_opts(
+            v1::database::internal::as_mongoc(check_moved_from(db)), opts, &error)}) {
+        std::vector<std::string> ret;
+
+        for (char const* const* iter = names.get(); *iter != nullptr; ++iter) {
+            ret.emplace_back(*iter);
+        }
+
+        return ret;
+    }
+
+    v_noabi::throw_exception<v_noabi::operation_exception>(error);
+}
+
+} // namespace
 
 std::vector<std::string> database::list_collection_names(bsoncxx::v_noabi::document::view_or_value filter) {
-    return _list_collection_names(nullptr, filter);
+    scoped_bson doc{BCON_NEW("filter", BCON_DOCUMENT(to_scoped_bson_view(filter).bson()))};
+
+    return list_collection_names_impl(_db, doc.bson());
 }
 
 std::vector<std::string> database::list_collection_names(
-    client_session const& session,
+    v_noabi::client_session const& session,
     bsoncxx::v_noabi::document::view_or_value filter) {
-    return _list_collection_names(&session, filter);
+    scoped_bson doc{BCON_NEW("filter", BCON_DOCUMENT(to_scoped_bson_view(filter).bson()))};
+
+    v_noabi::client_session::internal::append_to(session, doc);
+
+    return list_collection_names_impl(_db, doc.bson());
 }
 
 bsoncxx::v_noabi::stdx::string_view database::name() const {
-    return _get_impl().name;
+    return check_moved_from(_db).name();
 }
 
-bsoncxx::v_noabi::document::value database::_run_command(
-    client_session const* session,
-    bsoncxx::v_noabi::document::view_or_value command) {
-    libbson::scoped_bson_t command_bson{command};
-    libbson::scoped_bson_t reply_bson;
-    bson_error_t error;
+namespace {
 
-    bsoncxx::v_noabi::builder::basic::document options_builder;
-    if (session) {
-        options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
+bsoncxx::v_noabi::document::value run_command_impl(v1::database& db, bson_t const* command, bson_t const* opts) {
+    scoped_bson reply;
+    bson_error_t error = {};
+
+    if (!libmongoc::database_command_with_opts(
+            v1::database::internal::as_mongoc(check_moved_from(db)), command, nullptr, opts, reply.out_ptr(), &error)) {
+        v_noabi::throw_exception<v_noabi::operation_exception>(from_v1(std::move(reply)), error);
     }
 
-    scoped_bson_t options_bson(options_builder.extract());
-    auto result = libmongoc::database_command_with_opts(
-        _get_impl().database_t, command_bson.bson(), nullptr, options_bson.bson(), reply_bson.bson_for_init(), &error);
-
-    if (!result) {
-        throw_exception<operation_exception>(reply_bson.steal(), error);
-    }
-
-    return reply_bson.steal();
+    return from_v1(std::move(reply));
 }
+
+} // namespace
 
 bsoncxx::v_noabi::document::value database::run_command(bsoncxx::v_noabi::document::view_or_value command) {
-    return _run_command(nullptr, command);
+    return run_command_impl(_db, to_scoped_bson_view(command).bson(), nullptr);
 }
 
 bsoncxx::v_noabi::document::value database::run_command(
-    client_session const& session,
+    v_noabi::client_session const& session,
     bsoncxx::v_noabi::document::view_or_value command) {
-    return _run_command(&session, command);
+    scoped_bson doc;
+
+    v_noabi::client_session::internal::append_to(session, doc);
+
+    return run_command_impl(_db, to_scoped_bson_view(command).bson(), doc.bson());
 }
 
 bsoncxx::v_noabi::document::value database::run_command(
     bsoncxx::v_noabi::document::view_or_value command,
-    uint32_t server_id) {
-    libbson::scoped_bson_t command_bson{command};
-    libbson::scoped_bson_t reply_bson;
+    std::uint32_t server_id) {
+    scoped_bson reply;
     bson_error_t error;
 
-    auto result = libmongoc::client_command_simple_with_server_id(
-        _get_impl().client_impl->client_t,
-        _get_impl().name.c_str(),
-        command_bson.bson(),
-        read_preference()._impl->read_preference_t,
-        server_id,
-        reply_bson.bson_for_init(),
-        &error);
+    auto& db = check_moved_from(_db);
+    auto const ptr = v1::database::internal::as_mongoc(db);
 
-    if (!result) {
-        throw_exception<operation_exception>(reply_bson.steal(), error);
+    if (!libmongoc::client_command_simple_with_server_id(
+            v1::database::internal::get_client(db),
+            libmongoc::database_get_name(ptr),
+            to_scoped_bson_view(command.view()),
+            libmongoc::database_get_read_prefs(ptr),
+            server_id,
+            reply.out_ptr(),
+            &error)) {
+        v_noabi::throw_exception<v_noabi::operation_exception>(from_v1(std::move(reply)), error);
     }
 
-    return reply_bson.steal();
+    return from_v1(std::move(reply));
 }
 
-collection database::_create_collection(
-    client_session const* session,
+namespace {
+
+mongoc_collection_t* create_collection_impl(v1::database& db, char const* name, bson_t const* opts) {
+    bson_error_t error = {};
+
+    if (auto const ptr = libmongoc::database_create_collection(
+            v1::database::internal::as_mongoc(check_moved_from(db)), name, opts, &error)) {
+        return ptr;
+    }
+
+    v_noabi::throw_exception<v_noabi::operation_exception>(error);
+}
+
+} // namespace
+
+v_noabi::collection database::create_collection(
     bsoncxx::v_noabi::stdx::string_view name,
     bsoncxx::v_noabi::document::view_or_value collection_options,
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& write_concern) {
-    bsoncxx::v_noabi::builder::basic::document options_builder;
-    bson_error_t error;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> const& write_concern) {
+    scoped_bson doc;
 
-    options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{collection_options});
+    doc += to_scoped_bson_view(collection_options);
 
     if (write_concern) {
-        options_builder.append(kvp("writeConcern", write_concern->to_document()));
+        doc +=
+            scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(to_scoped_bson(write_concern->to_document()).bson()))};
     }
 
-    if (session) {
-        options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
-    }
-
-    libbson::scoped_bson_t opts_bson{options_builder.view()};
-    auto result = libmongoc::database_create_collection(
-        _get_impl().database_t, bsoncxx::v_noabi::string::to_string(name).c_str(), opts_bson.bson(), &error);
-
-    if (!result) {
-        throw_exception<operation_exception>(error);
-    }
-
-    return mongocxx::v_noabi::collection(*this, result);
+    return v1::collection::internal::make(
+        create_collection_impl(_db, std::string{name}.c_str(), doc.bson()), v1::database::internal::get_client(_db));
 }
 
-mongocxx::v_noabi::collection database::create_collection(
+v_noabi::collection database::create_collection(
+    v_noabi::client_session const& session,
     bsoncxx::v_noabi::stdx::string_view name,
     bsoncxx::v_noabi::document::view_or_value collection_options,
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& write_concern) {
-    return _create_collection(nullptr, name, collection_options, write_concern);
-}
+    bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> const& write_concern) {
+    scoped_bson doc;
 
-mongocxx::v_noabi::collection database::create_collection(
-    client_session const& session,
-    bsoncxx::v_noabi::stdx::string_view name,
-    bsoncxx::v_noabi::document::view_or_value collection_options,
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& write_concern) {
-    return _create_collection(&session, name, collection_options, write_concern);
-}
+    doc += to_scoped_bson_view(collection_options);
 
-void database::_drop(
-    client_session const* session,
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& write_concern) {
-    bson_error_t error;
-
-    bsoncxx::v_noabi::builder::basic::document opts_doc;
     if (write_concern) {
-        opts_doc.append(kvp("writeConcern", write_concern->to_document()));
+        doc +=
+            scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(to_scoped_bson(write_concern->to_document()).bson()))};
     }
 
-    if (session) {
-        opts_doc.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
-    }
+    v_noabi::client_session::internal::append_to(session, doc);
 
-    libbson::scoped_bson_t opts_bson{opts_doc.view()};
+    return v1::collection::internal::make(
+        create_collection_impl(_db, std::string{name}.c_str(), doc.bson()), v1::database::internal::get_client(_db));
+}
 
-    if (!libmongoc::database_drop_with_opts(_get_impl().database_t, opts_bson.bson(), &error)) {
-        throw_exception<operation_exception>(error);
+namespace {
+
+void drop_impl(v1::database& db, bson_t const* opts) {
+    bson_error_t error = {};
+
+    if (!libmongoc::database_drop_with_opts(v1::database::internal::as_mongoc(check_moved_from(db)), opts, &error)) {
+        v_noabi::throw_exception<v_noabi::operation_exception>(error);
     }
 }
 
-void database::drop(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& write_concern) {
-    return _drop(nullptr, write_concern);
+} // namespace
+
+void database::drop(bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> const& write_concern) {
+    scoped_bson doc;
+
+    if (write_concern) {
+        doc += scoped_bson{
+            BCON_NEW("writeConcern", BCON_DOCUMENT(to_scoped_bson_view(write_concern->to_document()).bson()))};
+    }
+
+    drop_impl(_db, doc.bson());
 }
 
 void database::drop(
-    client_session const& session,
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& write_concern) {
-    return _drop(&session, write_concern);
+    v_noabi::client_session const& session,
+    bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> const& write_concern) {
+    scoped_bson doc;
+
+    if (write_concern) {
+        doc += scoped_bson{
+            BCON_NEW("writeConcern", BCON_DOCUMENT(to_scoped_bson_view(write_concern->to_document()).bson()))};
+    }
+
+    v_noabi::client_session::internal::append_to(session, doc);
+
+    drop_impl(_db, doc.bson());
 }
 
-void database::read_concern(mongocxx::v_noabi::read_concern rc) {
-    libmongoc::database_set_read_concern(_get_impl().database_t, rc._impl->read_concern_t);
+void database::read_concern(v_noabi::read_concern rc) {
+    return check_moved_from(_db).read_concern(v_noabi::to_v1(std::move(rc)));
 }
 
-mongocxx::v_noabi::read_concern database::read_concern() const {
-    auto rc = libmongoc::database_get_read_concern(_get_impl().database_t);
-    return {bsoncxx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))};
+v_noabi::read_concern database::read_concern() const {
+    return check_moved_from(_db).read_concern();
 }
 
-void database::read_preference(mongocxx::v_noabi::read_preference rp) {
-    libmongoc::database_set_read_prefs(_get_impl().database_t, rp._impl->read_preference_t);
+void database::read_preference(v_noabi::read_preference rp) {
+    return check_moved_from(_db).read_preference(v_noabi::to_v1(std::move(rp)));
 }
 
 bool database::has_collection(bsoncxx::v_noabi::string::view_or_value name) const {
-    bson_error_t error;
-    auto result = libmongoc::database_has_collection(_get_impl().database_t, name.terminated().data(), &error);
+    // Backward compatibility: `has_collection()` is not logically const.
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
+    auto& d = const_cast<v1::database&>(check_moved_from(_db));
+
+    bson_error_t error = {};
+
+    auto const ret =
+        libmongoc::database_has_collection(v1::database::internal::as_mongoc(d), name.terminated().data(), &error);
+
     if (error.domain != 0) {
-        throw_exception<operation_exception>(error);
+        v_noabi::throw_exception<v_noabi::operation_exception>(error);
     }
 
-    return result;
+    return ret;
 }
 
-mongocxx::v_noabi::read_preference database::read_preference() const {
-    mongocxx::v_noabi::read_preference rp(bsoncxx::make_unique<read_preference::impl>(
-        libmongoc::read_prefs_copy(libmongoc::database_get_read_prefs(_get_impl().database_t))));
-    return rp;
+v_noabi::read_preference database::read_preference() const {
+    return check_moved_from(_db).read_preference();
 }
 
-void database::write_concern(mongocxx::v_noabi::write_concern wc) {
-    libmongoc::database_set_write_concern(_get_impl().database_t, wc._impl->write_concern_t);
+void database::write_concern(v_noabi::write_concern wc) {
+    return check_moved_from(_db).write_concern(v_noabi::to_v1(std::move(wc)));
 }
 
-mongocxx::v_noabi::write_concern database::write_concern() const {
-    mongocxx::v_noabi::write_concern wc(bsoncxx::make_unique<write_concern::impl>(
-        libmongoc::write_concern_copy(libmongoc::database_get_write_concern(_get_impl().database_t))));
-    return wc;
+v_noabi::write_concern database::write_concern() const {
+    return check_moved_from(_db).write_concern();
 }
 
 collection database::collection(bsoncxx::v_noabi::string::view_or_value name) const {
-    return mongocxx::v_noabi::collection(*this, std::move(name));
+    // Backward compatibility: `collection()` is not logically const.
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
+    auto& d = const_cast<v1::database&>(check_moved_from(_db));
+
+    return v1::collection::internal::make(
+        libmongoc::database_get_collection(v1::database::internal::as_mongoc(d), name.terminated().data()),
+        v1::database::internal::get_client(d));
 }
 
-gridfs::bucket database::gridfs_bucket(options::gridfs::bucket const& options) const {
-    return gridfs::bucket{*this, options};
-}
+v_noabi::gridfs::bucket database::gridfs_bucket(v_noabi::options::gridfs::bucket const& options) const {
+    // Backward compatibility: `gridfs_bucket()` is not logically const.
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
+    auto& d = const_cast<v_noabi::database&>(check_moved_from(*this));
 
-change_stream database::watch(options::change_stream const& options) {
-    return watch(pipeline{}, options);
-}
+    std::string bucket_name = options.bucket_name().value_or("fs");
 
-change_stream database::watch(client_session const& session, options::change_stream const& options) {
-    return _watch(&session, pipeline{}, options);
-}
-
-change_stream database::watch(pipeline const& pipe, options::change_stream const& options) {
-    return _watch(nullptr, pipe, options);
-}
-
-change_stream
-database::watch(client_session const& session, pipeline const& pipe, options::change_stream const& options) {
-    return _watch(&session, pipe, options);
-}
-
-change_stream
-database::_watch(client_session const* session, pipeline const& pipe, options::change_stream const& options) {
-    bsoncxx::v_noabi::builder::basic::document container;
-    container.append(kvp("pipeline", pipe._impl->view_array()));
-    scoped_bson_t pipeline_bson{container.view()};
-
-    bsoncxx::v_noabi::builder::basic::document options_builder;
-    options_builder.append(bsoncxx::v_noabi::builder::concatenate(options.as_bson()));
-    if (session) {
-        options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
+    if (bucket_name.empty()) {
+        throw v_noabi::logic_error{v_noabi::error_code::k_invalid_parameter, "non-empty bucket name required"};
     }
 
-    scoped_bson_t options_bson{options_builder.extract()};
+    // NOLINTNEXTLINE(cppcoreguidelines-avoid-magic-numbers): 255 KiB.
+    static constexpr std::int32_t default_chunk_size_default = {255 * 1024};
 
-    return change_stream{libmongoc::database_watch(_get_impl().database_t, pipeline_bson.bson(), options_bson.bson())};
-}
+    auto const default_chunk_size = options.chunk_size_bytes().value_or(default_chunk_size_default);
 
-database::impl const& database::_get_impl() const {
-    if (!_impl) {
-        throw logic_error{error_code::k_invalid_database_object};
+    if (default_chunk_size <= 0) {
+        throw v_noabi::logic_error{
+            v_noabi::error_code::k_invalid_parameter, "positive value for chunk_size_bytes required"};
     }
-    return *_impl;
+
+    auto chunks = d[bucket_name + ".chunks"];
+    auto files = d[bucket_name + ".files"];
+
+    if (auto const& opt = options.read_concern()) {
+        files.read_concern(*opt);
+        chunks.read_concern(*opt);
+    }
+
+    if (auto const& opt = options.read_preference()) {
+        files.read_preference(*opt);
+        chunks.read_preference(*opt);
+    }
+
+    if (auto const& opt = options.write_concern()) {
+        files.write_concern(*opt);
+        chunks.write_concern(*opt);
+    }
+
+    return v1::gridfs::bucket::internal::make(
+        v_noabi::to_v1(std::move(files)),
+        v_noabi::to_v1(std::move(chunks)),
+        std::move(bucket_name),
+        default_chunk_size);
 }
 
-database::impl& database::_get_impl() {
-    auto cthis = const_cast<database const*>(this);
-    return const_cast<database::impl&>(cthis->_get_impl());
+namespace {
+
+v_noabi::change_stream watch_impl(v1::database& db, bsoncxx::v_noabi::array::view pipeline, bson_t const* opts) {
+    return v1::change_stream::internal::make(
+        libmongoc::database_watch(
+            v1::database::internal::as_mongoc(check_moved_from(db)),
+            scoped_bson{BCON_NEW("pipeline", BCON_ARRAY(to_scoped_bson_view(pipeline).bson()))}.bson(),
+            opts));
+}
+
+} // namespace
+
+v_noabi::change_stream database::watch(v_noabi::options::change_stream const& options) {
+    scoped_bson doc;
+
+    doc += to_scoped_bson(v_noabi::options::change_stream::internal::to_document(options));
+
+    return watch_impl(_db, bsoncxx::v_noabi::array::view{}, doc.bson());
+}
+
+v_noabi::change_stream database::watch(client_session const& session, v_noabi::options::change_stream const& options) {
+    scoped_bson doc;
+
+    doc += to_scoped_bson(v_noabi::options::change_stream::internal::to_document(options));
+    v_noabi::client_session::internal::append_to(session, doc);
+
+    return watch_impl(_db, bsoncxx::v_noabi::array::view{}, doc.bson());
+}
+
+v_noabi::change_stream database::watch(v_noabi::pipeline const& pipe, v_noabi::options::change_stream const& options) {
+    scoped_bson doc;
+
+    doc += to_scoped_bson(v_noabi::options::change_stream::internal::to_document(options));
+
+    return watch_impl(_db, pipe.view_array(), doc.bson());
+}
+
+v_noabi::change_stream database::watch(
+    client_session const& session,
+    v_noabi::pipeline const& pipe,
+    v_noabi::options::change_stream const& options) {
+    scoped_bson doc;
+
+    doc += to_scoped_bson(v_noabi::options::change_stream::internal::to_document(options));
+    v_noabi::client_session::internal::append_to(session, doc);
+
+    return watch_impl(_db, pipe.view_array(), doc.bson());
+}
+
+mongoc_database_t* database::internal::as_mongoc(database& self) {
+    return v1::database::internal::as_mongoc(check_moved_from(self._db));
+}
+
+mongoc_client_t* database::internal::get_client(database& self) {
+    return v1::database::internal::get_client(check_moved_from(self._db));
 }
 
 } // namespace v_noabi

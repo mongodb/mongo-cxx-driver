@@ -16,7 +16,7 @@
 
 #include <type_traits>
 
-#include <bsoncxx/view_or_value-fwd.hpp>
+#include <bsoncxx/view_or_value-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/stdx/optional.hpp>
 
@@ -222,8 +222,8 @@ bool operator!=(Value const& lhs, view_or_value<View, Value> const& rhs) {
 
 namespace bsoncxx {
 
-using ::bsoncxx::v_noabi::operator==;
-using ::bsoncxx::v_noabi::operator!=;
+using v_noabi::operator==;
+using v_noabi::operator!=;
 
 } // namespace bsoncxx
 

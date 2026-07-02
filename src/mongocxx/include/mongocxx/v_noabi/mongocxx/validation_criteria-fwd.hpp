@@ -26,7 +26,7 @@ class validation_criteria;
 
 namespace mongocxx {
 
-using ::mongocxx::v_noabi::validation_criteria;
+using v_noabi::validation_criteria;
 
 } // namespace mongocxx
 

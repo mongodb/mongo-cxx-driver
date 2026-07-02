@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "mongocxx/test/client_helpers.hh"
+#include <mongocxx/test/v_noabi/client_helpers.hh>
 
 #include <fstream>
 #include <set>
@@ -124,16 +124,6 @@ bool check_if_skip_spec_test_impl(document::view test, std::string& reason) {
         reason.append(str.data(), str.size());
 
         return true;
-    }
-
-    {
-        auto const run_mongohouse_tests = std::getenv("RUN_MONGOHOUSE_TESTS");
-
-        if (run_mongohouse_tests && std::string(run_mongohouse_tests) == "ON") {
-            // mongohoused does not return `version` field in response to serverStatus.
-            // Exit early to run the test.
-            return false;
-        }
     }
 
     auto const server_version = test_util::get_server_version();
@@ -435,7 +425,7 @@ void run_operation_check_result(document::view op, make_op_runner_fn make_op_run
             FAIL("expected an error, got: " << bsoncxx::to_json(*actual_result));
         }
         INFO("expected error message " << op["result"]["errorContains"].get_string().value);
-        INFO("got error message" << error_msg);
+        INFO("got: " << error_msg);
         // Do a case insensitive check.
         auto error_contains = test_util::tolowercase(op["result"]["errorContains"].get_string().value);
         REQUIRE(test_util::tolowercase(error_msg).find(error_contains) < error_msg.length());

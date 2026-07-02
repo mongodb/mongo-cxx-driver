@@ -19,14 +19,7 @@ if ! command -v gpg >/dev/null; then
   echo "gpg is required to verify distribution tarball signature" 1>&2
 fi
 
-artifactory_creds=~/.secrets/artifactory-creds.txt
 garasign_creds=~/.secrets/garasign-creds.txt
-
-unset ARTIFACTORY_USER ARTIFACTORY_PASSWORD
-# shellcheck source=/dev/null
-. "${artifactory_creds:?}"
-: "${ARTIFACTORY_USER:?"missing ARTIFACTORY_USER in ${artifactory_creds:?}"}"
-: "${ARTIFACTORY_PASSWORD:?"missing ARTIFACTORY_PASSWORD in ${artifactory_creds:?}"}"
 
 unset GRS_CONFIG_USER1_USERNAME GRS_CONFIG_USER1_PASSWORD
 # shellcheck source=/dev/null
@@ -37,10 +30,8 @@ unset GRS_CONFIG_USER1_USERNAME GRS_CONFIG_USER1_PASSWORD
 dist_file="${1:?}"
 dist_file_signed="${dist_file:?}.asc"
 
-"${launcher:?}" login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
-
 # Ensure latest version of Garasign is being used.
-"${launcher:?}" pull artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-gpg
+"${launcher:?}" pull 901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/garasign-gpg
 
 plugin_commands=(
   gpg --yes -v --armor -o "${dist_file_signed:?}" --detach-sign "${dist_file:?}"
@@ -51,7 +42,7 @@ plugin_commands=(
   --rm \
   -v "$(pwd):$(pwd)" \
   -w "$(pwd)" \
-  artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-gpg
+  901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/garasign-gpg
 
 # Validate the signature file works as intended.
 (

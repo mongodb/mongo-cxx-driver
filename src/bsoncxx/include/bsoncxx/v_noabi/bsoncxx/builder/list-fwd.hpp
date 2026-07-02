@@ -29,9 +29,9 @@ class array;
 namespace bsoncxx {
 namespace builder {
 
-using ::bsoncxx::v_noabi::builder::array;
-using ::bsoncxx::v_noabi::builder::document;
-using ::bsoncxx::v_noabi::builder::list;
+using v_noabi::builder::array;
+using v_noabi::builder::document;
+using v_noabi::builder::list;
 
 } // namespace builder
 } // namespace bsoncxx

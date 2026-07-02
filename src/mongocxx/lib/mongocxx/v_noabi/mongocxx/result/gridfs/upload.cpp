@@ -12,27 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/builder/basic/array.hpp>
-
 #include <mongocxx/result/gridfs/upload.hpp>
+
+//
+
+#include <mongocxx/v1/gridfs/upload_result.hh>
+
+#include <utility>
+
+#include <bsoncxx/types/value.hpp>
 
 namespace mongocxx {
 namespace v_noabi {
 namespace result {
 namespace gridfs {
 
-upload::upload(bsoncxx::v_noabi::types::bson_value::view id)
-    : _id_owned(bsoncxx::v_noabi::builder::basic::make_array(id)), _id(_id_owned.view()[0].get_value()) {}
+upload::upload(v1::gridfs::upload_result opts)
+    : _id_owner{std::move(v1::gridfs::upload_result::internal::id(opts))}, _id{_id_owner} {}
 
-bsoncxx::v_noabi::types::bson_value::view const& upload::id() const {
-    return _id;
-}
-
-bool operator==(upload const& lhs, upload const& rhs) {
-    return lhs.id() == rhs.id();
-}
-bool operator!=(upload const& lhs, upload const& rhs) {
-    return !(lhs == rhs);
+upload::operator v1::gridfs::upload_result() const {
+    return v1::gridfs::upload_result::internal::make(bsoncxx::v_noabi::to_v1(_id_owner));
 }
 
 } // namespace gridfs

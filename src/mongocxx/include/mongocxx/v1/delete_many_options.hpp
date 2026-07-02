@@ -1,0 +1,171 @@
+// Copyright 2009-present MongoDB, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#pragma once
+
+#include <mongocxx/v1/delete_many_options-fwd.hpp> // IWYU pragma: export
+
+//
+
+#include <mongocxx/v1/detail/prelude.hpp>
+
+#include <bsoncxx/v1/document/value-fwd.hpp>
+#include <bsoncxx/v1/document/view-fwd.hpp>
+#include <bsoncxx/v1/types/value-fwd.hpp>
+#include <bsoncxx/v1/types/view-fwd.hpp>
+
+#include <mongocxx/v1/hint-fwd.hpp>
+#include <mongocxx/v1/read_concern-fwd.hpp>
+#include <mongocxx/v1/write_concern-fwd.hpp>
+
+#include <bsoncxx/v1/stdx/optional.hpp>
+
+#include <mongocxx/v1/config/export.hpp>
+
+namespace mongocxx {
+namespace v1 {
+
+///
+/// Options for a "deleteMany" operation.
+///
+/// Supported fields include:
+/// - `collation`
+/// - `hint`
+/// - `let`
+/// - `read_concern` ("readConcern")
+/// - `write_concern` ("writeConcern")
+/// - `comment`
+///
+/// @see
+/// - [Delete Methods (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/delete-methods/)
+///
+class delete_many_options {
+   private:
+    class impl;
+    void* _impl;
+
+   public:
+    ///
+    /// Destroy this object.
+    ///
+    /// @warning Invalidates all associated views.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() ~delete_many_options();
+
+    ///
+    /// Move constructor.
+    ///
+    /// @par Postconditions:
+    /// - `other` is in an assign-or-destroy-only state.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() delete_many_options(delete_many_options&& other) noexcept;
+
+    ///
+    /// Move assignment.
+    ///
+    /// @par Postconditions:
+    /// - `other` is in an assign-or-destroy-only state.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(delete_many_options&) operator=(delete_many_options&& other) noexcept;
+
+    ///
+    /// Copy construction.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() delete_many_options(delete_many_options const& other);
+
+    ///
+    /// Copy assignment.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(delete_many_options&) operator=(delete_many_options const& other);
+
+    ///
+    /// Default initialization.
+    ///
+    /// @par Postconditions:
+    /// - All supported fields are "unset" or zero-initialized.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL() delete_many_options();
+
+    ///
+    /// Set the "collation" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(delete_many_options&) collation(bsoncxx::v1::document::value v);
+
+    ///
+    /// Return the current "collation" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) collation() const;
+
+    ///
+    /// Set the "readConcern" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(delete_many_options&) read_concern(v1::read_concern v);
+
+    ///
+    /// Return the current "readConcern" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::read_concern>) read_concern() const;
+
+    ///
+    /// Set the "writeConcern" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(delete_many_options&) write_concern(v1::write_concern v);
+
+    ///
+    /// Return the current "writeConcern" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::write_concern>) write_concern() const;
+
+    ///
+    /// Set the "hint" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(delete_many_options&) hint(v1::hint v);
+
+    ///
+    /// Return the current "hint" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::hint>) hint() const;
+
+    ///
+    /// Set the "let" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(delete_many_options&) let(bsoncxx::v1::document::value v);
+
+    ///
+    /// Return the current "let" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> const) let() const;
+
+    ///
+    /// Set the "comment" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(delete_many_options&) comment(bsoncxx::v1::types::value v);
+
+    ///
+    /// Return the current "comment" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view> const) comment() const;
+
+    class internal;
+};
+
+} // namespace v1
+} // namespace mongocxx
+
+#include <mongocxx/v1/detail/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v1::delete_many_options.
+///

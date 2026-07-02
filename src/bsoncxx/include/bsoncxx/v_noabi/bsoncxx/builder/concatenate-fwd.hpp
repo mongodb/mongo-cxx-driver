@@ -28,8 +28,8 @@ struct concatenate_array;
 namespace bsoncxx {
 namespace builder {
 
-using ::bsoncxx::v_noabi::builder::concatenate_array;
-using ::bsoncxx::v_noabi::builder::concatenate_doc;
+using v_noabi::builder::concatenate_array;
+using v_noabi::builder::concatenate_doc;
 
 } // namespace builder
 } // namespace bsoncxx

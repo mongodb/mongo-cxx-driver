@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/exception/gridfs_exception-fwd.hpp>
+#include <mongocxx/exception/gridfs_exception-fwd.hpp> // IWYU pragma: export
 
 #include <mongocxx/exception/exception.hpp>
 

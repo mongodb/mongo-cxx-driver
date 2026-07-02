@@ -14,10 +14,10 @@
 
 #pragma once
 
-#include <string>
+#include <string> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <system_error>
 
-#include <mongocxx/exception/exception-fwd.hpp>
+#include <mongocxx/exception/exception-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/config/prelude.hpp>
 

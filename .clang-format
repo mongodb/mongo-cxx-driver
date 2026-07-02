@@ -8,6 +8,7 @@ AlignConsecutiveAssignments:
   AcrossEmptyLines: false
   AcrossComments:  false
   AlignCompound:   false
+  AlignFunctionDeclarations: false
   AlignFunctionPointers: false
   PadOperators:    true
 AlignConsecutiveBitFields:
@@ -15,6 +16,7 @@ AlignConsecutiveBitFields:
   AcrossEmptyLines: false
   AcrossComments:  false
   AlignCompound:   false
+  AlignFunctionDeclarations: false
   AlignFunctionPointers: false
   PadOperators:    false
 AlignConsecutiveDeclarations:
@@ -22,6 +24,7 @@ AlignConsecutiveDeclarations:
   AcrossEmptyLines: false
   AcrossComments:  false
   AlignCompound:   false
+  AlignFunctionDeclarations: false
   AlignFunctionPointers: false
   PadOperators:    false
 AlignConsecutiveMacros:
@@ -29,6 +32,7 @@ AlignConsecutiveMacros:
   AcrossEmptyLines: false
   AcrossComments:  false
   AlignCompound:   false
+  AlignFunctionDeclarations: false
   AlignFunctionPointers: false
   PadOperators:    false
 AlignConsecutiveShortCaseStatements:
@@ -42,6 +46,7 @@ AlignConsecutiveTableGenBreakingDAGArgColons:
   AcrossEmptyLines: false
   AcrossComments:  false
   AlignCompound:   false
+  AlignFunctionDeclarations: false
   AlignFunctionPointers: false
   PadOperators:    false
 AlignConsecutiveTableGenCondOperatorColons:
@@ -49,6 +54,7 @@ AlignConsecutiveTableGenCondOperatorColons:
   AcrossEmptyLines: false
   AcrossComments:  false
   AlignCompound:   false
+  AlignFunctionDeclarations: false
   AlignFunctionPointers: false
   PadOperators:    false
 AlignConsecutiveTableGenDefinitionColons:
@@ -56,6 +62,7 @@ AlignConsecutiveTableGenDefinitionColons:
   AcrossEmptyLines: false
   AcrossComments:  false
   AlignCompound:   false
+  AlignFunctionDeclarations: false
   AlignFunctionPointers: false
   PadOperators:    false
 AlignEscapedNewlines: Left
@@ -75,11 +82,13 @@ AllowShortFunctionsOnASingleLine: Empty
 AllowShortIfStatementsOnASingleLine: Never
 AllowShortLambdasOnASingleLine: All
 AllowShortLoopsOnASingleLine: false
+AllowShortNamespacesOnASingleLine: false
 AlwaysBreakAfterDefinitionReturnType: None
 AlwaysBreakBeforeMultilineStrings: true
 AttributeMacros:
   - BSONCXX_ABI_CDECL
   - BSONCXX_ABI_EXPORT
+  - BSONCXX_ABI_EXPORT_UNSTABLE
   - BSONCXX_ABI_NO_EXPORT
   - BSONCXX_DEPRECATED
   - BSONCXX_ENUM
@@ -87,10 +96,11 @@ AttributeMacros:
   - BSONCXX_PRIVATE_RETURNS
   - MONGOCXX_ABI_CDECL
   - MONGOCXX_ABI_EXPORT
+  - MONGOCXX_ABI_EXPORT_UNSTABLE
   - MONGOCXX_ABI_NO_EXPORT
   - MONGOCXX_DEPRECATED
 BinPackArguments: false
-BinPackParameters: false
+BinPackParameters: OnePerLine
 BitFieldColonSpacing: Both
 BraceWrapping:
   AfterCaseLabel:  false
@@ -121,6 +131,7 @@ BreakBeforeConceptDeclarations: Always
 BreakBeforeBraces: Attach
 BreakBeforeInlineASMColon: OnlyMultiline
 BreakBeforeTernaryOperators: true
+BreakBinaryOperations: Never
 BreakConstructorInitializers: BeforeColon
 BreakFunctionDefinitionParameters: false
 BreakInheritanceList: BeforeColon
@@ -161,31 +172,35 @@ IncludeCategories:
   - Regex: 'mongocxx/v1/.*\.hh' # v1 internal headers
     Priority: 27
   - Regex: 'bsoncxx/private/.*' # private headers
-    Priority: 60
-  - Regex: 'mongocxx/private/.*' # private headers
-    Priority: 61
-  - Regex: 'bsoncxx/config/prelude\.(hpp|hh)' # v_noabi preludes
-    Priority: 62
-  - Regex: 'mongocxx/config/prelude\.(hpp|hh)' # v_noabi preludes
-    Priority: 63
-  - Regex: 'bsoncxx/test/.*' # test headers
     Priority: 70
-  - Regex: 'mongocxx/test/.*' # test headers
+  - Regex: 'mongocxx/private/.*' # private headers
     Priority: 71
-  - Regex: '<[[:alnum:]_.]+>' # system headers
+  - Regex: 'bsoncxx/config/prelude\.(hpp|hh)' # v_noabi preludes
+    Priority: 72
+  - Regex: 'mongocxx/config/prelude\.(hpp|hh)' # v_noabi preludes
+    Priority: 73
+  - Regex: 'bsoncxx/test/(v.*|private)' # library test headers
     Priority: 30
-  - Regex: 'bsoncxx/.*(-|\/)fwd\.(hpp|hh)' # all remaining forward headers
+  - Regex: 'mongocxx/test/(v.*|private)' # library test headers
+    Priority: 31
+  - Regex: 'bsoncxx/test/.*' # test headers
+    Priority: 84
+  - Regex: 'mongocxx/test/.*' # test headers
+    Priority: 85
+  - Regex: '<[[:alnum:]_.]+>' # system headers
     Priority: 40
-  - Regex: 'mongocxx/.*(-|\/)fwd\.(hpp|hh)' # all remaining forward headers
-    Priority: 41
-  - Regex: 'bsoncxx/.*\.hpp' # all remaining public headers
+  - Regex: 'bsoncxx/.*(-|\/)fwd\.(hpp|hh)' # all remaining forward headers
     Priority: 50
-  - Regex: 'mongocxx/.*\.hpp' # all remaining public headers
+  - Regex: 'mongocxx/.*(-|\/)fwd\.(hpp|hh)' # all remaining forward headers
     Priority: 51
+  - Regex: 'bsoncxx/.*\.hpp' # all remaining public headers
+    Priority: 60
+  - Regex: 'mongocxx/.*\.hpp' # all remaining public headers
+    Priority: 61
   - Regex: 'bsoncxx/.*\.hh' # all remaining internal headers
-    Priority: 52
+    Priority: 62
   - Regex: 'mongocxx/.*\.hh' # all remaining internal headers
-    Priority: 53
+    Priority: 63
   - Regex: '.*' # all other headers (third party)
     Priority: 90
 IncludeIsMainRegex: '([-_](test|unittest))?$'
@@ -193,6 +208,7 @@ IncludeIsMainSourceRegex: ''
 IndentAccessModifiers: false
 IndentCaseBlocks: false
 IndentCaseLabels: true
+IndentExportBlock: true
 IndentExternBlock: AfterExternBlock
 IndentGotoLabels: true
 IndentPPDirectives: None
@@ -215,6 +231,7 @@ KeepEmptyLines:
   AtEndOfFile:     false
   AtStartOfBlock:  false
   AtStartOfFile:   false
+KeepFormFeed:    false
 LambdaBodyIndentation: Signature
 LineEnding:      DeriveLF
 MacroBlockBegin: ''
@@ -230,6 +247,7 @@ ObjCSpaceBeforeProtocolList: true
 PackConstructorInitializers: NextLine
 PenaltyBreakAssignment: 2
 PenaltyBreakBeforeFirstCallParameter: 1
+PenaltyBreakBeforeMemberAccess: 150
 PenaltyBreakComment: 300
 PenaltyBreakFirstLessLess: 120
 PenaltyBreakOpenParenthesis: 0
@@ -244,8 +262,9 @@ PPIndentWidth:   -1
 QualifierAlignment: Right
 RawStringFormats: []
 ReferenceAlignment: Pointer
-ReflowComments:  true
+ReflowComments:  Always
 RemoveBracesLLVM: false
+RemoveEmptyLinesInUnwrappedLines: false
 RemoveParentheses: Leave
 RemoveSemicolon: false
 RequiresClausePosition: OwnLine
@@ -313,11 +332,14 @@ TabWidth:        8
 TypenameMacros:
   - BSONCXX_ABI_EXPORT_CDECL
   - BSONCXX_ABI_EXPORT_CDECL_TESTING
+  - BSONCXX_ABI_EXPORT_CDECL_UNSTABLE
   - BSONCXX_ABI_EXPORT_TESTING
   - MONGOCXX_ABI_EXPORT_CDECL
   - MONGOCXX_ABI_EXPORT_CDECL_TESTING
+  - MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE
   - MONGOCXX_ABI_EXPORT_TESTING
 UseTab:          Never
 VerilogBreakBetweenInstancePorts: true
 WhitespaceSensitiveMacros: []
+WrapNamespaceBodyWithEmptyLines: Leave
 ...

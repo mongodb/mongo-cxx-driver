@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <bsoncxx/v1/types/view-fwd.hpp> // IWYU pragma: export
+
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
@@ -24,6 +26,14 @@ namespace bson_value {
 class view;
 
 } // namespace bson_value
+
+///
+/// Equivalent to @ref bsoncxx::v_noabi::types::bson_value::view.
+///
+/// To support incremental migration to @ref bsoncxx::v1::types::view.
+///
+using view = v_noabi::types::bson_value::view;
+
 } // namespace types
 } // namespace v_noabi
 } // namespace bsoncxx
@@ -32,9 +42,12 @@ namespace bsoncxx {
 namespace types {
 namespace bson_value {
 
-using ::bsoncxx::v_noabi::types::bson_value::view;
+using v_noabi::types::bson_value::view;
 
 } // namespace bson_value
+
+using v_noabi::types::view;
+
 } // namespace types
 } // namespace bsoncxx
 
@@ -43,4 +56,9 @@ using ::bsoncxx::v_noabi::types::bson_value::view;
 ///
 /// @file
 /// Declares @ref bsoncxx::v_noabi::types::bson_value::view.
+///
+/// @deprecated Use @ref bsoncxx/types/view-fwd.hpp instead (renamed).
+///
+/// @par Includes
+/// - @ref bsoncxx/v1/types/view-fwd.hpp
 ///

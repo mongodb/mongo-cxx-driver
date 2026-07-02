@@ -16,8 +16,8 @@
 
 #include <bsoncxx/array/value.hpp>
 #include <bsoncxx/array/view.hpp>
-#include <bsoncxx/document/view.hpp>
-#include <bsoncxx/view_or_value.hpp>
+#include <bsoncxx/document/view.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <bsoncxx/view_or_value.hpp> // IWYU pragma: export
 
 #include <bsoncxx/config/prelude.hpp>
 
@@ -37,7 +37,7 @@ using view_or_value = v_noabi::view_or_value<view, value>;
 namespace bsoncxx {
 namespace array {
 
-using ::bsoncxx::v_noabi::array::view_or_value;
+using v_noabi::array::view_or_value;
 
 } // namespace array
 } // namespace bsoncxx

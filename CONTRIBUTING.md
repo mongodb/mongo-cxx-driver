@@ -1,6 +1,6 @@
 # Contributing Guidelines
 
-Follow the [MongoDB C++ Driver Coding Guidelines](https://github.com/mongodb/mongo-cxx-driver/etc/coding_guidelines.md), ensure files are formatted properly, and follow guidelines for writing PR titles and commit messages.
+Follow the [MongoDB C++ Driver Coding Guidelines](/etc/coding_guidelines.md), ensure files are formatted properly, and follow guidelines for writing PR titles and commit messages.
 
 All contributions must be made via a GitHub pull request (PR).
 
@@ -35,17 +35,8 @@ Refer to Chris Beams' guidelines for
 
 ## Formatting
 
-Format files with [ClangFormat](https://clang.llvm.org/docs/ClangFormat.html) using the [etc/clang_format.py](https://github.com/mongodb/mongo-cxx-driver/blob/master/etc/clang_format.py) script.
-
-The script must be run in the project root directory to ensure the [.clang-format](https://github.com/mongodb/mongo-cxx-driver/blob/master/.clang-format) configuration file is used properly.
+Format files with [ClangFormat](https://clang.llvm.org/docs/ClangFormat.html) by running:
 
 ```bash
-# Allow the script to download the correct ClangFormat release version.
-python2 ./etc/clang-format.py format
-
-# Provide a path to an existing ClangFormat binary to use instead.
-MONGO_CLANG_FORMAT="path/to/clang-format" python2 ./etc/clang-format.py format
+uv run --frozen etc/format.py
 ```
-
-> [!NOTE]
-> ClangFormat results may differ across release versions. When using a preinstalled ClangFormat binary, its version must be consistent with the `CLANG_FORMAT_VERSION` variable defined in the `etc/clang_format.py` script.

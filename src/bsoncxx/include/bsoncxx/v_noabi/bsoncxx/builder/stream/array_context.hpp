@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <bsoncxx/builder/stream/array_context-fwd.hpp>
+#include <bsoncxx/builder/stream/array_context-fwd.hpp> // IWYU pragma: export
 #include <bsoncxx/builder/stream/key_context-fwd.hpp>
 #include <bsoncxx/builder/stream/single_context-fwd.hpp>
 
@@ -104,10 +104,7 @@ class array_context {
     /// @return A value type which holds the complete bson document.
     ///
     template <typename T>
-    detail::requires_t<
-        bsoncxx::v_noabi::array::value,
-        std::is_same<base, closed_context>,
-        detail::is_alike<T, finalize_type>>
+    detail::requires_t<v_noabi::array::value, std::is_same<base, closed_context>, detail::is_alike<T, finalize_type>>
     // VS2015U1 can't resolve the name.
     operator<<(T&&) {
         return _core->extract_array();

@@ -16,7 +16,7 @@
 
 #include <bsoncxx/v1/config/export.hpp>
 
-#include <memory>
+#include <memory> // IWYU pragma: export
 
 #pragma push_macro("BSONCXX_DETAIL_USE_STD_MAKE_UNIQUE")
 #undef BSONCXX_DETAIL_USE_STD_MAKE_UNIQUE

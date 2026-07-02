@@ -27,7 +27,7 @@ class view_or_value;
 
 namespace bsoncxx {
 
-using ::bsoncxx::v_noabi::view_or_value;
+using v_noabi::view_or_value;
 
 } // namespace bsoncxx
 

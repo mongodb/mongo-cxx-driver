@@ -14,54 +14,22 @@
 
 #include <mongocxx/options/range.hpp>
 
+//
+
+#include <mongocxx/v1/range_options.hh>
+
+#include <utility>
+
 namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-range& range::min(bsoncxx::v_noabi::types::bson_value::view_or_value value) {
-    _min = std::move(value);
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const& range::min() const {
-    return _min;
-}
-
-range& range::max(bsoncxx::v_noabi::types::bson_value::view_or_value value) {
-    _max = std::move(value);
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const& range::max() const {
-    return _max;
-}
-
-range& range::sparsity(std::int64_t value) {
-    _sparsity = value;
-    return *this;
-}
-
-range& range::trim_factor(std::int32_t value) {
-    _trim_factor = value;
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<std::int64_t> const& range::sparsity() const {
-    return _sparsity;
-}
-
-bsoncxx::v_noabi::stdx::optional<std::int32_t> const& range::trim_factor() const {
-    return _trim_factor;
-}
-
-range& range::precision(std::int32_t value) {
-    _precision = value;
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<std::int32_t> const& range::precision() const {
-    return _precision;
-}
+range::range(v1::range_options opts)
+    : _min{std::move(v1::range_options::internal::min(opts))},
+      _max{std::move(v1::range_options::internal::max(opts))},
+      _sparsity{opts.sparsity()},
+      _trim_factor{opts.trim_factor()},
+      _precision{opts.precision()} {}
 
 } // namespace options
 } // namespace v_noabi

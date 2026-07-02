@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/client-fwd.hpp> // IWYU pragma: export
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -26,7 +28,7 @@ class client;
 
 namespace mongocxx {
 
-using ::mongocxx::v_noabi::client;
+using v_noabi::client;
 
 } // namespace mongocxx
 
@@ -35,4 +37,7 @@ using ::mongocxx::v_noabi::client;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::client.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/client-fwd.hpp
 ///

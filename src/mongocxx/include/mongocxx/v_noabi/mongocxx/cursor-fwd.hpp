@@ -26,7 +26,7 @@ class cursor;
 
 namespace mongocxx {
 
-using ::mongocxx::v_noabi::cursor;
+using v_noabi::cursor;
 
 } // namespace mongocxx
 

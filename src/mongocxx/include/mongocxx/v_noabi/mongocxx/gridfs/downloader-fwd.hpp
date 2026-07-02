@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/gridfs/downloader-fwd.hpp> // IWYU pragma: export
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -31,9 +33,9 @@ class downloader;
 namespace mongocxx {
 namespace gridfs {
 
-using ::mongocxx::v_noabi::gridfs::chunks_and_bytes_offset;
+using v_noabi::gridfs::chunks_and_bytes_offset;
 
-using ::mongocxx::v_noabi::gridfs::downloader;
+using v_noabi::gridfs::downloader;
 
 } // namespace gridfs
 } // namespace mongocxx
@@ -43,4 +45,7 @@ using ::mongocxx::v_noabi::gridfs::downloader;
 ///
 /// @file
 /// Declares utilities to download GridFS files.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/gridfs/downloader-fwd.hpp
 ///

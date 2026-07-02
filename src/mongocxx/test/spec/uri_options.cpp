@@ -110,7 +110,6 @@ static void assert_elements_equal(bsoncxx::document::element expected_option, bs
 }
 
 TEST_CASE("uri_options::test_srv_options", "[uri_options]") {
-    mongocxx::instance::current();
     auto test_doc = _doc_from_file("/srv-options.json");
 
     auto tests = test_doc["tests"].get_array().value;

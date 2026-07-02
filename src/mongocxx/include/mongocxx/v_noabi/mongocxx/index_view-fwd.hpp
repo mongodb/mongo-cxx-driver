@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/indexes-fwd.hpp> // IWYU pragma: export
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -26,7 +28,7 @@ class index_view;
 
 namespace mongocxx {
 
-using ::mongocxx::v_noabi::index_view;
+using v_noabi::index_view;
 
 } // namespace mongocxx
 
@@ -35,4 +37,7 @@ using ::mongocxx::v_noabi::index_view;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::index_view.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/indexes-fwd.hpp
 ///

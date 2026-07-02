@@ -15,7 +15,7 @@
 #pragma once
 
 #include <string>
-#include <utility>
+#include <utility> // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <bsoncxx/stdx/string_view.hpp>
 
@@ -56,7 +56,7 @@ std::basic_string<CharT, Traits, Allocator> to_string(
 namespace bsoncxx {
 namespace string {
 
-using ::bsoncxx::v_noabi::string::to_string;
+using v_noabi::string::to_string;
 
 } // namespace string
 } // namespace bsoncxx

@@ -14,9 +14,9 @@
 
 #pragma once
 
-#include <mongocxx/exception/authentication_exception-fwd.hpp>
+#include <mongocxx/exception/authentication_exception-fwd.hpp> // IWYU pragma: export
 
-#include <bsoncxx/document/value.hpp>
+#include <bsoncxx/document/value.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <mongocxx/exception/operation_exception.hpp>
 

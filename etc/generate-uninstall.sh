@@ -15,50 +15,49 @@
 # limitations under the License.
 
 print_usage() {
-   echo
-   echo "Usage:"
-   echo
-   echo "${0} install-manifest install-prefix > uninstall.sh"
-   echo
-   echo "Note: program prints to standard out; redirect to desired location."
-   echo
+  echo
+  echo "Usage:"
+  echo
+  echo "${0} install-manifest install-prefix > uninstall.sh"
+  echo
+  echo "Note: program prints to standard out; redirect to desired location."
+  echo
 } >&2
 
 manifest="${1}"
 
 if [ ! -e "${manifest}" ]; then
-   echo "***** Specify location of installation manifest as first parameter" >&2
-   print_usage
-   exit 1
+  echo "***** Specify location of installation manifest as first parameter" >&2
+  print_usage
+  exit 1
 fi
 
 prefix="${2}"
 
 if [ -z "${prefix}" ]; then
-   echo "***** Specify installation prefix as second parameter" >&2
-   print_usage
-   exit 1
+  echo "***** Specify installation prefix as second parameter" >&2
+  print_usage
+  exit 1
 fi
 
 if [ "${prefix}" = "${prefix#/}" ]; then
-   echo "***** Installation prefix must refer to an absolute path" >&2
-   print_usage
-   exit 1
+  echo "***** Installation prefix must refer to an absolute path" >&2
+  print_usage
+  exit 1
 fi
 
 if [ "${prefix}" = "${prefix%/}" ]; then
-   # Trailing slash was omitted from prefix, so add it here
-   prefix="${prefix}/"
+  # Trailing slash was omitted from prefix, so add it here
+  prefix="${prefix}/"
 fi
 
 # If a DESTDIR is specified, ensure it ends with a trailing slash.
 if [ "${DESTDIR}" ]; then
-   if [ "${DESTDIR}" = "${DESTDIR%/}" ]; then
-      # Trailing slash was omitted, so add it here
-      DESTDIR="${DESTDIR}/"
-   fi
+  if [ "${DESTDIR}" = "${DESTDIR%/}" ]; then
+    # Trailing slash was omitted, so add it here
+    DESTDIR="${DESTDIR}/"
+  fi
 fi
-
 
 printf "#!/usr/bin/env bash\n"
 printf "#\n"
@@ -84,25 +83,25 @@ printf "\n"
 
 dirs=
 while IFS= read -r line || [ -n "${line}" ]; do
-   suffix="${line#${prefix}}"
-   dir="$(dirname "${suffix}")"
-   while [ "${dir}" != "." ]; do
-      dirs="${dirs}${dir}\n"
-      dir="$(dirname "${dir}")"
-   done
-   printf "printf \"Removing file \\\"%s\\\"\"\n" "${suffix}"
-   printf "(rm -f \"%s\" && printf \"\\\n\") || printf \" ... not removed\\\n\"\n" "${suffix}"
-done < "${manifest}"
+  suffix="${line#${prefix}}"
+  dir="$(dirname "${suffix}")"
+  while [ "${dir}" != "." ]; do
+    dirs="${dirs}${dir}\n"
+    dir="$(dirname "${dir}")"
+  done
+  printf "printf \"Removing file \\\"%s\\\"\"\n" "${suffix}"
+  printf "(rm -f \"%s\" && printf \"\\\n\") || printf \" ... not removed\\\n\"\n" "${suffix}"
+done <"${manifest}"
 
 printf "printf \"Removing file \\\"share/mongo-cxx-driver/uninstall.sh\\\"\"\n"
 printf "(rm -f \"share/mongo-cxx-driver/uninstall.sh\" && printf \"\\\n\") || printf \" ... not removed\\\n\"\n"
 dirs="${dirs}share/mongo-cxx-driver\nshare\n"
 
 printf "${dirs}" | sort -ru | while IFS= read -r dir; do
-   if [ -n "${dir}" ]; then
-      printf "printf \"Removing directory \\\"%s\\\"\"\n" "${dir}"
-      printf "(rmdir \"%s\" 2>/dev/null && printf \"\\\n\") || printf \" ... not removed (probably not empty)\\\n\"\n" "${dir}"
-   fi
+  if [ -n "${dir}" ]; then
+    printf "printf \"Removing directory \\\"%s\\\"\"\n" "${dir}"
+    printf "(rmdir \"%s\" 2>/dev/null && printf \"\\\n\") || printf \" ... not removed (probably not empty)\\\n\"\n" "${dir}"
+  fi
 done
 
 printf "cd ..\n"

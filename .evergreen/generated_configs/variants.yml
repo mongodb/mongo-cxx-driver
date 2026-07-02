@@ -68,10 +68,10 @@ buildvariants:
     display_name: macro-guards-matrix
     tasks:
       - name: .macro-guards
-  - name: mongohouse
-    display_name: Mongohouse
+  - name: oidc
+    display_name: OIDC
     tasks:
-      - name: .mongohouse
+      - name: test-oidc-task-group
   - name: packaging
     display_name: Linux Distro Packaging
     tasks:

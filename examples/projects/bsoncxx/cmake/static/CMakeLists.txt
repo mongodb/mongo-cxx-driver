@@ -15,7 +15,7 @@
 # Demonstrates how to use the CMake 'find_package' mechanism to locate build against the libbsoncxx
 # static library.
 
-cmake_minimum_required(VERSION 3.15...4.0)
+cmake_minimum_required(VERSION 3.15...4.99)
 
 project(HELLO_WORLD LANGUAGES C CXX)
 

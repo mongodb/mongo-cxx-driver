@@ -16,12 +16,12 @@
 
 #include <string>
 
-#include <bsoncxx/json-fwd.hpp>
+#include <bsoncxx/json-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
-#include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/stdx/optional.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <bsoncxx/config/prelude.hpp>
 
@@ -50,10 +50,10 @@ enum class ExtendedJsonMode : std::uint8_t {
 ///
 /// @{
 
-BSONCXX_ABI_EXPORT_CDECL(std::string)
+BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(std::string)
 to_json(document::view view, ExtendedJsonMode mode = ExtendedJsonMode::k_legacy);
 
-BSONCXX_ABI_EXPORT_CDECL(std::string)
+BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(std::string)
 to_json(array::view view, ExtendedJsonMode mode = ExtendedJsonMode::k_legacy);
 
 /// @}
@@ -68,7 +68,7 @@ to_json(array::view view, ExtendedJsonMode mode = ExtendedJsonMode::k_legacy);
 ///
 /// @throws bsoncxx::v_noabi::exception with error details if the conversion failed.
 ///
-BSONCXX_ABI_EXPORT_CDECL(document::value) from_json(stdx::string_view json);
+BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(document::value) from_json(stdx::string_view json);
 
 ///
 /// Constructs a new document::value from the provided JSON text. This is the UDL version of
@@ -82,25 +82,17 @@ BSONCXX_ABI_EXPORT_CDECL(document::value) from_json(stdx::string_view json);
 ///
 /// @throws bsoncxx::v_noabi::exception with error details if the conversion failed.
 ///
-#if defined(__GNUC__) && (__GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ <= 8)) && !defined(__clang__)
-BSONCXX_ABI_EXPORT_CDECL(document::value) operator"" _bson(char const* json, size_t len);
-#else
-BSONCXX_ABI_EXPORT_CDECL(document::value) operator""_bson(char const* json, size_t len);
-#endif // GCC <= 4.8
+BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(document::value) operator""_bson(char const* json, size_t len);
 
 } // namespace v_noabi
 } // namespace bsoncxx
 
 namespace bsoncxx {
 
-using ::bsoncxx::v_noabi::from_json;
-using ::bsoncxx::v_noabi::to_json;
+using v_noabi::from_json;
+using v_noabi::to_json;
 
-#if defined(__GNUC__) && (__GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ <= 8)) && !defined(__clang__)
-using ::bsoncxx::v_noabi::operator"" _bson;
-#else
-using ::bsoncxx::v_noabi::operator""_bson;
-#endif // GCC <= 4.8
+using v_noabi::operator""_bson;
 
 } // namespace bsoncxx
 

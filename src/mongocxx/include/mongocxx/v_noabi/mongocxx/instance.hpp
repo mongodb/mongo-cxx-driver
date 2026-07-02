@@ -14,9 +14,14 @@
 
 #pragma once
 
+#include <mongocxx/instance-fwd.hpp> // IWYU pragma: export
+
+//
+
+#include <mongocxx/v1/instance.hpp> // IWYU pragma: export
+
 #include <memory>
 
-#include <mongocxx/instance-fwd.hpp>
 #include <mongocxx/logger-fwd.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -24,65 +29,13 @@
 namespace mongocxx {
 namespace v_noabi {
 
-///
-/// An instance of the MongoDB driver.
-///
-/// The constructor and destructor initialize and shut down the driver, respectively. Therefore, an
-/// instance must be created before using the driver and must remain alive until all other mongocxx
-/// objects are destroyed. After the instance destructor runs, the driver may not be used.
-///
-/// Exactly one instance must be created in a given program. Not constructing an instance or
-/// constructing more than one instance in a program are errors, even if the multiple instances have
-/// non-overlapping lifetimes.
-///
-/// The following is a correct example of using an instance in a program, as the instance is kept
-/// alive for as long as the driver is in use:
-///
-/// \code
-///
-/// #include <mongocxx/client.hpp>
-/// #include <mongocxx/instance.hpp>
-/// #include <mongocxx/uri.hpp>
-///
-/// int main() {
-///     mongocxx::v_noabi::instance inst{};
-///     mongocxx::v_noabi::client conn{mongocxx::v_noabi::uri{}};
-///     ...
-/// }
-///
-/// \endcode
-///
-/// An example of using instance incorrectly might look as follows:
-///
-/// \code
-///
-/// #include <mongocxx/client.hpp>
-/// #include <mongocxx/instance.hpp>
-/// #include <mongocxx/uri.hpp>
-///
-/// client get_client() {
-///     mongocxx::v_noabi::instance inst{};
-///     mongocxx::v_noabi::client conn{mongocxx::v_noabi::uri{}};
-///
-///     return client;
-/// } // ERROR! The instance is no longer alive after this function returns.
-///
-/// int main() {
-///     mongocxx::v_noabi::client conn = get_client();
-///     ...
-/// }
-///
-/// \endcode
-///
-/// For examples of more advanced usage of instance, see
-/// `examples/mongocxx/instance_management.cpp`.
-///
+/// @copydoc mongocxx::v1::instance
 class instance {
    public:
     ///
     /// Creates an instance of the driver.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() instance();
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() instance();
 
     ///
     /// Creates an instance of the driver with a user provided log handler.
@@ -90,42 +43,43 @@ class instance {
     ///
     /// @throws mongocxx::v_noabi::logic_error if an instance already exists.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() instance(std::unique_ptr<logger> logger);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() instance(std::unique_ptr<v_noabi::logger> logger);
 
     ///
     /// Move constructs an instance of the driver.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() instance(instance&&) noexcept;
+    /// @par Postconditions:
+    /// - `other` is in an assign-or-destroy-only state.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() instance(instance&& other) noexcept;
 
     ///
     /// Move assigns an instance of the driver.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(instance&) operator=(instance&&) noexcept;
+    /// @par Postconditions:
+    /// - `other` is in an assign-or-destroy-only state.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(instance&) operator=(instance&& other) noexcept;
 
     ///
     /// Destroys an instance of the driver.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() ~instance();
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() ~instance();
 
+    ///
+    /// This class is not copyable.
+    ///
     instance(instance const&) = delete;
+
+    ///
+    /// This class is not copyable.
+    ///
     instance& operator=(instance const&) = delete;
 
     ///
-    /// Returns the current unique instance of the driver. If an instance was explicitly created,
-    /// that will be returned. If no instance has yet been created, a default instance will be
-    /// constructed and returned. If a default instance is constructed, its destruction will be
-    /// sequenced according to the rules for the destruction of static local variables at program
-    /// exit (see http://en.cppreference.com/w/cpp/utility/program/exit).
+    /// @warning For internal use only!
     ///
-    /// Note that, if you need to configure the instance in any way (e.g. with a logger), you cannot
-    /// use this method to cause the instance to be constructed. You must explicitly create an
-    /// properly configured instance object. You can, however, use this method to obtain that
-    /// configured instance object.
-    ///
-    /// @note This method is intended primarily for test authors, where managing the lifetime of the
-    /// instance w.r.t. the test framework can be problematic.
-    ///
-    static MONGOCXX_ABI_EXPORT_CDECL(instance&) current();
+    static MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(instance&) current();
 
    private:
     class impl;
@@ -140,4 +94,7 @@ class instance {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::instance.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/instance.hpp
 ///

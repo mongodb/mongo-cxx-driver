@@ -30,7 +30,7 @@ class accessor;
 namespace bsoncxx {
 namespace vector {
 
-using ::bsoncxx::v_noabi::vector::accessor;
+using v_noabi::vector::accessor;
 
 } // namespace vector
 } // namespace bsoncxx

@@ -1,17 +1,14 @@
-from config_generator.components.funcs.install_c_driver import InstallCDriver
-from config_generator.components.funcs.install_uv import InstallUV
-from config_generator.components.funcs.setup import Setup
-
-from config_generator.etc.distros import compiler_to_vars, find_small_distro
-from config_generator.etc.function import Function
-from config_generator.etc.utils import bash_exec
+from typing import Mapping
 
 from shrub.v3.evg_build_variant import BuildVariant
 from shrub.v3.evg_command import EvgCommandType
 from shrub.v3.evg_task import EvgTask, EvgTaskRef
 
-from typing import Mapping
-
+from config_generator.components.funcs.install_c_driver import InstallCDriver
+from config_generator.components.funcs.setup import Setup
+from config_generator.etc.distros import compiler_to_vars, find_large_distro
+from config_generator.etc.function import Function
+from config_generator.etc.utils import bash_exec
 
 TAG = 'clang-tidy'
 
@@ -25,7 +22,6 @@ class ClangTidy(Function):
             'cc_compiler',
             'cxx_compiler',
             'distro_id',
-            'UV_INSTALL_DIR',
         ],
         script='etc/run-clang-tidy.sh',
     )
@@ -44,8 +40,8 @@ def functions():
 
 
 def tasks():
-    distro_name = 'rhel80'
-    distro = find_small_distro(distro_name)
+    distro_name = 'rhel9-latest'
+    distro = find_large_distro(distro_name)
 
     return [
         EvgTask(
@@ -54,7 +50,6 @@ def tasks():
             run_on=distro.name,
             commands=[
                 Setup.call(),
-                InstallUV.call(),
                 InstallCDriver.call(compiler='clang'),
                 ClangTidy.call(compiler='clang'),
             ],

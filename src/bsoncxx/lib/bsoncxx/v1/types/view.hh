@@ -1,0 +1,42 @@
+// Copyright 2009-present MongoDB, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#include <bsoncxx/v1/types/view.hpp> // IWYU pragma: export
+
+//
+
+#include <bsoncxx/v1/stdx/optional.hpp>
+
+#include <cstdint>
+
+#include <bsoncxx/private/bson.hh>
+#include <bsoncxx/private/export.hh>
+
+namespace bsoncxx {
+namespace v1 {
+namespace types {
+
+class view::internal {
+   public:
+    static view make(bson_value_t const& v);
+
+    static v1::stdx::optional<view>
+    make(std::uint8_t const* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen);
+
+    static BSONCXX_ABI_EXPORT_CDECL_TESTING(void) type_id(view& v, v1::types::id id);
+};
+
+} // namespace types
+} // namespace v1
+} // namespace bsoncxx

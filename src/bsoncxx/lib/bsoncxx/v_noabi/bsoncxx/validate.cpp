@@ -93,11 +93,11 @@ validate(std::uint8_t const* data, std::size_t length, validator const& validato
         if (invalid_offset) {
             *invalid_offset = 0u;
         }
-        return bsoncxx::v_noabi::stdx::nullopt;
+        return v_noabi::stdx::nullopt;
     }
 
     if (!::bson_validate(&bson, flags, invalid_offset)) {
-        return bsoncxx::v_noabi::stdx::nullopt;
+        return v_noabi::stdx::nullopt;
     }
 
     return document::view{data, length};

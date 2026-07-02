@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <bsoncxx/v1/config/export.hpp>
+#include <bsoncxx/v1/config/export.hpp> // IWYU pragma: export
 
 // The BSONCXX_TESTING macro is intended to be used for exporting symbols for testing which are not
 // normally exported as part of the bsoncxx library.  We currently use this workaround in lieu of

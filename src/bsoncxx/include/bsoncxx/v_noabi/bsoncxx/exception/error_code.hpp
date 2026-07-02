@@ -14,10 +14,14 @@
 
 #pragma once
 
+#include <bsoncxx/exception/error_code-fwd.hpp> // IWYU pragma: export
+
+//
+
+#include <bsoncxx/v1/exception.hpp> // IWYU pragma: export
+
 #include <cstdint>
 #include <system_error>
-
-#include <bsoncxx/exception/error_code-fwd.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
 
@@ -160,7 +164,7 @@ enum class error_code : std::int32_t {
 ///
 /// @return The bsoncxx error_category
 ///
-BSONCXX_ABI_EXPORT_CDECL(std::error_category const&) error_category();
+BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(std::error_category const&) error_category();
 
 ///
 /// Translate a bsoncxx::v_noabi::error_code into a std::error_code.
@@ -177,8 +181,8 @@ inline std::error_code make_error_code(error_code error) {
 
 namespace bsoncxx {
 
-using ::bsoncxx::v_noabi::error_category;
-using ::bsoncxx::v_noabi::make_error_code;
+using v_noabi::error_category;
+using v_noabi::make_error_code;
 
 } // namespace bsoncxx
 
@@ -186,14 +190,15 @@ using ::bsoncxx::v_noabi::make_error_code;
 
 namespace std {
 
-// @cond DOXYGEN_DISABLE
 template <>
 struct is_error_code_enum<bsoncxx::v_noabi::error_code> : public true_type {};
-// @endcond
 
 } // namespace std
 
 ///
 /// @file
 /// Provides @ref bsoncxx::v_noabi::error_code.
+///
+/// @par Includes
+/// - @ref bsoncxx/v1/exception.hpp
 ///

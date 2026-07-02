@@ -14,9 +14,9 @@
 
 #pragma once
 
-#include "entity.hh"
-
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
+
+#include <mongocxx/test/spec/unified_tests/entity.hh>
 
 namespace mongocxx {
 namespace assert {

@@ -14,19 +14,21 @@
 
 #pragma once
 
+#include <bsoncxx/v1/exception-fwd.hpp> // IWYU pragma: export
+
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
 namespace v_noabi {
 
-class BSONCXX_ABI_EXPORT exception;
+class BSONCXX_ABI_EXPORT_UNSTABLE exception;
 
 } // namespace v_noabi
 } // namespace bsoncxx
 
 namespace bsoncxx {
 
-using ::bsoncxx::v_noabi::exception;
+using v_noabi::exception;
 
 } // namespace bsoncxx
 
@@ -35,4 +37,7 @@ using ::bsoncxx::v_noabi::exception;
 ///
 /// @file
 /// Declares @ref bsoncxx::v_noabi::exception.
+///
+/// @par Includes
+/// - @ref bsoncxx/v1/exception-fwd.hpp
 ///

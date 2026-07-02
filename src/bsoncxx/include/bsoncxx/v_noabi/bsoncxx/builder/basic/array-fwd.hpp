@@ -30,7 +30,7 @@ namespace bsoncxx {
 namespace builder {
 namespace basic {
 
-using ::bsoncxx::v_noabi::builder::basic::array;
+using v_noabi::builder::basic::array;
 
 } // namespace basic
 } // namespace builder

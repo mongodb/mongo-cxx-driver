@@ -2,30 +2,19 @@
 
 set -o errexit # Exit the script with error if any of the commands fail
 
+BSONCXX_BASENAME="bsoncxx1"
+MONGOCXX_BASENAME="mongocxx1"
+
 BUILD_DIR="$(pwd)/build"
 INSTALL_DIR="$BUILD_DIR/install"
 
-if [[ "${distro_id:?}" == rhel* ]]; then
-  LIB_DIR="lib64"
-else
-  LIB_DIR="lib"
-fi
-
-touch "$INSTALL_DIR/$LIB_DIR/canary.txt"
-
-ls -l "$INSTALL_DIR/share/mongo-cxx-driver"
-
-. .evergreen/scripts/find-cmake-old.sh
-
-"$CMAKE" --build "$BUILD_DIR" --target uninstall
-
 ls -lR "$INSTALL_DIR"
 
-if test -f "$INSTALL_DIR/$LIB_DIR/pkgconfig/libbsoncxx.pc"; then
-  echo "libbsoncxx.pc found!"
+if test -f "$INSTALL_DIR/$LIB_DIR/pkgconfig/lib${BSONCXX_BASENAME:?}.pc"; then
+  echo "lib${BSONCXX_BASENAME:?}.pc found!"
   exit 1
 else
-  echo "libbsoncxx.pc check ok"
+  echo "lib${BSONCXX_BASENAME:?}.pc check ok"
 fi
 if test ! -f "$INSTALL_DIR/$LIB_DIR/canary.txt"; then
   echo "canary.txt not found!"
@@ -39,11 +28,11 @@ if test ! -d "$INSTALL_DIR/$LIB_DIR"; then
 else
   echo "$INSTALL_DIR/$LIB_DIR check ok"
 fi
-if test -f "$INSTALL_DIR/$LIB_DIR/pkgconfig/libmongocxx.pc"; then
-  echo "libmongocxx.pc found!"
+if test -f "$INSTALL_DIR/$LIB_DIR/pkgconfig/lib${MONGOCXX_BASENAME:?}.pc"; then
+  echo "lib${MONGOCXX_BASENAME:?}.pc found!"
   exit 1
 else
-  echo "libmongocxx.pc check ok"
+  echo "lib${MONGOCXX_BASENAME:?}.pc check ok"
 fi
 if test -f "$INSTALL_DIR/include/bsoncxx/v_noabi/bsoncxx/json.hpp"; then
   echo "bsoncxx/json.hpp found!"

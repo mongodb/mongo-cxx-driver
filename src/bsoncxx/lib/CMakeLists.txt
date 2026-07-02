@@ -42,18 +42,39 @@ set(bsoncxx_sources_v_noabi
 )
 
 set(bsoncxx_sources_v1
+    bsoncxx/v1/array/value.cpp
+    bsoncxx/v1/array/view.cpp
     bsoncxx/v1/config/config.cpp
     bsoncxx/v1/config/export.cpp
     bsoncxx/v1/config/version.cpp
+    bsoncxx/v1/decimal128.cpp
     bsoncxx/v1/detail/postlude.cpp
     bsoncxx/v1/detail/prelude.cpp
+    bsoncxx/v1/document/value.cpp
+    bsoncxx/v1/document/view.cpp
+    bsoncxx/v1/element/view.cpp
+    bsoncxx/v1/exception.cpp
+    bsoncxx/v1/oid.cpp
+    bsoncxx/v1/types/id.cpp
+    bsoncxx/v1/types/value.cpp
+    bsoncxx/v1/types/view.cpp
+)
+
+file(GLOB_RECURSE bsoncxx_headers
+    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+    CONFIGURE_DEPENDS
+    "*.hh"
 )
 
 list(APPEND bsoncxx_sources
     ${bsoncxx_sources_private}
-    ${bsoncxx_sources_v_noabi}
     ${bsoncxx_sources_v1}
 )
+
+if(BSONCXX_ENABLE_UNSTABLE_ABI)
+    list(APPEND bsoncxx_sources ${bsoncxx_sources_v_noabi})
+endif()
+
 list(TRANSFORM bsoncxx_sources PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/")
 set(bsoncxx_sources "${bsoncxx_sources}" PARENT_SCOPE)
 
@@ -81,6 +102,79 @@ if(1)
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v1/config
         COMPONENT dev
     )
+
+    configure_file(
+        bsoncxx/v_noabi/bsoncxx/config/config.hpp.in
+        bsoncxx/v_noabi/bsoncxx/config/config.hpp
+    )
+
+    install(FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/bsoncxx/v_noabi/bsoncxx/config/config.hpp
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v_noabi/bsoncxx/config
+        COMPONENT dev
+    )
+
+    if(1)
+        file(GLOB_RECURSE bsoncxx_v_noabi_fwd_headers
+            RELATIVE "${PROJECT_SOURCE_DIR}/include/bsoncxx/v_noabi"
+            CONFIGURE_DEPENDS
+            "${PROJECT_SOURCE_DIR}/include/bsoncxx/v_noabi/bsoncxx/*-fwd.hpp"
+        )
+        list(SORT bsoncxx_v_noabi_fwd_headers)
+
+        if("${bsoncxx_v_noabi_fwd_headers}" STREQUAL "")
+            message(FATAL_ERROR "No bsoncxx v_noabi forward headers found by file(GLOB_RECURSE)")
+        endif()
+
+        set(BSONCXX_V_NOABI_FWD_INCLUDES "")
+        foreach(header IN LISTS bsoncxx_v_noabi_fwd_headers)
+            string(APPEND BSONCXX_V_NOABI_FWD_INCLUDES "#include <${header}> // IWYU pragma: export\n")
+        endforeach()
+        string(STRIP "${BSONCXX_V_NOABI_FWD_INCLUDES}" BSONCXX_V_NOABI_FWD_INCLUDES)
+
+        configure_file(
+            bsoncxx/v_noabi/bsoncxx/fwd.hpp.in
+            bsoncxx/v_noabi/bsoncxx/fwd.hpp
+            @ONLY
+        )
+
+        install(FILES
+            ${CMAKE_CURRENT_BINARY_DIR}/bsoncxx/v_noabi/bsoncxx/fwd.hpp
+            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v_noabi/bsoncxx
+            COMPONENT dev
+        )
+    endif()
+
+    if(1)
+        file(GLOB_RECURSE bsoncxx_v1_fwd_headers
+            RELATIVE "${PROJECT_SOURCE_DIR}/include"
+            CONFIGURE_DEPENDS
+            "${PROJECT_SOURCE_DIR}/include/bsoncxx/v1/*-fwd.hpp"
+        )
+        list(SORT bsoncxx_v1_fwd_headers)
+
+        if("${bsoncxx_v1_fwd_headers}" STREQUAL "")
+            message(FATAL_ERROR "No bsoncxx v1 forward headers found by file(GLOB_RECURSE)")
+        endif()
+
+        set(BSONCXX_V1_FWD_INCLUDES "")
+        foreach(header IN LISTS bsoncxx_v1_fwd_headers)
+            string(APPEND BSONCXX_V1_FWD_INCLUDES "#include <${header}> // IWYU pragma: export\n")
+        endforeach()
+        string(STRIP "${BSONCXX_V1_FWD_INCLUDES}" BSONCXX_V1_FWD_INCLUDES)
+
+        configure_file(
+            bsoncxx/v1/fwd.hpp.in
+            bsoncxx/v1/fwd.hpp
+            @ONLY
+        )
+
+        install(FILES
+            ${CMAKE_CURRENT_BINARY_DIR}/bsoncxx/v1/fwd.hpp
+            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v1
+            COMPONENT dev
+        )
+    endif()
 endif()
 
 set_dist_list(src_bsoncxx_lib_DIST
@@ -88,18 +182,11 @@ set_dist_list(src_bsoncxx_lib_DIST
     ${bsoncxx_sources_private}
     ${bsoncxx_sources_v_noabi}
     ${bsoncxx_sources_v1}
-    bsoncxx/private/b64_ntop.hh
+    ${bsoncxx_headers}
     bsoncxx/private/config/config.hh.in
-    bsoncxx/private/convert.hh
-    bsoncxx/private/export.hh
-    bsoncxx/private/helpers.hh
-    bsoncxx/private/itoa.hh
-    bsoncxx/private/bson.hh
-    bsoncxx/private/make_unique.hh
-    bsoncxx/private/stack.hh
-    bsoncxx/private/suppress_deprecation_warnings.hh
-    bsoncxx/private/version.hh
-    bsoncxx/v_noabi/bsoncxx/types/bson_value/value.hh
+    bsoncxx/v_noabi/bsoncxx/config/config.hpp.in
+    bsoncxx/v_noabi/bsoncxx/fwd.hpp.in
     bsoncxx/v1/config/config.hpp.in
     bsoncxx/v1/config/version.hpp.in
+    bsoncxx/v1/fwd.hpp.in
 )

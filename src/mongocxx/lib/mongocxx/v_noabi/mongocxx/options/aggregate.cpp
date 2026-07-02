@@ -12,120 +12,114 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/builder/basic/document.hpp>
+#include <mongocxx/options/aggregate.hh>
 
-#include <mongocxx/options/aggregate.hpp>
+//
 
-#include <mongocxx/private/append_aggregate_options.hh>
-#include <mongocxx/private/read_preference.hh>
+#include <bsoncxx/v1/types/value.hh>
+
+#include <mongocxx/v1/aggregate_options.hh>
+
+#include <cstdint>
+#include <stdexcept>
+#include <utility>
+
+#include <bsoncxx/document/value.hpp>
+#include <bsoncxx/types/bson_value/view.hpp>
+
+#include <mongocxx/scoped_bson.hh>
+
+#include <bsoncxx/private/bson.hh>
 
 namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-using bsoncxx::v_noabi::builder::basic::kvp;
+aggregate::aggregate(v1::aggregate_options opts)
+    : _allow_disk_use{opts.allow_disk_use()},
+      _batch_size{opts.batch_size()},
+      _collation{[&]() -> decltype(_collation) {
+          if (auto& opt = v1::aggregate_options::internal::collation(opts)) {
+              return bsoncxx::v_noabi::from_v1(std::move(*opt));
+          }
+          return {};
+      }()},
+      _let{[&]() -> decltype(_let) {
+          if (auto& opt = v1::aggregate_options::internal::let(opts)) {
+              return bsoncxx::v_noabi::from_v1(std::move(*opt));
+          }
+          return {};
+      }()},
+      _max_time{opts.max_time()},
+      _read_preference{std::move(v1::aggregate_options::internal::read_preference(opts))},
+      _bypass_document_validation{opts.bypass_document_validation()},
+      _hint{std::move(v1::aggregate_options::internal::hint(opts))},
+      _write_concern{std::move(v1::aggregate_options::internal::write_concern(opts))},
+      _read_concern{std::move(v1::aggregate_options::internal::read_concern(opts))},
+      _comment{std::move(v1::aggregate_options::internal::comment(opts))} {}
 
-aggregate& aggregate::allow_disk_use(bool allow_disk_use) {
-    _allow_disk_use = allow_disk_use;
-    return *this;
-}
+void aggregate::internal::append_to(aggregate const& self, scoped_bson& doc) {
+    if (auto const& opt = self.allow_disk_use()) {
+        doc += scoped_bson{BCON_NEW("allowDiskUse", BCON_BOOL(*opt))};
+    }
 
-void aggregate::append(bsoncxx::v_noabi::builder::basic::document& builder) const {
-    append_aggregate_options(builder, *this);
-}
+    if (auto const& opt = self.collation()) {
+        doc += scoped_bson{BCON_NEW("collation", BCON_DOCUMENT(to_scoped_bson_view(*opt).bson()))};
+    }
 
-aggregate& aggregate::collation(bsoncxx::v_noabi::document::view_or_value collation) {
-    _collation = std::move(collation);
-    return *this;
-}
+    if (auto const& opt = self.let()) {
+        doc += scoped_bson{BCON_NEW("let", BCON_DOCUMENT(to_scoped_bson_view(*opt).bson()))};
+    }
 
-aggregate& aggregate::let(bsoncxx::v_noabi::document::view_or_value let) {
-    _let = std::move(let);
-    return *this;
-}
+    if (auto const& opt = self.max_time()) {
+        doc += scoped_bson{BCON_NEW("maxTimeMS", BCON_INT64(std::int64_t{opt->count()}))};
+    }
 
-aggregate& aggregate::batch_size(std::int32_t batch_size) {
-    _batch_size = batch_size;
-    return *this;
-}
+    if (auto const& opt = self.bypass_document_validation()) {
+        doc += scoped_bson{BCON_NEW("bypassDocumentValidation", BCON_BOOL(*opt))};
+    }
 
-aggregate& aggregate::max_time(std::chrono::milliseconds max_time) {
-    _max_time = std::move(max_time);
-    return *this;
-}
+    if (auto const& opt = self.hint()) {
+        scoped_bson v;
 
-aggregate& aggregate::read_preference(mongocxx::v_noabi::read_preference rp) {
-    _read_preference = std::move(rp);
-    return *this;
-}
+        if (!BSON_APPEND_VALUE(
+                v.inout_ptr(),
+                "hint",
+                &bsoncxx::v1::types::value::internal::get_bson_value(
+                    bsoncxx::v1::types::value{bsoncxx::v_noabi::to_v1(opt->to_value())}))) {
+            throw std::logic_error{
+                "mongocxx::v_noabi::options::aggregate::internal::to_document: BSON_APPEND_VALUE failed"};
+        }
 
-aggregate& aggregate::bypass_document_validation(bool bypass_document_validation) {
-    _bypass_document_validation = bypass_document_validation;
-    return *this;
-}
+        doc += v;
+    }
 
-aggregate& aggregate::hint(mongocxx::v_noabi::hint index_hint) {
-    _hint = std::move(index_hint);
-    return *this;
-}
+    if (auto const& opt = self.read_concern()) {
+        doc += scoped_bson{BCON_NEW("readConcern", BCON_DOCUMENT(to_scoped_bson(opt->to_document()).bson()))};
+    }
 
-aggregate& aggregate::read_concern(mongocxx::v_noabi::read_concern read_concern) {
-    _read_concern = std::move(read_concern);
-    return *this;
-}
+    if (auto const& opt = self.write_concern()) {
+        doc += scoped_bson{BCON_NEW("writeConcern", BCON_DOCUMENT(to_scoped_bson(opt->to_document()).bson()))};
+    }
 
-aggregate& aggregate::write_concern(mongocxx::v_noabi::write_concern write_concern) {
-    _write_concern = std::move(write_concern);
-    return *this;
-}
+    if (auto const& opt = self.batch_size()) {
+        doc += scoped_bson{BCON_NEW("batchSize", BCON_INT32(*opt))};
+    }
 
-aggregate& aggregate::comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment) {
-    _comment = std::move(comment);
-    return *this;
-}
+    if (auto const& opt = self.comment()) {
+        scoped_bson v;
 
-bsoncxx::v_noabi::stdx::optional<bool> const& aggregate::allow_disk_use() const {
-    return _allow_disk_use;
-}
+        if (!BSON_APPEND_VALUE(
+                v.inout_ptr(),
+                "comment",
+                &bsoncxx::v1::types::value::internal::get_bson_value(
+                    bsoncxx::v1::types::value{bsoncxx::v_noabi::to_v1(opt->view())}))) {
+            throw std::logic_error{
+                "mongocxx::v_noabi::options::aggregate::internal::to_document: BSON_APPEND_VALUE failed"};
+        }
 
-bsoncxx::v_noabi::stdx::optional<std::int32_t> const& aggregate::batch_size() const {
-    return _batch_size;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& aggregate::collation() const {
-    return _collation;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& aggregate::let() const {
-    return _let;
-}
-
-bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> const& aggregate::max_time() const {
-    return _max_time;
-}
-
-bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference> const& aggregate::read_preference() const {
-    return _read_preference;
-}
-
-bsoncxx::v_noabi::stdx::optional<bool> const& aggregate::bypass_document_validation() const {
-    return _bypass_document_validation;
-}
-
-bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const& aggregate::hint() const {
-    return _hint;
-}
-
-bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_concern> const& aggregate::read_concern() const {
-    return _read_concern;
-}
-
-bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> const& aggregate::write_concern() const {
-    return _write_concern;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const& aggregate::comment() const {
-    return _comment;
+        doc += v;
+    }
 }
 
 } // namespace options

@@ -3,28 +3,31 @@
 set -o errexit
 set -o pipefail
 
-if [ "$USE_STATIC_LIBS" ]; then
-  DIR=static
+declare link_type
+if [[ "${USE_STATIC_LIBS:-}" == 1 ]]; then
+  link_type=static
 else
-  DIR=shared
+  link_type=shared
 fi
+: "${link_type:?}"
 
 cd examples/projects
 
 for project in bsoncxx mongocxx; do
   (
-    cd $project
+    cd "${project:?}"
 
-    if ! (cd cmake/$DIR && ./build.sh >|output.txt 2>&1); then
-      echo "Example $project/cmake/$DIR failed" 1>&2
-      cat cmake/$DIR/output.txt 1>&2
+    if ! (cd "cmake/${link_type:?}" && ./build.sh >|output.txt 2>&1); then
+      echo "Example ${project:?}/cmake/${link_type:?} failed" 1>&2
+      cat "cmake/${link_type:?}/output.txt" 1>&2
       exit 1
     fi
 
-    if [[ ! ("$OSTYPE" =~ cygwin) ]]; then
-      if ! (cd pkg-config/$DIR && ./build.sh >|output.txt 2>&1); then
-        echo "Example $project/pkg-config/$DIR failed" 1>&2
-        cat pkg-config/$DIR/output.txt 1>&2
+    # pkg-config is only applicable to non-Visual Studio generators.
+    if [[ "${generator:-}" != Visual\ Studio\ * ]]; then
+      if ! (cd "pkg-config/${link_type:?}" && ./build.sh >|output.txt 2>&1); then
+        echo "Example ${project:?}/pkg-config/${link_type:?} failed" 1>&2
+        cat "pkg-config/${link_type:?}/output.txt" 1>&2
         exit 1
       fi
     fi

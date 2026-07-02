@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <bsoncxx/vector/iterators-fwd.hpp>
+#include <bsoncxx/vector/iterators-fwd.hpp> // IWYU pragma: export
 
 //
 
@@ -111,6 +111,10 @@ class packed_bit_element {
     /// If the two iterators do not point into the same vector, behavior is undefined.
     constexpr difference_type operator-(packed_bit_element const& other) const noexcept {
         return {(byte - other.byte) * 8 + (difference_type{bit} - difference_type{other.bit})};
+    }
+
+    constexpr reference operator[](difference_type const& other) const noexcept {
+        return *(*this + other);
     }
 
     /// Advance this iterator forward by the indicated number of bits
@@ -237,6 +241,10 @@ class packed_bit_byte {
         return {byte - other.byte};
     }
 
+    constexpr reference operator[](difference_type const& other) const noexcept {
+        return *(*this + other);
+    }
+
     /// Advance this iterator forward by the indicated number of bytes
     packed_bit_byte& operator+=(difference_type const& other) noexcept {
         return *this = *this + other;
@@ -278,7 +286,7 @@ class packed_bit_byte {
     constexpr packed_bit_byte(packed_bit_element<Iterator> element, packed_bit_element<Iterator> element_end)
         : byte{element.byte},
           byte_end{(element_end + 7u).byte},
-          last_byte_mask{value_type(0xFFu << (-element_end.bit & 7u))} {}
+          last_byte_mask{value_type(0xFFu << (-element_end.bit & 7))} {}
 
     constexpr packed_bit_byte(Iterator byte, Iterator byte_end, value_type last_byte_mask)
         : byte{byte}, byte_end{byte_end}, last_byte_mask{last_byte_mask} {}

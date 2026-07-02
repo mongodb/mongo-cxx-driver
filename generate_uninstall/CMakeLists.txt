@@ -57,7 +57,7 @@ else ()
          \"\${MONGOCXX_INSTALL_MANIFEST_CONTENT}\")
       execute_process (
          COMMAND
-            find \"\$ENV{DESTDIR}/${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v_noabi\" \"\$ENV{DESTDIR}/${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}/mongocxx/v_noabi\" -type d -empty -delete
+            find \"\$ENV{DESTDIR}/${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx\" \"\$ENV{DESTDIR}/${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}/mongocxx\" -type d -empty -delete
       )
       execute_process (
          COMMAND

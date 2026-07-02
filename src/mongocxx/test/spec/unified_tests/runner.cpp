@@ -12,9 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "assert.hh"
-#include "entity.hh"
-#include "operations.hh"
+#include "./assert.hh"
+#include "./operations.hh"
+
+#include <mongocxx/v1/client_bulk_write.hpp>
+#include <mongocxx/v1/oidc_callback.hpp>
+#include <mongocxx/v1/oidc_credential.hpp>
+
+#include <mongocxx/v1/exception.hh>
+#include <mongocxx/v1/server_error.hh>
+
+#include <mongocxx/test/v_noabi/client_helpers.hh>
 
 #include <fstream>
 #include <numeric>
@@ -27,6 +35,7 @@
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/string/to_string.hpp>
+#include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
 
 #include <mongocxx/client_encryption.hpp>
@@ -35,10 +44,12 @@
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/instance.hpp>
 
+#include <mongocxx/private/mongoc.hh>
+
 #include <bsoncxx/test/catch.hh>
 
-#include <mongocxx/test/client_helpers.hh>
 #include <mongocxx/test/spec/monitoring.hh>
+#include <mongocxx/test/spec/unified_tests/entity.hh>
 #include <mongocxx/test/spec/util.hh>
 
 namespace {
@@ -50,8 +61,8 @@ using namespace spec;
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 
-using schema_versions_t = std::array<std::array<int, 3 /* major.minor.patch */>, 2 /* supported version */>;
-constexpr schema_versions_t schema_versions{{{{1, 1, 0}}, {{1, 8, 0}}}};
+using schema_versions_t = std::array<std::array<int, 3 /* major.minor.patch */>, 3 /* supported version */>;
+constexpr schema_versions_t schema_versions{{{{1, 1, 0}}, {{1, 8, 0}}, {{1, 19, 0}}}};
 
 std::pair<std::unordered_map<std::string, spec::apm_checker>&, entity::map&> init_maps() {
     // Below initializes the static apm map and entity map if needed, in that order. This will also
@@ -270,19 +281,7 @@ bool compatible_with_server(bsoncxx::array::element const& requirement) {
         return equals_server_topology(topologies);
 
     if (auto const server_params = requirement["serverParameters"]) {
-        document::value actual = make_document();
-        try {
-            actual = test_util::get_server_params();
-        } catch (operation_exception const& e) {
-            // Mongohouse does not support getParameter, so if we get an error from
-            // getParameter, exit this logic early and skip the test.
-            std::string const message = e.what();
-            if (message.find("command getParameter is unsupported") != std::string::npos) {
-                return false;
-            }
-
-            throw e;
-        }
+        document::value const actual = test_util::get_server_params();
 
         for (auto const& kvp : server_params.get_document().view()) {
             auto const param = kvp.key();
@@ -294,20 +293,16 @@ bool compatible_with_server(bsoncxx::array::element const& requirement) {
         }
     }
 
-    if (auto const csfle = requirement["csfle"]) {
-        // csfle: Optional boolean. If true, the tests MUST only run if the
-        // driver and server support Client-Side Field Level Encryption. A
-        // server supports CSFLE if it is version 4.2.0 or higher. If false,
-        // tests MUST only run if CSFLE is not enabled. If this field is
-        // omitted, there is no CSFLE requirement.
-        std::vector<int> const requires_at_least{4, 2, 0};
-        bool const is_csfle = csfle.get_bool().value;
-        if (is_csfle) {
-            if (!is_compatible_version(requires_at_least, expected)) {
+    if (auto const authMechanism = requirement["authMechanism"]) {
+        REQUIRE(authMechanism.type() == bsoncxx::type::k_string);
+        if (authMechanism.get_string().value == "MONGODB-OIDC") {
+            if (!std::getenv("OIDC_TOKEN_FILE")) {
+                // Test environment not configured for OIDC.
                 return false;
             }
         }
     }
+
     return true;
 }
 
@@ -365,7 +360,26 @@ std::string uri_options_to_string(document::view object) {
     //  'readPreferenceTags' keys in the object.
     REQUIRE_FALSE(object["readPreferenceTags"]);
 
-    auto const json = to_json(object["uriOptions"].get_document());
+    auto uri_options_doc = bsoncxx::builder::basic::document{};
+    for (auto const& el : object["uriOptions"].get_document().value) {
+        auto const key = el.key();
+        auto const value = el.get_value();
+
+        if (test_util::tolowercase(key) == MONGOC_URI_AUTHMECHANISMPROPERTIES &&
+            value.type() == bsoncxx::type::k_document &&
+            value.get_document().value == make_document(kvp("$$placeholder", 1))) {
+            auto const auth_mechanism = object["uriOptions"]["authMechanism"];
+            REQUIRE(auth_mechanism);
+            REQUIRE(auth_mechanism.type() == bsoncxx::type::k_string);
+            REQUIRE(auth_mechanism.get_string().value == "MONGODB-OIDC");
+            // Skip authMechanismProperties with placeholder.
+            continue;
+        }
+
+        uri_options_doc.append(kvp(key, value));
+    }
+
+    auto const json = to_json(uri_options_doc.view());
     auto const opts = json_to_uri_opts(json);
 
     CAPTURE(json, opts);
@@ -373,7 +387,13 @@ std::string uri_options_to_string(document::view object) {
 }
 
 std::string get_hostnames(bsoncxx::document::view object) {
-    auto const uri0 = mongocxx::uri("mongodb://localhost:27017");
+    auto uri0 = mongocxx::uri{"mongodb://localhost:27017"};
+    if (auto const* oidc_user = std::getenv("OIDC_ADMIN_USER")) {
+        auto const* oidc_pwd = std::getenv("OIDC_ADMIN_PWD");
+        REQUIRE(oidc_pwd);
+        // The OIDC test server requires auth. For test setup, use username/password.
+        uri0 = mongocxx::uri{"mongodb://" + std::string(oidc_user) + ":" + std::string(oidc_pwd) + "@localhost:27017"};
+    }
 
     // All test topologies should have either a mongod or mongos on localhost:27017.
     mongocxx::client const client0{uri0, test_util::add_test_server_api()};
@@ -701,6 +721,18 @@ client create_client(document::view object) {
         auto const server_api_opts = create_server_api(object);
         client_opts.server_api_opts(server_api_opts);
     }
+    {
+        auto const auth_mechanism = object["uriOptions"]["authMechanism"];
+        if (auth_mechanism && auth_mechanism.type() == bsoncxx::type::k_string &&
+            auth_mechanism.get_string().value == "MONGODB-OIDC") {
+            std::ifstream token_file(test_util::getenv_or_fail("OIDC_TOKEN_FILE"));
+            REQUIRE(token_file.is_open());
+            auto const token =
+                std::string(std::istreambuf_iterator<char>(token_file), std::istreambuf_iterator<char>());
+            client_opts.oidc_callback(
+                [=](mongocxx::v1::oidc_callback_params const&) { return mongocxx::v1::oidc_credential(token); });
+        }
+    }
     auto& apm = get_apm_map()[string::to_string(object["id"].get_string().value)];
 
     add_observe_events(apm, apm_opts, object);
@@ -898,7 +930,10 @@ void assert_error(
             // { MONGOCRYPT_STATUS_ERROR_CLIENT, MONGOCRYPT_GENERIC_ERROR_CODE }
             // libmongocrypt: _kms_done
             "key material not expected length",
-        };
+
+            // { MONGOC_ERROR_STREAM, MONGOC_ERROR_STREAM_SOCKET }
+            // mongoc: _mongoc_buffer_append_from_stream
+            "socket error or timeout"};
 
         bsoncxx::stdx::string_view const message = exception.what();
 
@@ -994,6 +1029,49 @@ void assert_error(mongocxx::exception& e, array::element const& ops) {
 
     REQUIRE_FALSE(/* TODO */ expect_error["errorContains"]);
     REQUIRE_FALSE(/* TODO */ expect_error["errorCode"]);
+    REQUIRE_FALSE(/* TODO */ expect_error["errorCodeName"]);
+}
+
+void assert_error(
+    mongocxx::v1::exception const& e,
+    array::element const& ops,
+    stdx::optional<document::view> const& actual = stdx::nullopt) {
+    CAPTURE(e.what());
+    auto const expect_error = ops["expectError"];
+    REQUIRE(expect_error);
+
+    if (expect_error["isError"])
+        return;
+
+    if (auto const expected_result = expect_error["expectResult"]) {
+        REQUIRE(actual.has_value());
+        auto const actual_result = (*actual)["result"];
+        assert::matches(actual_result.get_value(), expected_result.get_value(), get_entity_map());
+    }
+
+    if (auto const is_client_error = expect_error["isClientError"]) {
+        CHECKED_IF(is_client_error.get_bool().value) {
+            CHECK(e.code() != mongocxx::v1::source_errc::server);
+        }
+        else {
+            CHECK(e.code() == mongocxx::v1::source_errc::server);
+        }
+    }
+
+    REQUIRE_FALSE(/* TODO */ expect_error["errorLabelsContain"]);
+    REQUIRE_FALSE(/* TODO */ expect_error["errorLabelsOmit"]);
+
+    if (auto const error_code = expect_error["errorCode"]) {
+        CHECK(e.code() == std::error_code{error_code.get_int32(), mongocxx::v1::server_error::internal::category()});
+    }
+
+    if (auto const error_response = expect_error["errorResponse"]) {
+        auto const& reply = mongocxx::v1::exception::internal::get_reply(e);
+        REQUIRE(reply);
+        assert::matches(types::bson_value::value(*reply), error_response.get_value(), get_entity_map());
+    }
+
+    REQUIRE_FALSE(/* TODO */ expect_error["errorContains"]);
     REQUIRE_FALSE(/* TODO */ expect_error["errorCodeName"]);
 }
 
@@ -1146,6 +1224,10 @@ document::value bulk_write_result(mongocxx::bulk_write_exception const& e) {
     return result.extract();
 }
 
+document::value make_client_bulk_write_result_doc(mongocxx::client_bulk_write::exception const& e) {
+    return operations::make_client_bulk_write_result_doc(e.partial_result());
+}
+
 // Match test cases that should be skipped by both test and case descriptions.
 std::map<std::pair<bsoncxx::stdx::string_view, bsoncxx::stdx::string_view>, bsoncxx::stdx::string_view> const
     should_skip_test_cases = {
@@ -1256,11 +1338,20 @@ void run_tests(bsoncxx::stdx::string_view test_description, document::view test)
                         auto result = bulk_write_result(e);
                         assert_error(e, ops, result);
                     }
+                } catch (mongocxx::client_bulk_write::exception const& e) {
+                    if (!ignore_result_and_error) {
+                        auto result = make_client_bulk_write_result_doc(e);
+                        assert_error(e, ops, result);
+                    }
                 } catch (mongocxx::operation_exception const& e) {
                     if (!ignore_result_and_error) {
                         assert_error(e, ops, make_document());
                     }
                 } catch (mongocxx::exception& e) {
+                    if (!ignore_result_and_error) {
+                        assert_error(e, ops);
+                    }
+                } catch (mongocxx::v1::exception const& e) {
                     if (!ignore_result_and_error) {
                         assert_error(e, ops);
                     }
@@ -1322,8 +1413,6 @@ void run_unified_format_tests_in_env_dir(
         FAIL("unable to find/open test_files.txt in path \"" << test_file_set_path << '\"');
     }
 
-    instance::current();
-
     for (std::string file; std::getline(files, file);) {
         DYNAMIC_SECTION(file) {
             if (unsupported_tests.find(file) != unsupported_tests.end()) {
@@ -1350,14 +1439,7 @@ TEST_CASE("session unified format spec automated tests", "[unified_format_specs]
 }
 
 TEST_CASE("CRUD unified format spec automated tests", "[unified_format_specs]") {
-    std::set<bsoncxx::stdx::string_view> const unsupported_tests = {
-        // Waiting on CXX-2494.
-        "client-bulkWrite-replaceOne-sort.json",
-        // Waiting on CXX-2494.
-        "client-bulkWrite-updateOne-sort.json",
-    };
-
-    run_unified_format_tests_in_env_dir("CRUD_UNIFIED_TESTS_PATH", unsupported_tests);
+    run_unified_format_tests_in_env_dir("CRUD_UNIFIED_TESTS_PATH");
 }
 
 TEST_CASE("change streams unified format spec automated tests", "[unified_format_specs]") {
@@ -1402,6 +1484,10 @@ TEST_CASE("index management spec automated tests", "[unified_format_specs]") {
 TEST_CASE("client side encryption unified format spec automated tests", "[unified_format_specs]") {
     CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
     run_unified_format_tests_in_env_dir("CLIENT_SIDE_ENCRYPTION_UNIFIED_TESTS_PATH");
+}
+
+TEST_CASE("auth spec automated tests", "[unified_format_specs]") {
+    run_unified_format_tests_in_env_dir("AUTH_TESTS_PATH");
 }
 
 } // namespace

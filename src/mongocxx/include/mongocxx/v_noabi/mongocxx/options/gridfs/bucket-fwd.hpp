@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/gridfs/bucket-fwd.hpp> // IWYU pragma: export
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -32,7 +34,7 @@ namespace mongocxx {
 namespace options {
 namespace gridfs {
 
-using ::mongocxx::v_noabi::options::gridfs::bucket;
+using v_noabi::options::gridfs::bucket;
 
 } // namespace gridfs
 } // namespace options
@@ -43,4 +45,7 @@ using ::mongocxx::v_noabi::options::gridfs::bucket;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::options::gridfs::bucket.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/gridfs/bucket-fwd.hpp
 ///

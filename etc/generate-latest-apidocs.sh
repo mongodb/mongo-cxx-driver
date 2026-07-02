@@ -10,8 +10,8 @@
 set -o errexit
 set -o pipefail
 
-LATEST_VERSION="4.0.0"
-DOXYGEN_VERSION_REQUIRED="1.13.2"
+LATEST_VERSION="4.3.1"
+DOXYGEN_VERSION_REQUIRED="1.15.0"
 
 # Permit using a custom Doxygen binary.
 : "${DOXYGEN_BINARY:=doxygen}"
@@ -21,10 +21,6 @@ DOXYGEN_VERSION_REQUIRED="1.13.2"
 
 # Permit using any Doxygen version.
 : "${DOXYGEN_ANY_VERSION:=0}"
-
-command -v git >/dev/null
-command -v mktemp >/dev/null
-command -v sed >/dev/null
 
 if [[ ! -d build ]]; then
   echo "missing build directory: this script must be run from the project root directory" 1>&2
@@ -50,6 +46,11 @@ if [[ "${DOXYGEN_USE_CURRENT:?}" == 1 ]]; then
   output_directory="${apidocspath:?}/current"
   scratch_dir="$(pwd)"
 else
+  # Check required tools exist.
+  command -V git >/dev/null
+  command -V mktemp >/dev/null
+  command -V sed >/dev/null
+
   # Use a clean copy of the repository.
   output_directory="${apidocspath:?}/mongocxx-${LATEST_VERSION:?}"
   scratch_dir="$(mktemp -d)"
@@ -57,12 +58,21 @@ else
 
   git clone -q -c advice.detachedHead=false -b "r${LATEST_VERSION}" . "${scratch_dir:?}"
 
+  function sed_in_place {
+    if [[ "${OSTYPE}" == darwin* ]]; then
+      # macOS uses FreeBSD sed.
+      sed -i '' "$@"
+    else
+      sed -i'' "$@"
+    fi
+  }
+
   # Update the Doxyfile configuration file:
   #  - set OUTPUT_DIRECTORY to `build/docs/api/mongocxx-<version>`.
   #  - set PROJECT_NUMBER to `<version>`.
-  sed -i'' \
-    -e "s|^OUTPUT_DIRECTORY\s*=\s*.*$|OUTPUT_DIRECTORY = ${output_directory:?}|g" \
-    -e "s|^PROJECT_NUMBER\s*=\s*.*$|PROJECT_NUMBER = ${LATEST_VERSION:?}|g" \
+  sed_in_place \
+    -e "s|^OUTPUT_DIRECTORY[[:space:]]*=[[:space:]]*.*$|OUTPUT_DIRECTORY = ${output_directory:?}|g" \
+    -e "s|^PROJECT_NUMBER[[:space:]]*=[[:space:]]*.*$|PROJECT_NUMBER = ${LATEST_VERSION:?}|g" \
     "${scratch_dir:?}/Doxyfile"
 fi
 

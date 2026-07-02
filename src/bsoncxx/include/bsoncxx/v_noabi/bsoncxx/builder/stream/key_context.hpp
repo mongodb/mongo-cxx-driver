@@ -15,7 +15,7 @@
 #pragma once
 
 #include <bsoncxx/builder/stream/closed_context-fwd.hpp>
-#include <bsoncxx/builder/stream/key_context-fwd.hpp>
+#include <bsoncxx/builder/stream/key_context-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/builder/stream/value_context.hpp>
@@ -129,10 +129,7 @@ class key_context {
     /// @return A value type which holds the complete bson document.
     ///
     template <typename T>
-    detail::requires_t<
-        bsoncxx::v_noabi::document::value,
-        std::is_same<base, closed_context>,
-        detail::is_alike<T, finalize_type>>
+    detail::requires_t<v_noabi::document::value, std::is_same<base, closed_context>, detail::is_alike<T, finalize_type>>
     operator<<(T&&) {
         return _core->extract_document();
     }

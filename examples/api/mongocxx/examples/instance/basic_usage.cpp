@@ -32,8 +32,6 @@ void example() {
         // Initialize the MongoDB C++ Driver by constructing the instance object.
         mongocxx::instance instance;
 
-        EXPECT(&mongocxx::instance::current() == &instance);
-
         // Use mongocxx library interfaces at this point.
         use(mongocxx::client{});
 

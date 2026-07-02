@@ -12,32 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/view_or_value.hpp>
-
 #include <mongocxx/options/gridfs/upload.hpp>
+
+//
+
+#include <mongocxx/v1/gridfs/upload_options.hh>
+
+#include <utility>
+
+#include <bsoncxx/document/value.hpp>
 
 namespace mongocxx {
 namespace v_noabi {
 namespace options {
 namespace gridfs {
 
-upload& upload::chunk_size_bytes(std::int32_t chunk_size_bytes) {
-    _chunk_size_bytes = chunk_size_bytes;
-    return *this;
-}
+upload::upload(v1::gridfs::upload_options opts)
+    : _chunk_size_bytes{opts.chunk_size_bytes()}, _metadata{[&]() -> decltype(_metadata) {
+          if (auto& opt = v1::gridfs::upload_options::internal::metadata(opts)) {
+              return bsoncxx::v_noabi::from_v1(std::move(*opt));
+          }
 
-bsoncxx::v_noabi::stdx::optional<std::int32_t> const& upload::chunk_size_bytes() const {
-    return _chunk_size_bytes;
-}
-
-upload& upload::metadata(bsoncxx::v_noabi::document::view_or_value metadata) {
-    _metadata = std::move(metadata);
-    return *this;
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& upload::metadata() const {
-    return _metadata;
-}
+          return {};
+      }()} {}
 
 } // namespace gridfs
 } // namespace options

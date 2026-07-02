@@ -1,13 +1,44 @@
 task_groups:
+  - name: test-oidc-task-group
+    setup_group:
+      - func: setup
+      - func: fetch-det
+      - command: ec2.assume_role
+        params:
+          role_arn: ${aws_test_secrets_role}
+      - command: subprocess.exec
+        type: setup
+        params:
+          binary: bash
+          include_expansions_in_env:
+            - AWS_ACCESS_KEY_ID
+            - AWS_SECRET_ACCESS_KEY
+            - AWS_SESSION_TOKEN
+          args:
+            - -c
+            - ./drivers-evergreen-tools/.evergreen/auth_oidc/setup.sh
+    setup_group_can_fail_task: true
+    tasks:
+      - oidc-auth-test-task
+    teardown_group:
+      - command: subprocess.exec
+        params:
+          binary: bash
+          args:
+            - -c
+            - ./drivers-evergreen-tools/.evergreen/auth_oidc/teardown.sh
+    teardown_group_timeout_secs: 180
   - name: tg-abi-stability-impls-cxx11
     max_hosts: -1
-    setup_group_can_fail_task: true
     setup_task:
       - command: git.get_project
         params:
           directory: mongo-cxx-driver
       - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - command: subprocess.exec
+        type: setup
         params:
           binary: bash
           env:
@@ -26,9 +57,11 @@ task_groups:
           aws_secret: ${aws_secret}
           bucket: mciuploads
           content_type: text/plain
-          local_files_include_filter: "*.log"
+          local_files_include_filter:
+            - "*.log"
           permissions: public-read
           remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-stability-setup/
+    setup_task_can_fail_task: true
     tasks:
       - abi-compliance-check-impls-cxx11
       - abidiff-impls-cxx11
@@ -43,13 +76,15 @@ task_groups:
     teardown_task_can_fail_task: true
   - name: tg-abi-stability-impls-cxx17
     max_hosts: -1
-    setup_group_can_fail_task: true
     setup_task:
       - command: git.get_project
         params:
           directory: mongo-cxx-driver
       - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - command: subprocess.exec
+        type: setup
         params:
           binary: bash
           env:
@@ -68,9 +103,11 @@ task_groups:
           aws_secret: ${aws_secret}
           bucket: mciuploads
           content_type: text/plain
-          local_files_include_filter: "*.log"
+          local_files_include_filter:
+            - "*.log"
           permissions: public-read
           remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-stability-setup/
+    setup_task_can_fail_task: true
     tasks:
       - abi-compliance-check-impls-cxx17
       - abidiff-impls-cxx17
@@ -85,13 +122,15 @@ task_groups:
     teardown_task_can_fail_task: true
   - name: tg-abi-stability-stdlib-cxx17
     max_hosts: -1
-    setup_group_can_fail_task: true
     setup_task:
       - command: git.get_project
         params:
           directory: mongo-cxx-driver
       - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - command: subprocess.exec
+        type: setup
         params:
           binary: bash
           env:
@@ -110,9 +149,11 @@ task_groups:
           aws_secret: ${aws_secret}
           bucket: mciuploads
           content_type: text/plain
-          local_files_include_filter: "*.log"
+          local_files_include_filter:
+            - "*.log"
           permissions: public-read
           remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-stability-setup/
+    setup_task_can_fail_task: true
     tasks:
       - abi-compliance-check-stdlib-cxx17
       - abidiff-stdlib-cxx17
@@ -127,13 +168,15 @@ task_groups:
     teardown_task_can_fail_task: true
   - name: tg-abi-stability-stdlib-cxx20
     max_hosts: -1
-    setup_group_can_fail_task: true
     setup_task:
       - command: git.get_project
         params:
           directory: mongo-cxx-driver
       - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - command: subprocess.exec
+        type: setup
         params:
           binary: bash
           env:
@@ -152,9 +195,11 @@ task_groups:
           aws_secret: ${aws_secret}
           bucket: mciuploads
           content_type: text/plain
-          local_files_include_filter: "*.log"
+          local_files_include_filter:
+            - "*.log"
           permissions: public-read
           remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-stability-setup/
+    setup_task_can_fail_task: true
     tasks:
       - abi-compliance-check-stdlib-cxx20
       - abidiff-stdlib-cxx20
@@ -169,13 +214,15 @@ task_groups:
     teardown_task_can_fail_task: true
   - name: tg-abi-stability-stdlib-cxx23
     max_hosts: -1
-    setup_group_can_fail_task: true
     setup_task:
       - command: git.get_project
         params:
           directory: mongo-cxx-driver
       - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - command: subprocess.exec
+        type: setup
         params:
           binary: bash
           env:
@@ -194,9 +241,11 @@ task_groups:
           aws_secret: ${aws_secret}
           bucket: mciuploads
           content_type: text/plain
-          local_files_include_filter: "*.log"
+          local_files_include_filter:
+            - "*.log"
           permissions: public-read
           remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${task_id}/${execution}/abi-stability-setup/
+    setup_task_can_fail_task: true
     tasks:
       - abi-compliance-check-stdlib-cxx23
       - abidiff-stdlib-cxx23

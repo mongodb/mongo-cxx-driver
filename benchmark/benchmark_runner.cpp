@@ -55,15 +55,17 @@ benchmark_runner::benchmark_runner(std::set<benchmark_type> types) : _types{type
     // Single doc microbenchmarks
     _microbenches.push_back(std::make_unique<run_command>());
     _microbenches.push_back(std::make_unique<find_one_by_id>("single_and_multi_document/tweet.json"));
-    _microbenches.push_back(std::make_unique<insert_one>(
-        "TestSmallDocInsertOne", 2.75, iterations, "single_and_multi_document/small_doc.json"));
+    _microbenches.push_back(
+        std::make_unique<insert_one>(
+            "TestSmallDocInsertOne", 2.75, iterations, "single_and_multi_document/small_doc.json"));
     _microbenches.push_back(
         std::make_unique<insert_one>("TestLargeDocInsertOne", 27.31, 10, "single_and_multi_document/large_doc.json"));
 
     // Multi doc microbenchmarks
     _microbenches.push_back(std::make_unique<find_many>("single_and_multi_document/tweet.json"));
-    _microbenches.push_back(std::make_unique<bulk_insert>(
-        "TestSmallDocBulkInsert", 2.75, iterations, "single_and_multi_document/small_doc.json"));
+    _microbenches.push_back(
+        std::make_unique<bulk_insert>(
+            "TestSmallDocBulkInsert", 2.75, iterations, "single_and_multi_document/small_doc.json"));
     _microbenches.push_back(
         std::make_unique<bulk_insert>("TestLargeDocBulkInsert", 27.31, 10, "single_and_multi_document/large_doc.json"));
     // CXX-2794: Disable GridFS benchmarks due to long runtime

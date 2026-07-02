@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/bulk_write-fwd.hpp> // IWYU pragma: export
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -29,7 +31,7 @@ class bulk_write;
 namespace mongocxx {
 namespace options {
 
-using ::mongocxx::v_noabi::options::bulk_write;
+using v_noabi::options::bulk_write;
 
 } // namespace options
 } // namespace mongocxx
@@ -39,4 +41,7 @@ using ::mongocxx::v_noabi::options::bulk_write;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::options::bulk_write.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/bulk_write-fwd.hpp
 ///

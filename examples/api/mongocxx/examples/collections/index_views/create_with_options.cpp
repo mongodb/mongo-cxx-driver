@@ -49,10 +49,11 @@ void example(mongocxx::index_view indexes) {
 
     // Index model.
     {
-        auto result_opt = indexes.create_one(mongocxx::index_model{
-            bsoncxx::from_json(R"({"y": 1})"),
-            bsoncxx::from_json(R"({"name": "two"})"),
-        });
+        auto result_opt = indexes.create_one(
+            mongocxx::index_model{
+                bsoncxx::from_json(R"({"y": 1})"),
+                bsoncxx::from_json(R"({"name": "two"})"),
+            });
 
         EXPECT(result_opt);
         EXPECT(result_opt->compare("two") == 0);

@@ -3,9 +3,8 @@
 set -o errexit
 set -o pipefail
 
-: "${ARTIFACTORY_USER:?}"
-: "${ARTIFACTORY_PASSWORD:?}"
 : "${branch_name:?}"
+: "${DOCKER_CONFIG:?}"
 : "${KONDUKTO_TOKEN:?}"
 
 command -v podman >/dev/null || {
@@ -18,9 +17,7 @@ command -v jq >/dev/null || {
   exit 1
 }
 
-podman login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
-
-silkbomb="artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:2.0"
+silkbomb="901841024863.dkr.ecr.us-east-1.amazonaws.com/release-infrastructure/silkbomb:2.0"
 
 # Ensure latest version of SilkBomb is being used.
 podman pull "${silkbomb:?}"

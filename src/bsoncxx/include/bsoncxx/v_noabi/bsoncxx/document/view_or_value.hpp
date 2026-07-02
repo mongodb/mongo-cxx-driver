@@ -16,7 +16,7 @@
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
-#include <bsoncxx/view_or_value.hpp>
+#include <bsoncxx/view_or_value.hpp> // IWYU pragma: export
 
 #include <bsoncxx/config/prelude.hpp>
 
@@ -36,7 +36,7 @@ using view_or_value = v_noabi::view_or_value<v_noabi::document::view, v_noabi::d
 namespace bsoncxx {
 namespace document {
 
-using ::bsoncxx::v_noabi::document::view_or_value;
+using v_noabi::document::view_or_value;
 
 } // namespace document
 } // namespace bsoncxx

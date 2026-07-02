@@ -11,19 +11,17 @@ set -o pipefail
 : "${cse_azure_tenant_id:?}"
 : "${cse_gcp_email:?}"
 : "${cse_gcp_privatekey:?}"
-: "${distro_id:?}" # Required by find-cmake-latest.sh.
 : "${MONGOCXX_TEST_TOPOLOGY:?}"
 
+: "${ASAN_SYMBOLIZER_PATH:-}"
 : "${CRYPT_SHARED_LIB_PATH:-}"
 : "${disable_slow_tests:-}"
-: "${example_projects_cc:-}"
-: "${example_projects_cxx_standard:-}"
-: "${example_projects_cxx:-}"
 : "${example_projects_cxxflags:-}"
 : "${example_projects_ldflags:-}"
 : "${generator:-}"
 : "${MONGODB_API_VERSION:-}"
 : "${platform:-}"
+: "${REQUIRED_CXX_STANDARD:-}"
 : "${TEST_WITH_ASAN:-}"
 : "${TEST_WITH_CSFLE:-}"
 : "${TEST_WITH_UBSAN:-}"
@@ -91,6 +89,7 @@ export URI_OPTIONS_TESTS_PATH="${data_dir}/uri-options"
 export VERSIONED_API_TESTS_PATH="${data_dir}/versioned-api"
 export WITH_TRANSACTION_TESTS_PATH="${data_dir}/with_transaction"
 export INDEX_MANAGEMENT_TESTS_PATH="${data_dir}/index-management"
+export AUTH_TESTS_PATH="${data_dir}/auth/unified"
 
 pushd "${working_dir:?}/../drivers-evergreen-tools"
 DRIVERS_TOOLS="$(pwd)"
@@ -100,11 +99,9 @@ fi
 export DRIVERS_TOOLS
 popd # "${working_dir:?}/../drivers-evergreen-tools"
 
-# shellcheck source=/dev/null
-. "${mongoc_dir:?}/.evergreen/scripts/find-cmake-latest.sh"
-export cmake_binary
-cmake_binary="$(find_cmake_latest)"
-command -v "${cmake_binary:?}"
+. .evergreen/scripts/bypass-dlclose.sh
+. .evergreen/scripts/install-build-tools.sh
+install_build_tools
 
 # Use ccache if available.
 if [[ -f "${mongoc_dir:?}/.evergreen/scripts/find-ccache.sh" ]]; then
@@ -235,13 +232,43 @@ else
   echo "Waiting for mock KMS servers to start... done."
 fi
 
+if [[ "${generator:-}" == Visual\ Studio\ * ]]; then
+  cmake_build_opts+=("/verbosity:minimal")
+elif [[ "${OSTYPE:?}" == cygwin ]]; then
+  : "${generator:="Ninja Multi-Config"}"
+  PATH="/cygdrive/c/ProgramData/chocolatey/lib/winlibs/tools/mingw64/bin:${PATH:-}" # mingw-w64 GCC
+  cmake_build_opts=(--quiet)                                                        # "" is not a valid argument to Ninja.
+fi
+
+# Required by example projects.
+export CMAKE_GENERATOR="${generator:-}"
+export CMAKE_GENERATOR_PLATFORM="${platform:-}"
+export CC="${CC:-"cc"}"
+export CXX="${CXX:-"c++"}"
+export CXX_STANDARD="${REQUIRED_CXX_STANDARD:-"11"}"
+export CXXFLAGS="${example_projects_cxxflags:-}"
+export LDFLAGS="${example_projects_ldflags:-}"
+
+export BSONCXX_BASENAME="bsoncxx1"
+export MONGOCXX_BASENAME="mongocxx1"
+
 pushd "${working_dir:?}/build"
 
-if [[ "${OSTYPE:?}" =~ cygwin ]]; then
-  CTEST_OUTPUT_ON_FAILURE=1 "${cmake_binary:?}" --build . --config "${build_type:?}" --target RUN_TESTS -- /verbosity:minimal
+if [[ "${OSTYPE:?}" == cygwin ]]; then
+  if [[ "${generator:-}" == Visual\ Studio\ * ]]; then
+    run_tests_target="RUN_TESTS"
+    build_examples_target="examples/examples"
+    run_examples_target="examples/run-examples"
+  else
+    run_tests_target=test
+    build_examples_target="examples"
+    run_examples_target="run-examples"
+  fi
+
+  CTEST_OUTPUT_ON_FAILURE=1 cmake --build . --config "${build_type:?}" --target "${run_tests_target:?}" -- "${cmake_build_opts[@]:-}"
 
   echo "Building examples..."
-  "${cmake_binary:?}" --build . --config "${build_type:?}" --target examples/examples
+  cmake --build . --config "${build_type:?}" --target "${build_examples_target:?}"
   echo "Building examples... done."
 
   # Only run examples if MONGODB_API_VERSION is unset. We do not append
@@ -249,7 +276,7 @@ if [[ "${OSTYPE:?}" =~ cygwin ]]; then
   # is true.
   if [[ -z "$MONGODB_API_VERSION" ]]; then
     echo "Running examples..."
-    if ! "${cmake_binary:?}" --build . --config "${build_type:?}" --target examples/run-examples --parallel 1 -- /verbosity:minimal >|output.txt 2>&1; then
+    if ! cmake --build . --config "${build_type:?}" --target "${run_examples_target:?}" --parallel 1 -- "${cmake_build_opts[@]:-}" >|output.txt 2>&1; then
       # Only emit output on failure.
       cat output.txt
       exit 1
@@ -276,17 +303,39 @@ else
     --allow-running-no-tests
   )
 
-  run_test() { "$@" "${test_args[@]:?}"; }
+  run_test() {
+    echo "Running ${1:?}..."
+    LD_PRELOAD="${ld_preload:-}" "${1:?}" "${test_args[@]:?}" || return
+    echo "Running ${1:?}... done."
+  }
 
+  declare ld_preload="${LD_PRELOAD:-}"
   if [[ "${TEST_WITH_ASAN:-}" == "ON" || "${TEST_WITH_UBSAN:-}" == "ON" ]]; then
     export ASAN_OPTIONS="detect_leaks=1"
     export UBSAN_OPTIONS="print_stacktrace=1"
-    export PATH="/opt/mongodbtoolchain/v4/bin:${PATH:-}" # llvm-symbolizer
+    ld_preload="$(bypass_dlclose):${ld_preload:-}"
   elif [[ "${TEST_WITH_VALGRIND:-}" == "ON" ]]; then
-    PATH="${VALGRIND_INSTALL_DIR:?}:${PATH:-}"
+    command -V valgrind
     valgrind --version
     run_test() {
-      valgrind --leak-check=full --track-origins=yes --num-callers=50 --error-exitcode=1 --error-limit=no --read-var-info=yes --suppressions=../etc/memcheck.suppressions "$@" "${test_args[@]:?}"
+      valgrind_args=(
+        "--leak-check=full"
+        "--track-origins=yes"
+        "--num-callers=50"
+        "--error-exitcode=1"
+        "--error-limit=no"
+        "--read-var-info=yes"
+        "--suppressions=../etc/memcheck.suppressions"
+      )
+
+      # Avoid noisy diagnostics caused by deliberate subprocess termination.
+      if [[ "${1:?}" =~ test_instance ]]; then
+        valgrind_args+=("--trace-children=no")
+      fi
+
+      echo "Running ${1:?}..."
+      valgrind "${1:?}" "${test_args[@]:?}" || return
+      echo "Running ${1:?}... done."
     }
   fi
 
@@ -299,7 +348,6 @@ else
   run_test ./src/mongocxx/test/test_command_monitoring_specs
   run_test ./src/mongocxx/test/test_instance
   run_test ./src/mongocxx/test/test_transactions_specs
-  run_test ./src/mongocxx/test/test_logging
   run_test ./src/mongocxx/test/test_retryable_reads_specs
   run_test ./src/mongocxx/test/test_read_write_concern_specs
   run_test ./src/mongocxx/test/test_unified_format_specs
@@ -312,7 +360,7 @@ else
     export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 
     echo "Running examples..."
-    if ! "${cmake_binary:?}" --build . --target run-examples --parallel 1 >|output.txt 2>&1; then
+    if ! cmake --build . --target run-examples --parallel 1 >|output.txt 2>&1; then
       # Only emit output on failure.
       cat output.txt
       exit 1
@@ -327,23 +375,16 @@ CMAKE_PREFIX_PATH="${mongoc_dir:?}:${working_dir:?}/build/install"
 export CMAKE_PREFIX_PATH
 
 PKG_CONFIG_PATH=""
-PKG_CONFIG_PATH+=":${mongoc_dir:?}/${LIB_DIR:?}/pkgconfig"
-PKG_CONFIG_PATH+=":${working_dir:?}/build/install/${LIB_DIR:?}/pkgconfig"
+if [[ "${OSTYPE:?}" == cygwin ]]; then
+  PKG_CONFIG_PATH+=";$(cygpath -aw "${mongoc_dir:?}/${LIB_DIR:?}/pkgconfig")"
+  PKG_CONFIG_PATH+=";$(cygpath -aw "${working_dir:?}/build/install/${LIB_DIR:?}/pkgconfig")"
+else
+  PKG_CONFIG_PATH+=":${mongoc_dir:?}/${LIB_DIR:?}/pkgconfig"
+  PKG_CONFIG_PATH+=":${working_dir:?}/build/install/${LIB_DIR:?}/pkgconfig"
+fi
 export PKG_CONFIG_PATH
 
-# Environment variables used by example projects.
-export CMAKE_GENERATOR="${generator:-}"
-export CMAKE_GENERATOR_PLATFORM="${platform:-}"
-export BUILD_TYPE="${build_type:?}"
-export CXXFLAGS="${example_projects_cxxflags:-}"
-export LDFLAGS="${example_projects_ldflags:-}"
-export CC="${example_projects_cc:-"cc"}"
-export CXX="${example_projects_cxx:-"c++"}"
-export CXX_STANDARD="${example_projects_cxx_standard:-11}"
-
-if [[ "$OSTYPE" =~ cygwin ]]; then
-  export MSVC=1
-else
+if [[ "${generator:-}" != Visual\ Studio\ * ]]; then
   LD_LIBRARY_PATH="${working_dir:?}/build/install/${LIB_DIR:?}:${LD_LIBRARY_PATH:-}"
   DYLD_FALLBACK_LIBRARY_PATH="$(pwd)/build/install/lib:${DYLD_FALLBACK_LIBRARY_PATH:-}"
 fi

@@ -17,7 +17,7 @@
 #include <cstdint>
 #include <system_error>
 
-#include <mongocxx/exception/error_code-fwd.hpp>
+#include <mongocxx/exception/error_code-fwd.hpp> // IWYU pragma: export
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -121,7 +121,7 @@ enum class error_code : std::int32_t {
 ///
 /// @return The mongocxx error_category
 ///
-MONGOCXX_ABI_EXPORT_CDECL(std::error_category const&) error_category();
+MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(std::error_category const&) error_category();
 
 ///
 /// Translate a mongocxx::v_noabi::error_code into a std::error_code.
@@ -139,8 +139,8 @@ inline std::error_code make_error_code(error_code error) {
 
 namespace mongocxx {
 
-using ::mongocxx::v_noabi::error_category;
-using ::mongocxx::v_noabi::make_error_code;
+using v_noabi::error_category;
+using v_noabi::make_error_code;
 
 } // namespace mongocxx
 
@@ -150,7 +150,7 @@ namespace std {
 
 // @cond DOXYGEN_DISABLE
 template <>
-struct is_error_code_enum<::mongocxx::v_noabi::error_code> : std::true_type {};
+struct is_error_code_enum<mongocxx::v_noabi::error_code> : std::true_type {};
 // @endcond
 
 } // namespace std

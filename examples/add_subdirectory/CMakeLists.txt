@@ -15,7 +15,7 @@
 # Demonstrates how to use the CMake 'add_subdirectory' mechanism to locate and
 # build against the mongoc and mongocxx shared libraries.
 
-cmake_minimum_required(VERSION 3.15...4.0)
+cmake_minimum_required(VERSION 3.15...4.99)
 
 project(HELLO_WORLD LANGUAGES C CXX)
 

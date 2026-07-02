@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <bsoncxx/builder/concatenate.hpp>
+#include <bsoncxx/builder/concatenate.hpp> // IWYU pragma: export
 
 #include <bsoncxx/config/prelude.hpp>
 
@@ -23,7 +23,7 @@ namespace v_noabi {
 namespace builder {
 namespace basic {
 
-using ::bsoncxx::v_noabi::builder::concatenate;
+using v_noabi::builder::concatenate;
 
 } // namespace basic
 } // namespace builder
@@ -34,7 +34,7 @@ namespace bsoncxx {
 namespace builder {
 namespace basic {
 
-using ::bsoncxx::v_noabi::builder::basic::concatenate;
+using v_noabi::builder::basic::concatenate;
 
 } // namespace basic
 } // namespace builder

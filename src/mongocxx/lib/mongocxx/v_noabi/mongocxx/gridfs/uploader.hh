@@ -14,78 +14,40 @@
 
 #pragma once
 
-#include <mongocxx/gridfs/uploader.hpp>
+#include <mongocxx/gridfs/uploader.hpp> // IWYU pragma: export
 
 //
 
+#include <mongocxx/v1/exception-fwd.hpp>
+
+#include <cstdint>
 #include <string>
-#include <vector>
 
-#include <bsoncxx/string/to_string.hpp>
+#include <bsoncxx/types/bson_value/value-fwd.hpp>
 
-#include <bsoncxx/private/make_unique.hh>
+#include <mongocxx/client_session-fwd.hpp>
+#include <mongocxx/collection-fwd.hpp>
+
+#include <bsoncxx/document/view_or_value.hpp>
+#include <bsoncxx/stdx/optional.hpp>
 
 namespace mongocxx {
 namespace v_noabi {
 namespace gridfs {
 
-class uploader::impl {
+class uploader::internal {
    public:
-    impl(
-        client_session const* session,
-        result::gridfs::upload result,
-        bsoncxx::v_noabi::stdx::string_view filename,
-        collection files,
-        collection chunks,
+    static uploader make(
+        v_noabi::collection files_coll,
+        v_noabi::collection chunks_coll,
+        v_noabi::client_session const* session_ptr,
+        std::string filename,
+        bsoncxx::v_noabi::types::value id,
         std::int32_t chunk_size,
-        bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> metadata)
-        : session{session},
-          buffer{bsoncxx::make_unique<std::uint8_t[]>(static_cast<size_t>(chunk_size))},
-          buffer_off{0},
-          chunks{std::move(chunks)},
-          chunk_size{chunk_size},
-          chunks_written{0},
-          closed{false},
-          filename{bsoncxx::v_noabi::string::to_string(filename)},
-          files{std::move(files)},
-          metadata{std::move(metadata)},
-          result{std::move(result)} {}
+        bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& metadata);
 
-    // Client session to use for upload operations.
-    client_session const* session;
-
-    // Bytes that have been written for the current chunk.
-    std::unique_ptr<std::uint8_t[]> buffer;
-
-    // The offset from `buffer` to the next byte to be written.
-    std::size_t buffer_off;
-
-    // The collection to which the chunks will be written.
-    collection chunks;
-
-    // Chunks that have been fully written but not yet uploaded to the server.
-    std::vector<bsoncxx::v_noabi::document::value> chunks_collection_documents;
-
-    // The size of a chunk in bytes.
-    std::int32_t chunk_size;
-
-    // The number of chunks fully written so far.
-    std::int32_t chunks_written;
-
-    // Whether or not the uploader has already been closed.
-    bool closed;
-
-    // The name of the file to be written.
-    std::string filename;
-
-    // The collection to which the files document will be written.
-    collection files;
-
-    // User-specified metadata for the file.
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> metadata;
-
-    // Contains the id of the file being written.
-    result::gridfs::upload result;
+    [[noreturn]]
+    static void rethrow_exception(v1::exception const& ex);
 };
 
 } // namespace gridfs

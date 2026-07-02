@@ -14,13 +14,15 @@
 
 #pragma once
 
+#include <mongocxx/v1/return_document-fwd.hpp>
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-enum class return_document;
+using v1::return_document;
 
 } // namespace options
 } // namespace v_noabi
@@ -29,7 +31,7 @@ enum class return_document;
 namespace mongocxx {
 namespace options {
 
-using ::mongocxx::v_noabi::options::return_document;
+using v1::return_document;
 
 } // namespace options
 } // namespace mongocxx
@@ -39,4 +41,7 @@ using ::mongocxx::v_noabi::options::return_document;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::options::return_document.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/return_document-fwd.hpp
 ///

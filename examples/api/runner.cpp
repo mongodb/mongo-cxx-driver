@@ -43,13 +43,13 @@
 
 #include <examples/macros.hh>
 
-#if !defined(_MSC_VER)
+#if !defined(_WIN32)
 
 #include <unistd.h>
 
 #include <sys/wait.h>
 
-#endif // !defined(_MSC_VER)
+#endif // !defined(_WIN32)
 
 namespace {
 
@@ -119,7 +119,7 @@ class runner_type {
 
     action run_forking_components() {
         if (use_fork) {
-#if !defined(_MSC_VER)
+#if !defined(_WIN32)
             // Forking with threads is difficult and the number of components that require forking
             // are few in number. Run forking components sequentially.
             for (auto const& component : forking_components) {
@@ -167,7 +167,7 @@ class runner_type {
             }
 
             return action::succeed;
-#endif // !defined(_MSC_VER)
+#endif // !defined(_WIN32)
         }
 
         std::cout << "Skipping API examples that require forked processes" << std::endl;
@@ -300,11 +300,12 @@ class runner_type {
         if (verbose) {
             std::vector<bsoncxx::stdx::string_view> names;
 
-            names.reserve(std::accumulate(
-                std::begin(all_components),
-                std::end(all_components),
-                std::size_t{0},
-                [](std::size_t n, std::vector<component> const* cptr) { return n + cptr->size(); }));
+            names.reserve(
+                std::accumulate(
+                    std::begin(all_components),
+                    std::end(all_components),
+                    std::size_t{0},
+                    [](std::size_t n, std::vector<component> const* cptr) { return n + cptr->size(); }));
 
             for (auto cptr : all_components) {
                 for (auto c : *cptr) {
@@ -483,7 +484,7 @@ void runner_register_forking_component(void (*fn)(), char const* name) {
 }
 
 int EXAMPLES_CDECL main(int argc, char** argv)
-#if defined(_MSC_VER)
+#if defined(_WIN32)
     try
 #endif
 {
@@ -538,7 +539,7 @@ int EXAMPLES_CDECL main(int argc, char** argv)
 
     return runner.run(); // Return directly from forked processes.
 }
-#if defined(_MSC_VER)
+#if defined(_WIN32)
 // Avoid popup dialog boxes or completely-absent CLI error messages on Windows.
 catch (std::exception const& ex) {
     std::cerr << "API runner failed due to uncaught exception: " << ex.what() << std::endl;

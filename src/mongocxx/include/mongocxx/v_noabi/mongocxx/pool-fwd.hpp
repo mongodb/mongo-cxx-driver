@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/pool-fwd.hpp>
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -26,7 +28,7 @@ class pool;
 
 namespace mongocxx {
 
-using ::mongocxx::v_noabi::pool;
+using v_noabi::pool;
 
 } // namespace mongocxx
 
@@ -35,4 +37,7 @@ using ::mongocxx::v_noabi::pool;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::pool.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/pool-fwd.hpp
 ///

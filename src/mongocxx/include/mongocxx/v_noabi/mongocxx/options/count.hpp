@@ -14,17 +14,28 @@
 
 #pragma once
 
+#include <mongocxx/options/count-fwd.hpp> // IWYU pragma: export
+
+//
+
+#include <bsoncxx/v1/document/value.hpp>
+#include <bsoncxx/v1/types/value.hpp>
+
+#include <mongocxx/v1/count_options.hpp> // IWYU pragma: export
+
 #include <chrono>
 #include <cstdint>
-#include <string>
+#include <string> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <utility>
 
-#include <mongocxx/options/count-fwd.hpp>
-
+#include <bsoncxx/document/view.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/types/bson_value/view.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
 
 #include <mongocxx/hint.hpp>
+#include <mongocxx/read_concern.hpp>
 #include <mongocxx/read_preference.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -39,20 +50,76 @@ namespace options {
 class count {
    public:
     ///
+    /// Default initialization.
+    ///
+    count() = default;
+
+    ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() count(v1::count_options opts);
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    explicit operator v1::count_options() const {
+        using bsoncxx::v_noabi::to_v1;
+        using mongocxx::v_noabi::to_v1;
+
+        v1::count_options ret;
+
+        if (_collation) {
+            ret.collation(bsoncxx::v1::document::value{to_v1(_collation->view())});
+        }
+
+        if (_hint) {
+            ret.hint(to_v1(*_hint));
+        }
+
+        if (_comment) {
+            ret.comment(bsoncxx::v1::types::value{to_v1(_comment->view())});
+        }
+
+        if (_limit) {
+            ret.limit(*_limit);
+        }
+
+        if (_max_time) {
+            ret.max_time(*_max_time);
+        }
+
+        if (_skip) {
+            ret.skip(*_skip);
+        }
+
+        if (_read_preference) {
+            ret.read_preference(to_v1(*_read_preference));
+        }
+
+        if (_read_concern) {
+            ret.read_concern(to_v1(*_read_concern));
+        }
+
+        return ret;
+    }
+
+    ///
     /// Sets the collation for this operation.
     ///
     /// @param collation
     ///   The new collation.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(count&)
-    collation(bsoncxx::v_noabi::document::view_or_value collation);
+    count& collation(bsoncxx::v_noabi::document::view_or_value collation) {
+        _collation = std::move(collation);
+        return *this;
+    }
 
     ///
     /// Retrieves the current collation for this operation.
@@ -63,8 +130,9 @@ class count {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
-    collation() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const& collation() const {
+        return _collation;
+    }
 
     ///
     /// Sets the index to use for this operation.
@@ -73,13 +141,16 @@ class count {
     ///   Object representing the index to use.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(count&) hint(mongocxx::v_noabi::hint index_hint);
+    count& hint(v_noabi::hint index_hint) {
+        _hint = std::move(index_hint);
+        return *this;
+    }
 
     ///
     /// Gets the current hint.
@@ -89,8 +160,9 @@ class count {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> const&)
-    hint() const;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::hint> const& hint() const {
+        return _hint;
+    }
 
     ///
     /// Set the value of the comment option.
@@ -99,14 +171,16 @@ class count {
     ///   The new comment option.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(count&)
-    comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
+    count& comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment) {
+        _comment = std::move(comment);
+        return *this;
+    }
 
     ///
     /// Gets the current value of the comment option.
@@ -116,9 +190,9 @@ class count {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<
-                              bsoncxx::v_noabi::types::bson_value::view_or_value> const&)
-    comment() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> const& comment() const {
+        return _comment;
+    }
 
     ///
     /// Sets the maximum number of documents to count.
@@ -127,13 +201,16 @@ class count {
     ///  The max number of documents to count.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(count&) limit(std::int64_t limit);
+    count& limit(std::int64_t limit) {
+        _limit = limit;
+        return *this;
+    }
 
     ///
     /// Gets the current limit.
@@ -143,7 +220,9 @@ class count {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::int64_t> const&) limit() const;
+    bsoncxx::v_noabi::stdx::optional<std::int64_t> const& limit() const {
+        return _limit;
+    }
 
     ///
     /// Sets the maximum amount of time for this operation to run (server-side) in milliseconds.
@@ -152,13 +231,16 @@ class count {
     ///   The max amount of time (in milliseconds).
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(count&) max_time(std::chrono::milliseconds max_time);
+    count& max_time(std::chrono::milliseconds max_time) {
+        _max_time = max_time;
+        return *this;
+    }
 
     ///
     /// The current max_time setting.
@@ -168,8 +250,9 @@ class count {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> const&)
-    max_time() const;
+    bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> const& max_time() const {
+        return _max_time;
+    }
 
     ///
     /// Sets the number of documents to skip before counting documents.
@@ -178,13 +261,16 @@ class count {
     ///   The number of documents to skip.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(count&) skip(std::int64_t skip);
+    count& skip(std::int64_t skip) {
+        _skip = skip;
+        return *this;
+    }
 
     ///
     /// Gets the current number of documents to skip.
@@ -194,7 +280,9 @@ class count {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::int64_t> const&) skip() const;
+    bsoncxx::v_noabi::stdx::optional<std::int64_t> const& skip() const {
+        return _skip;
+    }
 
     ///
     /// Sets the read_preference for this operation.
@@ -203,13 +291,16 @@ class count {
     ///   The new read_preference.
     ///
     /// @return
-    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(count&) read_preference(mongocxx::v_noabi::read_preference rp);
+    count& read_preference(v_noabi::read_preference rp) {
+        _read_preference = std::move(rp);
+        return *this;
+    }
 
     ///
     /// The current read_preference for this operation.
@@ -219,20 +310,73 @@ class count {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference> const&)
-    read_preference() const;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::read_preference> const& read_preference() const {
+        return _read_preference;
+    }
+
+    ///
+    /// Sets the read_concern for this operation.
+    ///
+    /// @param rc
+    ///   The new read_concern.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called. This facilitates
+    ///   method chaining.
+    ///
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/read-concern/
+    ///
+    count& read_concern(v_noabi::read_concern rc) {
+        _read_concern = std::move(rc);
+        return *this;
+    }
+
+    ///
+    /// The current read_concern for this operation.
+    ///
+    /// @return
+    ///   The current read_concern.
+    ///
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/read-concern/
+    ///
+    bsoncxx::v_noabi::stdx::optional<v_noabi::read_concern> const& read_concern() const {
+        return _read_concern;
+    }
 
    private:
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> _hint;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::hint> _hint;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
     bsoncxx::v_noabi::stdx::optional<std::int64_t> _limit;
     bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> _max_time;
     bsoncxx::v_noabi::stdx::optional<std::int64_t> _skip;
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference> _read_preference;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::read_preference> _read_preference;
+    bsoncxx::v_noabi::stdx::optional<v_noabi::read_concern> _read_concern;
 };
 
 } // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
+
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::options::count from_v1(v1::count_options v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::count_options to_v1(v_noabi::options::count const& v) {
+    return v1::count_options{v};
+}
+
 } // namespace v_noabi
 } // namespace mongocxx
 
@@ -241,4 +385,7 @@ class count {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::options::count.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/count_options.hpp
 ///

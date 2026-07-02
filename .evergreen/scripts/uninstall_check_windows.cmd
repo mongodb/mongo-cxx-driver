@@ -1,28 +1,20 @@
 echo on
 echo
 
-set INSTALL_DIR=%CD%\build\install
+set BSONCXX_BASENAME=bsoncxx1
+set MONGOCXX_BASENAME=mongocxx1
 
-echo > %INSTALL_DIR%\lib\canary.txt
+set INSTALL_DIR=%CD%\build\install
 
 dir %INSTALL_DIR%\share\mongo-cxx-driver
 
-set CMAKE="C:\cmake\bin\cmake.exe"
-
-pushd build
-%CMAKE% --build . --target uninstall
-if errorlevel 1 (
-  exit /B 1
-)
-popd
-
 dir %INSTALL_DIR% /s
 
-if exist %INSTALL_DIR%\lib\pkgconfig\libbsoncxx.pc (
-  echo libbsoncxx.pc found!
+if exist %INSTALL_DIR%\lib\pkgconfig\lib%BSONCXX_BASENAME%.pc (
+  echo lib%BSONCXX_BASENAME%.pc found!
   exit /B 1
 ) else (
-  echo libbsoncxx.pc check ok
+  echo lib%BSONCXX_BASENAME%.pc check ok
 )
 if not exist %INSTALL_DIR%\lib\canary.txt (
   echo canary.txt not found!
@@ -36,11 +28,11 @@ if not exist %INSTALL_DIR%\lib (
 ) else (
   echo %INSTALL_DIR%\lib check ok
 )
-if exist %INSTALL_DIR%\lib\pkgconfig\libmongocxx.pc (
-  echo libmongocxx.pc found!
+if exist %INSTALL_DIR%\lib\pkgconfig\lib%MONGOCXX_BASENAME%.pc (
+  echo lib%MONGOCXX_BASENAME%.pc found!
   exit /B 1
 ) else (
-  echo libmongocxx.pc check ok
+  echo lib%MONGOCXX_BASENAME%.pc check ok
 )
 if exist %INSTALL_DIR%\include\bsoncxx\v_noabi\bsoncxx\json.hpp (
   echo bsoncxx\json.hpp found!

@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <bsoncxx/builder/concatenate-fwd.hpp>
+#include <bsoncxx/builder/concatenate-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/array/view_or_value.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
@@ -126,7 +126,7 @@ inline concatenate_array concatenate(array::view_or_value array) {
 namespace bsoncxx {
 namespace builder {
 
-using ::bsoncxx::v_noabi::builder::concatenate;
+using v_noabi::builder::concatenate;
 
 } // namespace builder
 } // namespace bsoncxx

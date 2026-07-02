@@ -14,30 +14,18 @@
 
 #include <mongocxx/events/server_closed_event.hpp>
 
+//
+
+#include <mongocxx/v1/events/server_closed.hh>
+
 #include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {
 namespace events {
 
-server_closed_event::server_closed_event(void const* event) : _event(event) {}
-
-server_closed_event::~server_closed_event() = default;
-
-bsoncxx::v_noabi::stdx::string_view server_closed_event::host() const {
-    return libmongoc::apm_server_changed_get_host(static_cast<mongoc_apm_server_changed_t const*>(_event))->host;
-}
-
-std::uint16_t server_closed_event::port() const {
-    return libmongoc::apm_server_changed_get_host(static_cast<mongoc_apm_server_changed_t const*>(_event))->port;
-}
-
-bsoncxx::v_noabi::oid const server_closed_event::topology_id() const {
-    bson_oid_t boid;
-    libmongoc::apm_server_changed_get_topology_id(static_cast<mongoc_apm_server_changed_t const*>(_event), &boid);
-
-    return bsoncxx::v_noabi::oid{reinterpret_cast<char const*>(boid.bytes), sizeof(boid.bytes)};
-}
+server_closed_event::server_closed_event(void const* event)
+    : _event{v1::events::server_closed::internal::make(static_cast<mongoc_apm_server_closed_t const*>(event))} {}
 
 } // namespace events
 } // namespace v_noabi

@@ -14,9 +14,10 @@
 
 #pragma once
 
+#include <mongocxx/test/v_noabi/client_helpers.hh>
+
 #include <mongocxx/client.hpp>
 
-#include <mongocxx/test/client_helpers.hh>
 #include <mongocxx/test/spec/unified_tests/entity.hh>
 
 namespace mongocxx {

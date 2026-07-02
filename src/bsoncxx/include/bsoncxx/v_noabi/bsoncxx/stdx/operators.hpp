@@ -15,7 +15,7 @@
 #pragma once
 
 // For backward compatibility.
-#include <bsoncxx/v1/detail/compare.hpp>
+#include <bsoncxx/v1/detail/compare.hpp> // IWYU pragma: export
 
 ///
 /// @file

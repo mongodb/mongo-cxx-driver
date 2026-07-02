@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/data_key_options-fwd.hpp>
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -29,7 +31,7 @@ class data_key;
 namespace mongocxx {
 namespace options {
 
-using ::mongocxx::v_noabi::options::data_key;
+using v_noabi::options::data_key;
 
 } // namespace options
 } // namespace mongocxx
@@ -39,4 +41,7 @@ using ::mongocxx::v_noabi::options::data_key;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::options::data_key.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/data_key_options-fwd.hpp
 ///

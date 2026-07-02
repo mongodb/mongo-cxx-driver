@@ -1,4 +1,4 @@
-// Compile with: c++ --std=c++11 tutorial.cpp $(pkg-config --cflags --libs libmongocxx)
+// Compile with: c++ --std=c++11 tutorial.cpp $(pkgconf --cflags --libs libmongocxx)
 
 // The following is a formatted copy from the tutorial
 // https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/tutorial/.

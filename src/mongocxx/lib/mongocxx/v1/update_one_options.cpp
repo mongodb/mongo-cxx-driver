@@ -1,0 +1,266 @@
+// Copyright 2009-present MongoDB, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#include <mongocxx/v1/update_one_options.hh>
+
+//
+
+#include <bsoncxx/v1/array/value.hpp>
+#include <bsoncxx/v1/document/value.hpp>
+#include <bsoncxx/v1/document/view.hpp>
+#include <bsoncxx/v1/stdx/optional.hpp>
+#include <bsoncxx/v1/types/view.hpp>
+
+#include <mongocxx/v1/hint.hpp>
+#include <mongocxx/v1/read_concern.hpp>
+#include <mongocxx/v1/write_concern.hpp>
+
+#include <bsoncxx/v1/types/value.hh>
+
+#include <mongocxx/private/utility.hh>
+
+namespace mongocxx {
+namespace v1 {
+
+class update_one_options::impl {
+   public:
+    bsoncxx::v1::stdx::optional<bool> _bypass_document_validation;
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _collation;
+    bsoncxx::v1::stdx::optional<v1::hint> _hint;
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _let;
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _sort;
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> _comment;
+    bsoncxx::v1::stdx::optional<bool> _upsert;
+    bsoncxx::v1::stdx::optional<v1::read_concern> _read_concern;
+    bsoncxx::v1::stdx::optional<v1::write_concern> _write_concern;
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::array::value> _array_filters;
+
+    static impl const& with(update_one_options const& self) {
+        return *static_cast<impl const*>(self._impl);
+    }
+
+    static impl const* with(update_one_options const* self) {
+        return static_cast<impl const*>(self->_impl);
+    }
+
+    static impl& with(update_one_options& self) {
+        return *static_cast<impl*>(self._impl);
+    }
+
+    static impl* with(update_one_options* self) {
+        return static_cast<impl*>(self->_impl);
+    }
+
+    static impl* with(void* ptr) {
+        return static_cast<impl*>(ptr);
+    }
+};
+
+// NOLINTBEGIN(cppcoreguidelines-owning-memory): owning void* for ABI stability.
+
+update_one_options::~update_one_options() {
+    delete impl::with(this);
+}
+
+update_one_options::update_one_options(update_one_options&& other) noexcept : _impl{exchange(other._impl, nullptr)} {}
+
+update_one_options& update_one_options::operator=(update_one_options&& other) noexcept {
+    if (this != &other) {
+        delete impl::with(exchange(_impl, exchange(other._impl, nullptr)));
+    }
+
+    return *this;
+}
+
+update_one_options::update_one_options(update_one_options const& other) : _impl{new impl{impl::with(other)}} {}
+
+update_one_options& update_one_options::operator=(update_one_options const& other) {
+    if (this != &other) {
+        delete impl::with(exchange(_impl, new impl{impl::with(other)}));
+    }
+
+    return *this;
+}
+
+update_one_options::update_one_options() : _impl{new impl{}} {}
+
+// NOLINTEND(cppcoreguidelines-owning-memory)
+
+update_one_options& update_one_options::bypass_document_validation(bool v) {
+    impl::with(this)->_bypass_document_validation = v;
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<bool> update_one_options::bypass_document_validation() const {
+    return impl::with(this)->_bypass_document_validation;
+}
+
+update_one_options& update_one_options::collation(bsoncxx::v1::document::value v) {
+    impl::with(this)->_collation = std::move(v);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> update_one_options::collation() const {
+    return impl::with(this)->_collation;
+}
+
+update_one_options& update_one_options::hint(v1::hint v) {
+    impl::with(this)->_hint = std::move(v);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<v1::hint> update_one_options::hint() const {
+    return impl::with(this)->_hint;
+}
+
+update_one_options& update_one_options::let(bsoncxx::v1::document::value v) {
+    impl::with(this)->_let = std::move(v);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> const update_one_options::let() const {
+    return impl::with(this)->_let;
+}
+
+update_one_options& update_one_options::sort(bsoncxx::v1::document::value v) {
+    impl::with(this)->_sort = std::move(v);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> update_one_options::sort() const {
+    return impl::with(this)->_sort;
+}
+
+update_one_options& update_one_options::comment(bsoncxx::v1::types::value v) {
+    impl::with(this)->_comment = std::move(v);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::types::view> const update_one_options::comment() const {
+    return impl::with(this)->_comment;
+}
+
+update_one_options& update_one_options::upsert(bool v) {
+    impl::with(this)->_upsert = v;
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<bool> update_one_options::upsert() const {
+    return impl::with(this)->_upsert;
+}
+
+update_one_options& update_one_options::read_concern(v1::read_concern v) {
+    impl::with(this)->_read_concern = std::move(v);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_concern> update_one_options::read_concern() const {
+    return impl::with(this)->_read_concern;
+}
+
+update_one_options& update_one_options::write_concern(v1::write_concern v) {
+    impl::with(this)->_write_concern = std::move(v);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<v1::write_concern> update_one_options::write_concern() const {
+    return impl::with(this)->_write_concern;
+}
+
+update_one_options& update_one_options::array_filters(bsoncxx::v1::array::value v) {
+    impl::with(this)->_array_filters = std::move(v);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::array::view> update_one_options::array_filters() const {
+    return impl::with(this)->_array_filters;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& update_one_options::internal::collation(
+    update_one_options const& self) {
+    return impl::with(self)._collation;
+}
+
+bsoncxx::v1::stdx::optional<v1::hint> const& update_one_options::internal::hint(update_one_options const& self) {
+    return impl::with(self)._hint;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& update_one_options::internal::let(
+    update_one_options const& self) {
+    return impl::with(self)._let;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> const& update_one_options::internal::sort(
+    update_one_options const& self) {
+    return impl::with(self)._sort;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> const& update_one_options::internal::comment(
+    update_one_options const& self) {
+    return impl::with(self)._comment;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_concern> const& update_one_options::internal::read_concern(
+    update_one_options const& self) {
+    return impl::with(self)._read_concern;
+}
+
+bsoncxx::v1::stdx::optional<v1::write_concern> const& update_one_options::internal::write_concern(
+    update_one_options const& self) {
+    return impl::with(self)._write_concern;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::array::value> const& update_one_options::internal::array_filters(
+    update_one_options const& self) {
+    return impl::with(self)._array_filters;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& update_one_options::internal::collation(
+    update_one_options& self) {
+    return impl::with(self)._collation;
+}
+
+bsoncxx::v1::stdx::optional<v1::hint>& update_one_options::internal::hint(update_one_options& self) {
+    return impl::with(self)._hint;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& update_one_options::internal::let(update_one_options& self) {
+    return impl::with(self)._let;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value>& update_one_options::internal::sort(
+    update_one_options& self) {
+    return impl::with(self)._sort;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value>& update_one_options::internal::comment(
+    update_one_options& self) {
+    return impl::with(self)._comment;
+}
+
+bsoncxx::v1::stdx::optional<v1::read_concern>& update_one_options::internal::read_concern(update_one_options& self) {
+    return impl::with(self)._read_concern;
+}
+
+bsoncxx::v1::stdx::optional<v1::write_concern>& update_one_options::internal::write_concern(update_one_options& self) {
+    return impl::with(self)._write_concern;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::array::value>& update_one_options::internal::array_filters(
+    update_one_options& self) {
+    return impl::with(self)._array_filters;
+}
+
+} // namespace v1
+} // namespace mongocxx

@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/validation_criteria-fwd.hpp>
+#include <mongocxx/validation_criteria-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -45,7 +45,7 @@ class validation_criteria {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(validation_criteria&)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(validation_criteria&)
     rule(bsoncxx::v_noabi::document::view_or_value rule);
 
     ///
@@ -54,7 +54,7 @@ class validation_criteria {
     /// @return
     ///   Document representing a validation rule.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> const&)
     rule() const;
 
     ///
@@ -82,7 +82,7 @@ class validation_criteria {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(validation_criteria&) level(validation_level level);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(validation_criteria&) level(validation_level level);
 
     ///
     /// Gets the validation level.
@@ -90,7 +90,7 @@ class validation_criteria {
     /// @return
     ///   The enumerated validation level.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<validation_level> const&)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<validation_level> const&)
     level() const;
 
     ///
@@ -115,7 +115,7 @@ class validation_criteria {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(validation_criteria&) action(validation_action action);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(validation_criteria&) action(validation_action action);
 
     ///
     /// Gets the validation action to run when documents failing validation are inserted or
@@ -124,7 +124,7 @@ class validation_criteria {
     /// @return
     ///   The enumerated validation action.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<validation_action> const&)
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<validation_action> const&)
     action() const;
 
     ///
@@ -136,9 +136,9 @@ class validation_criteria {
     ///
     /// @return Validation criteria, as a document.
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value) to_document() const;
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::document::value) to_document() const;
 
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value) to_document_deprecated() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::document::value) to_document_deprecated() const;
 
     ///
     /// @deprecated
@@ -162,11 +162,11 @@ class validation_criteria {
 /// @{
 
 /// @relatesalso mongocxx::v_noabi::validation_criteria
-MONGOCXX_ABI_EXPORT_CDECL(bool)
+MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bool)
 operator==(validation_criteria const& lhs, validation_criteria const& rhs);
 
 /// @relatesalso mongocxx::v_noabi::validation_criteria
-MONGOCXX_ABI_EXPORT_CDECL(bool)
+MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bool)
 operator!=(validation_criteria const& lhs, validation_criteria const& rhs);
 /// @}
 ///
@@ -176,8 +176,8 @@ operator!=(validation_criteria const& lhs, validation_criteria const& rhs);
 
 namespace mongocxx {
 
-using ::mongocxx::v_noabi::operator==;
-using ::mongocxx::v_noabi::operator!=;
+using v_noabi::operator==;
+using v_noabi::operator!=;
 
 } // namespace mongocxx
 

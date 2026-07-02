@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/indexes-fwd.hpp> // IWYU pragma: export
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -29,7 +31,7 @@ class index;
 namespace mongocxx {
 namespace options {
 
-using ::mongocxx::v_noabi::options::index;
+using v_noabi::options::index;
 
 } // namespace options
 } // namespace mongocxx
@@ -39,4 +41,7 @@ using ::mongocxx::v_noabi::options::index;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::options::index.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/indexes-fwd.hpp
 ///

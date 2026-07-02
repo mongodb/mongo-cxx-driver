@@ -41,7 +41,7 @@ namespace bsoncxx {
 namespace builder {
 namespace basic {
 
-using ::bsoncxx::v_noabi::builder::basic::kvp;
+using v_noabi::builder::basic::kvp;
 
 } // namespace basic
 } // namespace builder

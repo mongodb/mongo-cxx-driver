@@ -14,15 +14,15 @@
 
 #pragma once
 
-#include <bsoncxx/builder/stream/array-fwd.hpp>
+#include <bsoncxx/builder/stream/array-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/array/value.hpp>
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/builder/stream/array_context.hpp>
-#include <bsoncxx/builder/stream/key_context.hpp>
-#include <bsoncxx/builder/stream/single_context.hpp>
-#include <bsoncxx/builder/stream/value_context.hpp>
+#include <bsoncxx/builder/stream/key_context.hpp>    // IWYU pragma: keep: backward compatibility, to be removed.
+#include <bsoncxx/builder/stream/single_context.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <bsoncxx/builder/stream/value_context.hpp>  // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <bsoncxx/config/prelude.hpp>
 
@@ -49,14 +49,14 @@ class array : public array_context<> {
     ///
     /// @return A view of the BSON array.
     ///
-    bsoncxx::v_noabi::array::view view() const {
+    v_noabi::array::view view() const {
         return _core.view_array();
     }
 
     ///
     /// @return A view of the BSON array.
     ///
-    operator bsoncxx::v_noabi::array::view() const {
+    operator v_noabi::array::view() const {
         return view();
     }
 
@@ -69,7 +69,7 @@ class array : public array_context<> {
     ///  After calling extract() it is illegal to call any methods
     ///  on this class, unless it is subsequenly moved into.
     ///
-    bsoncxx::v_noabi::array::value extract() {
+    v_noabi::array::value extract() {
         return _core.extract_array();
     }
 

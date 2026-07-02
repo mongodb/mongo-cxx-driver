@@ -14,19 +14,25 @@
 
 #pragma once
 
+#include <mongocxx/gridfs/downloader-fwd.hpp> // IWYU pragma: export
+
+//
+
+#include <mongocxx/v1/gridfs/downloader.hpp> // IWYU pragma: export
+
 #include <cstddef>
 #include <cstdint>
-#include <memory>
+#include <memory> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <utility>
 
-#include <mongocxx/gridfs/bucket-fwd.hpp>
-#include <mongocxx/gridfs/downloader-fwd.hpp>
+#include <mongocxx/gridfs/bucket-fwd.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 
-#include <bsoncxx/document/value.hpp>
+#include <bsoncxx/document/value.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <bsoncxx/document/view.hpp>
-#include <bsoncxx/stdx/optional.hpp>
-#include <bsoncxx/types/bson_value/view.hpp>
+#include <bsoncxx/stdx/optional.hpp>         // IWYU pragma: keep: backward compatibility, to be removed.
+#include <bsoncxx/types/bson_value/view.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 
-#include <mongocxx/cursor.hpp>
+#include <mongocxx/cursor.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -46,38 +52,64 @@ struct chunks_and_bytes_offset {
 /// Used to download a GridFS file.
 ///
 class downloader {
+   private:
+    v1::gridfs::downloader _downloader;
+
    public:
     ///
     /// Default constructs a downloader object. The downloader is equivalent to the state of a moved
     /// from downloader. The only valid actions to take with a default constructed downloader are to
     /// assign to it, or destroy it.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() downloader() noexcept;
+    downloader() noexcept {}
 
     ///
     /// Move constructs a downloader.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() downloader(downloader&&) noexcept;
+    downloader(downloader&& other) noexcept = default;
 
     ///
     /// Move assigns a downloader.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(downloader&) operator=(downloader&&) noexcept;
+    downloader& operator=(downloader&& other) noexcept = default;
 
-    downloader(downloader const&) = delete;
-
-    downloader& operator=(downloader const&) = delete;
+    downloader(downloader const& other) = delete;
+    downloader& operator=(downloader const& other) = delete;
 
     ///
     /// Destroys a downloader.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL() ~downloader();
+    ~downloader() = default;
+
+    ///
+    /// Construct with the @ref mongocxx::v1 equivalent.
+    ///
+    /* explicit(false) */ downloader(v1::gridfs::downloader downloader) : _downloader{std::move(downloader)} {}
+
+    ///
+    /// Convert to the @ref mongocxx::v1 equivalent.
+    ///
+    /// @par Postconditions:
+    /// - `*this` is in an assign-or-destroy-only state.
+    ///
+    /// @warning Invalidates all associated objects.
+    ///
+    explicit operator v1::gridfs::downloader() && {
+        return std::move(_downloader);
+    }
+
+    ///
+    /// This class is not copyable.
+    ///
+    explicit operator v1::gridfs::downloader() const& = delete;
 
     ///
     /// Returns true if the downloader is valid, meaning it was not default constructed or moved
     /// from.
     ///
-    explicit MONGOCXX_ABI_EXPORT_CDECL() operator bool() const noexcept;
+    explicit operator bool() const noexcept {
+        return _downloader.operator bool();
+    }
 
     ///
     /// Reads a specified number of bytes from the GridFS file being downloaded.
@@ -99,14 +131,14 @@ class downloader {
     /// @throws mongocxx::v_noabi::query_exception
     ///   if an error occurs when reading chunk data from the database for the requested file.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::size_t) read(std::uint8_t* buffer, std::size_t length);
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(std::size_t) read(std::uint8_t* buffer, std::size_t length);
 
     ///
     /// Closes the downloader stream.
     ///
     /// @throws mongocxx::v_noabi::logic_error if the download stream was already closed.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) close();
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void) close();
 
     ///
     /// Gets the chunk size of the file being downloaded.
@@ -114,7 +146,7 @@ class downloader {
     /// @return
     ///   The chunk size in bytes.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::int32_t) chunk_size() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(std::int32_t) chunk_size() const;
 
     ///
     /// Gets the length of the file being downloaded.
@@ -122,7 +154,7 @@ class downloader {
     /// @return
     ///   The length in bytes.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) file_length() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(std::int64_t) file_length() const;
 
     ///
     /// Gets the files collection document of the file being downloaded.
@@ -130,48 +162,32 @@ class downloader {
     /// @return
     ///    A view to the files collection document of the file being downloaded.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) files_document() const;
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::document::view) files_document() const;
 
-   private:
-    friend ::mongocxx::v_noabi::gridfs::bucket;
-
-    //
-    // Constructs a new downloader stream.
-    //
-    // @param chunks
-    //   The cursor to read the chunks of the file from. It must have a value if the length of the
-    //   file is non-zero.
-    //
-    // @param start
-    //   The offset from which to start reading the chunks of the file.
-    //
-    // @param chunk_size
-    //   The expected size of a chunk in bytes.
-    //
-    // @param file_len
-    //   The expected size of the file in bytes.
-    //
-    // @param files_doc
-    //   The files collection document of the file being downloaded.
-    //
-    downloader(
-        bsoncxx::v_noabi::stdx::optional<cursor> chunks,
-        chunks_and_bytes_offset start,
-        std::int32_t chunk_size,
-        std::int64_t file_len,
-        bsoncxx::v_noabi::document::value files_doc);
-
-    void fetch_chunk();
-
-    class impl;
-
-    impl& _get_impl();
-    impl const& _get_impl() const;
-
-    std::unique_ptr<impl> _impl;
+    class internal;
 };
 
 } // namespace gridfs
+} // namespace v_noabi
+} // namespace mongocxx
+
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+inline v_noabi::gridfs::downloader from_v1(v1::gridfs::downloader v) {
+    return {std::move(v)};
+}
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+inline v1::gridfs::downloader to_v1(v_noabi::gridfs::downloader v) {
+    return v1::gridfs::downloader{std::move(v)};
+}
+
 } // namespace v_noabi
 } // namespace mongocxx
 
@@ -180,4 +196,7 @@ class downloader {
 ///
 /// @file
 /// Provides utilities to download GridFS files.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/gridfs/downloader.hpp
 ///

@@ -12,32 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/builder/basic/array.hpp>
-
 #include <mongocxx/result/insert_one.hpp>
+
+//
+
+#include <mongocxx/v1/insert_one_result.hh>
+
+#include <utility>
+
+#include <bsoncxx/types/value.hpp>
+
+#include <mongocxx/result/bulk_write.hpp>
 
 namespace mongocxx {
 namespace v_noabi {
 namespace result {
 
-insert_one::insert_one(result::bulk_write result, bsoncxx::v_noabi::types::bson_value::view inserted_id)
-    : _result(std::move(result)),
-      _inserted_id_owned(bsoncxx::v_noabi::builder::basic::make_array(inserted_id)),
-      _inserted_id(_inserted_id_owned.view()[0].get_value()) {}
+insert_one::insert_one(v1::insert_one_result opts)
+    : _result{std::move(v1::insert_one_result::internal::result(opts))},
+      _inserted_id_owned{std::move(v1::insert_one_result::internal::inserted_id(opts))},
+      _inserted_id{_inserted_id_owned} {}
 
-result::bulk_write const& insert_one::result() const {
-    return _result;
-}
-
-bsoncxx::v_noabi::types::bson_value::view const& insert_one::inserted_id() const {
-    return _inserted_id;
-}
-
-bool operator==(insert_one const& lhs, insert_one const& rhs) {
-    return ((lhs.result() == rhs.result()) && (lhs.inserted_id() == rhs.inserted_id()));
-}
-bool operator!=(insert_one const& lhs, insert_one const& rhs) {
-    return !(lhs == rhs);
+insert_one::operator v1::insert_one_result() const {
+    return v1::insert_one_result::internal::make(v_noabi::to_v1(_result), bsoncxx::v_noabi::to_v1(_inserted_id_owned));
 }
 
 } // namespace result

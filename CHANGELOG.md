@@ -7,11 +7,163 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Changes prior to 3.9.0 are documented as [release notes on GitHub](https://github.com/mongodb/mongo-cxx-driver/releases).
 
+## 4.4.0
+
+> [!IMPORTANT]
+> This is the first release supporting a stable ABI for the bsoncxx and mongocxx libraries.
+>
+> - The stable ABI is declared under the `v1` namespace of the bsoncxx and mongocxx libraries.
+> - The unstable ABI declared under the `v_noabi` namespace is still supported.
+> - Root namespace redeclarations (e.g. `bsoncxx::document::value`) are recommended when ABI stability is not a requirement. These redeclarations will be updated to the latest ABI version equivalents in an upcoming API major release.
+>
+> See [ABI Versioning](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/reference/api-abi-versioning/abi-versioning/) for more information.
+
+### Fixed
+
+- Include of `v1/text_options.hpp` (normal header) by `options/text-fwd.hpp` (forward header).
+- Include of v\_noabi macro guard headers by `text_options.hpp` (v1).
+
+### Deprecated
+
+- Support for MongoDB Server 4.2.
+  - See: [MongoDB Software Lifecycle Schedules](https://www.mongodb.com/legal/support-policy/lifecycles).
+
+### Changed
+
+- Stable ABI (v1) is now officially supported for both bsoncxx and mongocxx libraries.
+- The soversion for both bsoncxx and mongocxx libraries is now set to `1`.
+- Library filenames now include the ABI version number, e.g. `libbsoncxx1.so.4.4.0`.
+- pkg-config config filenames now include the ABI version number, e.g. `libbsoncxx1.pc`.
+- CMake package config filenames now use `camelCase`, e.g. `bsoncxxConfig.cmake`.
+- Bump the minimum required C Driver version to [2.3.1](https://github.com/mongodb/mongo-c-driver/releases/tag/2.3.1).
+
+### Added
+
+- Support for the "readConcern" option field to "delete", "insert", "replace", "bulkWrite", "findOneAnd*", "count", and "distinct" operations.
+- Support for `MONGODB-OIDC` authMechanism.
+- Support for client bulk write API (`mongocxx::client_bulk_write`).
+  - Unlike collection bulk write (`mongocxx::bulk_write`), client bulk write supports writes across more than one collection and can group inserts, updates, and deletes in the same network payload.
+  - Requires MongoDB Server 8.0 or newer.
+  - See:
+    - [Bulk Write Operations (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/bulk-write-operations/)
+    - [bulkWrite (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/command/bulkWrite/)
+
+## 4.3.1
+
+### Fixed
+
+- Do not set `upsert: true` in "findOneAnd*" operations when the option is explicitly set to `false` (regression in 4.2.0).
+
+
+## 4.3.0
+
+### Fixed
+
+- Added missing subscript operators for class types declared in `bsoncxx::vector::iterators`.
+
+### Deprecated
+
+- Support for Visual Studio 2015 (EOL since Oct 2025). Use Visual Studio 2017 or newer.
+
+### Changed
+
+- Bump the minimum required C Driver version to [2.3.0](https://github.com/mongodb/mongo-c-driver/releases/tag/2.3.0).
+
+### Added
+
+- Added support for [MongoDB's Intelligent Workload Management (IWM)](https://www.mongodb.com/docs/atlas/intelligent-workload-management/) and ingress connection rate limiting features. The driver now gracefully handles write-blocking scenarios and optimizes connection establishment during high-load conditions to maintain application availability.
+    - Supported on all commands.
+    - Custom application retry logic may need to be adjusted to avoid retrying too long.
+    - Upgrade is recommended to avoid impacts of server changes related to overload errors.
+        - If not upgrading, custom application retry logic may need to be adjusted to handle higher rates of overload errors.
+    - Add URI option `maxAdaptiveRetries` to configure the maximum number of retries for operations that fail with a `SystemOverloadedError` (default: `2`).
+    - Add URI option `enableOverloadRetargeting` to control whether retries of `SystemOverloadedError` will attempt to use a different server (default: `false`).
+- Added support for the "readConcern" option field to "find" and "update" operations.
+
+## 4.2.0
+
+> [!IMPORTANT]
+> This release removes and changes the exports of many unstable ABI symbols.
+> As a reminder, recompilation is required to link with a new release of the unstable ABI for mongo-cxx-driver libraries.
+
+### Added
+
+- Experimental support for stable ABI interfaces under the `v1` namespace for both bsoncxx and mongocxx libraries.
+- To support incremental migration, the following entities are defined as equivalent to their renamed counterparts.
+  - `bsoncxx::types::id`: equivalent to `bsoncxx::type`.
+  - `bsoncxx::types::binary_subtype`: equivalent to `bsoncxx::binary_sub_type`.
+  - `bsoncxx::types::view`: equivalent to `bsoncxx::types::bson_value::view`.
+  - `bsoncxx::types::value`: equivalent to `bsoncxx::types::bson_value::value`.
+  - `type_view()` in `bsoncxx::document::element` and `bsoncxx::array::element`: equivalent to `get_value()`.
+  - `type_value()` in `bsoncxx::document::element` and `bsoncxx::array::element`: equivalent to `get_owning_value()`.
+- Experimental support for In-Use Encryption Text Indexes (`mongocxx::v1::text_options`).
+- Change stream helpers for convenient iteration (`mongocxx::v1::change_stream::next` and `mongocxx::v1::change_stream::try_next`).
+
+### Changed
+
+> [!IMPORTANT]
+> This release provides an _experimental_ stable ABI for bsoncxx and mongocxx.
+
+- For consistency with the library and package filenames of MongoDB C Driver 2.0.0 and newer:
+  - CMake package config files now use the `<name>Config.cmake` and `<name>ConfigVersion.cmake` pattern. (Old: `<name>-config.cmake` and `<name>-config-version.cmake`)
+- CMake 3.16.0 or newer is required when `ENABLE_TESTS=ON` for compatibility with the updated Catch2 library version (3.7.0 -> 3.8.1).
+- Minimum supported compiler versions to build from source are updated to the following:
+  - GCC 8.1 (from GCC 4.8.2).
+    - Users on RHEL 7 may consult Red Hat's ["Hello World - installing GCC on RHEL 7"](https://developers.redhat.com/HW/gcc-RHEL-7) or ["How to install GCC 8 and Clang/LLVM 6 on Red Hat Enterprise Linux 7"](https://developers.redhat.com/blog/2019/03/05/yum-install-gcc-8-clang-6) for instructions on how to obtain GCC 8 or newer.
+  - Clang 3.8 (from Clang 3.5).
+  - Apple Clang 13.1 with Xcode 13.4.1 (from Apple Clang 5.1 with Xcode 5.1).
+  - MSVC 19.0.24210 with Visual Studio 2015 Update 3 (from MSVC 19.0.23506 with Visual Studio 2015 Update 1).
+- `mongocxx::v_noabi::instance::~instance()` no longer skips calling `mongoc_cleanup()` when compiled with ASAN enabled.
+  - See https://github.com/google/sanitizers/issues/89 for context.
+- Bump the minimum required C Driver version to [2.2.3](https://github.com/mongodb/mongo-c-driver/releases/tag/2.2.3).
+
+### Deprecated
+
+- `mongocxx::v_noabi::instance::current()` is "for internal use only". The `instance` constructor(s) should be used instead.
+  - Creating the `instance` object in the scope of `main()`, or in an appropriate (non-global) scope such that its (non-static) lifetime is valid for the duration of all other mongocxx library operations, is recommended over the following workarounds.
+  - If there is only _one_ call to `current()` present within an application, it may be replaced with a static local variable:
+    ```cpp
+    // Before:
+    mongocxx::instance::current();
+
+    // After:
+    static mongocxx::instance instance; // Only ONE instance object!
+    ```
+  - If there are _multiple_ calls to `current()` present within an application, they may be replaced with a call to a user-defined function containing the static local variable:
+    ```cpp
+    mongocxx::instance& mongocxx_instance() {
+      static mongocxx::instance instance; // Only ONE instance object!
+      return instance;
+    }
+    ```
+- These following entities will be renamed (and removed) in an upcoming major release. To support incremental migration, both old and new names are still provided.
+  - `bsoncxx::type` -> `bsoncxx::types::id`.
+  - `bsoncxx::binary_sub_type` -> `bsoncxx::types::binary_subtype`.
+  - `bsoncxx::types::bson_value::view` -> `bsoncxx::types::view`
+  - `bsoncxx::types::bson_value::value` -> `bsoncxx::types::value`
+  - `get_value()` -> `type_view()` in `bsoncxx::document::element` and `bsoncxx::array::element`.
+  - `get_owning_value()` -> `type_value()` in `bsoncxx::document::element` and `bsoncxx::array::element`.
+
+### Removed
+
+- Support for MongoDB Server 4.2.
+  - See: [MongoDB Software Lifecycle Schedules](https://www.mongodb.com/legal/support-policy/lifecycles).
+  - See: [MongoDB C Driver 2.1.0 Release Notes](https://github.com/mongodb/mongo-c-driver/releases/tag/2.1.0).
+- Support for macOS 11 and macOS 12 (deprecated in 4.1.0).
+
+### Fixed
+
+- Do not throw when comparing `mongocxx::result::insert_many` with non-ObjectID IDs.
+
 ## 4.1.4
 
 ### Changed
 
 - Bump the auto-downloaded C Driver version to [2.1.2](https://github.com/mongodb/mongo-c-driver/releases/tag/2.1.2).
+
+### Changed
+
+- Bump the minimum required C Driver version to [1.30.6](https://github.com/mongodb/mongo-c-driver/releases/tag/1.30.6).
 
 ## 4.1.3
 
@@ -112,6 +264,12 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
   - `bsoncxx::builder::types` in `<bsoncxx/builder/list.hpp>`. Use `bsoncxx::types` in `<bsoncxx/types.hpp>` instead.
   - `bsoncxx::builder::stream::concatenate` in `<bsoncxx/builder/stream/helpers.hpp>`. Use `bsoncxx::builder::concatenate` in `<bsoncxx/builder/concatenate.hpp>` instead.
   - `mongocxx::events::read_preference` in `<mongocxx/events/topology_description.hpp>`. Use `mongocxx::read_preference` in `<mongocxx/read_preference.hpp>` instead.
+
+## 3.11.1
+
+### Fixed
+
+- The API version of auto-downloaded C Driver libraries no longer incorrectly inherits the C++ Driver's `BUILD_VERSION` value.
 
 ## 3.11.0
 

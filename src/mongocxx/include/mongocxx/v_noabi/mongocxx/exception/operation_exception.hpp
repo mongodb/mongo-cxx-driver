@@ -16,7 +16,7 @@
 
 #include <string>
 
-#include <mongocxx/exception/operation_exception-fwd.hpp>
+#include <mongocxx/exception/operation_exception-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/stdx/optional.hpp>

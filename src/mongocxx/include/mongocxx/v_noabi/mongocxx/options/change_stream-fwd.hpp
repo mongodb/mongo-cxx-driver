@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/change_stream-fwd.hpp> // IWYU pragma: export
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -29,7 +31,7 @@ class change_stream;
 namespace mongocxx {
 namespace options {
 
-using ::mongocxx::v_noabi::options::change_stream;
+using v_noabi::options::change_stream;
 
 } // namespace options
 } // namespace mongocxx
@@ -39,4 +41,7 @@ using ::mongocxx::v_noabi::options::change_stream;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::options::change_stream.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/change_stream-fwd.hpp
 ///

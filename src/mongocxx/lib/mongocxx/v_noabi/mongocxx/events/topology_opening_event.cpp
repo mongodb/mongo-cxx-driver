@@ -14,21 +14,18 @@
 
 #include <mongocxx/events/topology_opening_event.hpp>
 
+//
+
+#include <mongocxx/v1/events/topology_opening.hh>
+
 #include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {
 namespace events {
 
-topology_opening_event::topology_opening_event(void const* event) : _event(event) {}
-
-topology_opening_event::~topology_opening_event() = default;
-
-bsoncxx::v_noabi::oid topology_opening_event::topology_id() const {
-    bson_oid_t boid;
-    libmongoc::apm_topology_opening_get_topology_id(static_cast<mongoc_apm_topology_opening_t const*>(_event), &boid);
-    return bsoncxx::v_noabi::oid(reinterpret_cast<char const*>(boid.bytes), sizeof(boid.bytes));
-}
+topology_opening_event::topology_opening_event(void const* event)
+    : _event{v1::events::topology_opening::internal::make(static_cast<mongoc_apm_topology_opening_t const*>(event))} {}
 
 } // namespace events
 } // namespace v_noabi

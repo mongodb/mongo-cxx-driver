@@ -14,42 +14,19 @@
 
 #include <mongocxx/events/heartbeat_failed_event.hpp>
 
+//
+
+#include <mongocxx/v1/events/server_heartbeat_failed.hh>
+
 #include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
 namespace v_noabi {
 namespace events {
 
-heartbeat_failed_event::heartbeat_failed_event(void const* event) : _failed_event(event) {}
-
-heartbeat_failed_event::~heartbeat_failed_event() = default;
-
-std::string heartbeat_failed_event::message() const {
-    bson_error_t error;
-    auto casted = static_cast<mongoc_apm_server_heartbeat_failed_t const*>(_failed_event);
-    libmongoc::apm_server_heartbeat_failed_get_error(casted, &error);
-    return error.message;
-}
-
-std::int64_t heartbeat_failed_event::duration() const {
-    auto casted = static_cast<mongoc_apm_server_heartbeat_failed_t const*>(_failed_event);
-    return libmongoc::apm_server_heartbeat_failed_get_duration(casted);
-}
-
-bsoncxx::v_noabi::stdx::string_view heartbeat_failed_event::host() const {
-    auto casted = static_cast<mongoc_apm_server_heartbeat_failed_t const*>(_failed_event);
-    return libmongoc::apm_server_heartbeat_failed_get_host(casted)->host;
-}
-
-std::uint16_t heartbeat_failed_event::port() const {
-    auto casted = static_cast<mongoc_apm_server_heartbeat_failed_t const*>(_failed_event);
-    return libmongoc::apm_server_heartbeat_failed_get_host(casted)->port;
-}
-
-bool heartbeat_failed_event::awaited() const {
-    auto casted = static_cast<mongoc_apm_server_heartbeat_failed_t const*>(_failed_event);
-    return libmongoc::apm_server_heartbeat_failed_get_awaited(casted);
-}
+heartbeat_failed_event::heartbeat_failed_event(void const* event)
+    : _event{v1::events::server_heartbeat_failed::internal::make(
+          static_cast<mongoc_apm_server_heartbeat_failed_t const*>(event))} {}
 
 } // namespace events
 } // namespace v_noabi

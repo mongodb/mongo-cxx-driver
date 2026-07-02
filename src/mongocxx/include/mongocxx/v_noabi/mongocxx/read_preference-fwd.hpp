@@ -26,7 +26,7 @@ class read_preference;
 
 namespace mongocxx {
 
-using ::mongocxx::v_noabi::read_preference;
+using v_noabi::read_preference;
 
 } // namespace mongocxx
 

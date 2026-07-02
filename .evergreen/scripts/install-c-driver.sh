@@ -3,15 +3,11 @@
 set -o errexit
 set -o pipefail
 
+declare script_dir
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 declare -r mongoc_version="${mongoc_version:-"${mongoc_version_minimum:?"missing mongoc version"}"}"
 : "${mongoc_version:?}"
-
-# Usage:
-#   to_windows_path "./some/unix/style/path"
-#   to_windows_path "/some/unix/style/path"
-to_windows_path() {
-  cygpath -aw "${1:?"to_windows_path requires a path to convert"}"
-}
 
 declare mongoc_dir
 mongoc_dir="$(pwd)/mongoc"
@@ -20,8 +16,8 @@ mongoc_dir="$(pwd)/mongoc"
 declare mongoc_idir mongoc_install_idir
 if [[ "${OSTYPE:?}" == "cygwin" ]]; then
   # CMake requires Windows paths for configuration variables on Windows.
-  mongoc_idir="$(to_windows_path "${mongoc_dir}")"
-  mongoc_install_idir="$(to_windows_path "${mongoc_dir}")"
+  mongoc_idir="$(cygpath -aw "${mongoc_dir}")"
+  mongoc_install_idir="$(cygpath -aw "${mongoc_dir}")"
 else
   mongoc_idir="${mongoc_dir}"
   mongoc_install_idir="${mongoc_dir}"
@@ -37,38 +33,90 @@ mkdir "${mongoc_dir}"
 curl -sS -o mongo-c-driver.tar.gz -L "https://api.github.com/repos/mongodb/mongo-c-driver/tarball/${mongoc_version}"
 tar xzf mongo-c-driver.tar.gz --directory "${mongoc_dir}" --strip-components=1
 
-# shellcheck source=/dev/null
-. "${mongoc_dir}/.evergreen/scripts/find-cmake-latest.sh"
-declare cmake_binary
-cmake_binary="$(find_cmake_latest)"
-command -v "${cmake_binary:?}"
-
-# Install libmongocrypt.
-if [[ "${SKIP_INSTALL_LIBMONGOCRYPT:-}" != "1" ]]; then
-  {
-    echo "Installing libmongocrypt into ${mongoc_dir}..." 1>&2
-    "${mongoc_dir}/.evergreen/scripts/compile-libmongocrypt.sh" "${cmake_binary}" "${mongoc_idir}" "${mongoc_install_idir}"
-    echo "Installing libmongocrypt into ${mongoc_dir}... done." 1>&2
-  } >/dev/null
-fi
-
-if [[ "${OSTYPE}" == darwin* ]]; then
-  # MacOS does not have nproc.
-  nproc() {
-    sysctl -n hw.logicalcpu
-  }
-fi
+. "${script_dir:?}/install-build-tools.sh"
+install_build_tools
 
 # Default CMake generator to use if not already provided.
 declare CMAKE_GENERATOR CMAKE_GENERATOR_PLATFORM
-if [[ "${OSTYPE:?}" == "cygwin" ]]; then
-  CMAKE_GENERATOR="${generator:-"Visual Studio 14 2015"}"
-  CMAKE_GENERATOR_PLATFORM="${platform:-"x64"}"
-else
-  CMAKE_GENERATOR="${generator:-"Unix Makefiles"}"
-  CMAKE_GENERATOR_PLATFORM="${platform:-""}"
+case "${OSTYPE:?}" in
+cygwin)
+  if [[ "${generator:-}" == Visual\ Studio\ * ]]; then
+    # MSBuild task-based parallelism (VS 2019 16.3 and newer).
+    export UseMultiToolTask=true
+    export EnforceProcessCountAcrossBuilds=true
+    # MSBuild inter-project parallelism via CMake (3.26 and newer).
+    export CMAKE_BUILD_PARALLEL_LEVEL
+    CMAKE_BUILD_PARALLEL_LEVEL="$(nproc)" # /maxcpucount
+
+    CMAKE_GENERATOR="${generator:?}"
+    CMAKE_GENERATOR_PLATFORM="${platform:-"x64"}"
+  else
+    : "${generator:="Ninja Multi-Config"}"
+    PATH="/cygdrive/c/ProgramData/chocolatey/lib/winlibs/tools/mingw64/bin:${PATH:-}" # mingw-w64 GCC
+  fi
+  ;;
+
+darwin* | linux*)
+  : "${generator:="Ninja"}"
+  ;;
+
+*)
+  echo "unrecognized operating system ${OSTYPE:?}" 1>&2
+  exit 1
+  ;;
+esac
+export CMAKE_GENERATOR="${generator:?}"
+export CMAKE_GENERATOR_PLATFORM="${platform:-}"
+
+# Install libmongocrypt.
+if [[ "${SKIP_INSTALL_LIBMONGOCRYPT:-}" != "1" ]]; then
+  echo "Installing libmongocrypt into ${mongoc_install_idir}..."
+
+  # Avoid using compile-libmongocrypt.sh (mongo-c-driver) -> compile.sh (libmongocrypt) -> build_all.sh (libmongocrypt),
+  # which hardcodes MSVC-specific compiler flags (-EHsc) and does not support the Ninja Multi-Config generator (see:
+  # references to the USE_NINJA environment variable).
+  if [[ "${OSTYPE:?}" == cygwin && "${CMAKE_GENERATOR:?}" != Visual\ Studio\ * ]]; then
+    (
+      git clone -q https://github.com/mongodb/libmongocrypt --branch 1.18.1 --depth 1
+
+      declare -a crypt_cmake_flags=(
+        "-DMONGOCRYPT_MONGOC_DIR=${mongoc_idir:?}"
+        "-DBUILD_TESTING=OFF"
+        "-DENABLE_ONLINE_TESTS=OFF"
+        "-DENABLE_MONGOC=OFF"
+        "-DBUILD_VERSION=1.18.1"
+      )
+
+      . "${mongoc_dir}/.evergreen/scripts/find-ccache.sh"
+      find_ccache_and_export_vars "$(pwd)/libmongocrypt" || true
+      if command -v "${CMAKE_C_COMPILER_LAUNCHER:-}" && [[ "${OSTYPE:?}" == cygwin && "${generator:-}" == Visual\ Studio\ * ]]; then
+        crypt_cmake_flags+=(
+          "-DCMAKE_POLICY_DEFAULT_CMP0141=NEW"
+          "-DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=Embedded"
+        )
+      fi
+
+      # build_all.sh (libmongocrypt)
+      cmake \
+        "${crypt_cmake_flags[@]:?}" \
+        -D CMAKE_INSTALL_PREFIX="${mongoc_install_idir:?}" \
+        -D CMAKE_BUILD_TYPE=RelWithDebInfo \
+        -S libmongocrypt \
+        -B libmongocrypt/cmake-build
+      cmake --build libmongocrypt/cmake-build --config RelWithDebInfo --target install
+    ) &>output.txt || {
+      cat output.txt >&2
+      exit 1
+    }
+  else
+    # Unset CC / CXX variables if set to the empty string. Avoids an error in libmongocrypt building Ninja from source.
+    [ -z "${CC:-}" ] && unset CC
+    [ -z "${CXX:-}" ] && unset CXX
+    "${mongoc_dir}/.evergreen/scripts/compile-libmongocrypt.sh" "$(command -v cmake)" "${mongoc_idir}" "${mongoc_install_idir}"
+  fi
+
+  echo "Installing libmongocrypt into ${mongoc_install_idir}... done."
 fi
-export CMAKE_GENERATOR CMAKE_GENERATOR_PLATFORM
 
 declare -a configure_flags=(
   "-DCMAKE_BUILD_TYPE=Debug"
@@ -87,21 +135,24 @@ declare -a compile_flags
 
 case "${OSTYPE:?}" in
 cygwin)
-  compile_flags+=("/maxcpucount:$(nproc)")
-
-  # Replace `/Zi`, which is incompatible with ccache, with `/Z7` while preserving other default debug flags.
-  cmake_flags+=(
-    "-DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=Embedded"
-  )
+  if [[ "${generator:-}" == Visual\ Studio\ * ]]; then
+    # Replace `/Zi`, which is incompatible with ccache, with `/Z7` while preserving other default debug flags.
+    configure_flags+=(
+      "-DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=Embedded"
+    )
+  else
+    # Avoid mingw-w64 linker issues (hangs indefinitely?).
+    configure_flags+=(
+      "-DMONGO_USE_LLD=OFF"
+    )
+  fi
   ;;
 darwin*)
   configure_flags+=("-DCMAKE_C_FLAGS=-fPIC")
   configure_flags+=("-DCMAKE_MACOSX_RPATH=ON")
-  compile_flags+=("-j" "$(nproc)")
   ;;
 *)
   configure_flags+=("-DCMAKE_C_FLAGS=-fPIC")
-  compile_flags+=("-j" "$(nproc)")
   ;;
 esac
 
@@ -115,7 +166,7 @@ fi
 # Install C Driver libraries.
 {
   echo "Installing C Driver into ${mongoc_dir}..." 1>&2
-  "${cmake_binary}" -S "${mongoc_idir}" -B "${mongoc_idir}" "${configure_flags[@]}"
-  "${cmake_binary}" --build "${mongoc_idir}" --config Debug --target install -- "${compile_flags[@]}"
+  cmake -S "${mongoc_idir}" -B "${mongoc_idir}" "${configure_flags[@]}"
+  cmake --build "${mongoc_idir}" --config Debug --target install -- "${compile_flags[@]}"
   echo "Installing C Driver into ${mongoc_dir}... done." 1>&2
 } >/dev/null

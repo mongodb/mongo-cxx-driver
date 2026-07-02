@@ -17,7 +17,7 @@
 #include <cstdint>
 #include <memory>
 
-#include <bsoncxx/validate-fwd.hpp>
+#include <bsoncxx/validate-fwd.hpp> // IWYU pragma: export
 
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -41,7 +41,7 @@ namespace v_noabi {
 ///   An engaged optional containing a view if the document is valid, or
 ///   an unengaged optional if the document is invalid.
 ///
-BSONCXX_ABI_EXPORT_CDECL(stdx::optional<document::view>)
+BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(stdx::optional<document::view>)
 validate(std::uint8_t const* data, std::size_t length);
 
 ///
@@ -64,7 +64,7 @@ validate(std::uint8_t const* data, std::size_t length);
 ///   An engaged optional containing a view if the document is valid, or
 ///   an unengaged optional if the document is invalid.
 ///
-BSONCXX_ABI_EXPORT_CDECL(stdx::optional<document::view>)
+BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(stdx::optional<document::view>)
 validate(
     std::uint8_t const* data,
     std::size_t length,
@@ -79,12 +79,12 @@ class validator {
     ///
     /// Constructs a validator.
     ///
-    BSONCXX_ABI_EXPORT_CDECL() validator();
+    BSONCXX_ABI_EXPORT_CDECL_UNSTABLE() validator();
 
     ///
     /// Destructs a validator.
     ///
-    BSONCXX_ABI_EXPORT_CDECL() ~validator();
+    BSONCXX_ABI_EXPORT_CDECL_UNSTABLE() ~validator();
 
     ///
     /// Verify that all keys and string values are valid UTF-8.
@@ -92,14 +92,14 @@ class validator {
     /// @param check_utf8
     ///   If true, UTF-8 validation is performed.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(void) check_utf8(bool check_utf8);
+    BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(void) check_utf8(bool check_utf8);
 
     ///
     /// Getter for the current check_utf8 value of the underlying validator.
     ///
     /// @return True if UTF-8 validation is performed.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(bool) check_utf8() const;
+    BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(bool) check_utf8() const;
 
     ///
     /// Verify that all keys and string values are valid UTF-8, but allow
@@ -109,7 +109,7 @@ class validator {
     /// @param check_utf8_allow_null
     ///   If true, UTF-8 validation (with null bytes allowed) is performed.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(void) check_utf8_allow_null(bool check_utf8_allow_null);
+    BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(void) check_utf8_allow_null(bool check_utf8_allow_null);
 
     ///
     /// Getter for the current check_utf8_allow_null value of the underlying
@@ -118,7 +118,7 @@ class validator {
     /// @return True if UTF-8 validation (with null bytes allowed) is
     ///   performed.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(bool) check_utf8_allow_null() const;
+    BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(bool) check_utf8_allow_null() const;
 
     ///
     /// Verifies that document keys are not preceeded with '$'.
@@ -126,7 +126,7 @@ class validator {
     /// @param check_dollar_keys
     ///   If true, keys starting with '$' will be treated as invalid.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(void) check_dollar_keys(bool check_dollar_keys);
+    BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(void) check_dollar_keys(bool check_dollar_keys);
 
     ///
     /// Getter for the current check_dollar_keys value of the underlying
@@ -134,7 +134,7 @@ class validator {
     ///
     /// @return True if keys starting with '$' will be treated as invalid.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(bool) check_dollar_keys() const;
+    BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(bool) check_dollar_keys() const;
 
     ///
     /// Verifies that document keys do not contain any '.' characters.
@@ -142,7 +142,7 @@ class validator {
     /// @param check_dot_keys
     ///   If true, keys containing '.' will be treated as invalid.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(void) check_dot_keys(bool check_dot_keys);
+    BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(void) check_dot_keys(bool check_dot_keys);
 
     ///
     /// Getter for the current check_dot_keys value of the underlying
@@ -150,7 +150,7 @@ class validator {
     ///
     /// @return True if keys containing '.' will be treated as invalid.
     ///
-    BSONCXX_ABI_EXPORT_CDECL(bool) check_dot_keys() const;
+    BSONCXX_ABI_EXPORT_CDECL_UNSTABLE(bool) check_dot_keys() const;
 
    private:
     struct impl;
@@ -162,7 +162,7 @@ class validator {
 
 namespace bsoncxx {
 
-using ::bsoncxx::v_noabi::validate;
+using v_noabi::validate;
 
 } // namespace bsoncxx
 

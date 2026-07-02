@@ -12,14 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/oid.hpp>
-#include <bsoncxx/stdx/optional.hpp>
-
 #include <mongocxx/events/command_failed_event.hpp>
 
-#include <bsoncxx/private/bson.hh>
-#include <bsoncxx/private/helpers.hh>
-#include <bsoncxx/private/make_unique.hh>
+//
+
+#include <mongocxx/v1/events/command_failed.hh>
 
 #include <mongocxx/private/mongoc.hh>
 
@@ -27,51 +24,8 @@ namespace mongocxx {
 namespace v_noabi {
 namespace events {
 
-command_failed_event::command_failed_event(void const* event) : _failed_event(event) {}
-
-command_failed_event::~command_failed_event() = default;
-
-bsoncxx::v_noabi::document::view command_failed_event::failure() const {
-    bson_t const* const failure =
-        libmongoc::apm_command_failed_get_reply(static_cast<mongoc_apm_command_failed_t const*>(_failed_event));
-    return {bson_get_data(failure), failure->len};
-}
-
-bsoncxx::v_noabi::stdx::string_view command_failed_event::command_name() const {
-    return libmongoc::apm_command_failed_get_command_name(
-        static_cast<mongoc_apm_command_failed_t const*>(_failed_event));
-}
-
-std::int64_t command_failed_event::duration() const {
-    return libmongoc::apm_command_failed_get_duration(static_cast<mongoc_apm_command_failed_t const*>(_failed_event));
-}
-
-std::int64_t command_failed_event::request_id() const {
-    return libmongoc::apm_command_failed_get_request_id(static_cast<mongoc_apm_command_failed_t const*>(_failed_event));
-}
-
-std::int64_t command_failed_event::operation_id() const {
-    return libmongoc::apm_command_failed_get_operation_id(
-        static_cast<mongoc_apm_command_failed_t const*>(_failed_event));
-}
-
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::oid> command_failed_event::service_id() const {
-    bson_oid_t const* bson_oid =
-        libmongoc::apm_command_failed_get_service_id(static_cast<mongoc_apm_command_failed_t const*>(_failed_event));
-
-    if (nullptr == bson_oid)
-        return {bsoncxx::v_noabi::stdx::nullopt};
-
-    return {bsoncxx::helpers::make_oid(bson_oid)};
-}
-
-bsoncxx::v_noabi::stdx::string_view command_failed_event::host() const {
-    return libmongoc::apm_command_failed_get_host(static_cast<mongoc_apm_command_failed_t const*>(_failed_event))->host;
-}
-
-std::uint16_t command_failed_event::port() const {
-    return libmongoc::apm_command_failed_get_host(static_cast<mongoc_apm_command_failed_t const*>(_failed_event))->port;
-}
+command_failed_event::command_failed_event(void const* event)
+    : _event{v1::events::command_failed::internal::make(static_cast<mongoc_apm_command_failed_t const*>(event))} {}
 
 } // namespace events
 } // namespace v_noabi

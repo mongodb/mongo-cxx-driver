@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/exception/logic_error-fwd.hpp>
+#include <mongocxx/exception/logic_error-fwd.hpp> // IWYU pragma: export
 
 #include <mongocxx/exception/exception.hpp>
 

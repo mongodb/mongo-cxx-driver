@@ -19,14 +19,14 @@
 namespace mongocxx {
 namespace v_noabi {
 
-class MONGOCXX_ABI_EXPORT exception;
+class MONGOCXX_ABI_EXPORT_UNSTABLE exception;
 
 } // namespace v_noabi
 } // namespace mongocxx
 
 namespace mongocxx {
 
-using ::mongocxx::v_noabi::exception;
+using v_noabi::exception;
 
 } // namespace mongocxx
 

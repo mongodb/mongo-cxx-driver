@@ -1,17 +1,22 @@
+from typing import Mapping
+
 from shrub.v3.evg_command import EvgCommandType
 
 from config_generator.etc.distros import compiler_to_vars
 from config_generator.etc.function import Function
 from config_generator.etc.utils import bash_exec
 
-from typing import Mapping
-
 
 class Test(Function):
     name = 'test'
     commands = bash_exec(
         command_type=EvgCommandType.TEST,
+        env={
+            'CC': '${cc_compiler}',
+            'CXX': '${cxx_compiler}',
+        },
         include_expansions_in_env=[
+            'ASAN_SYMBOLIZER_PATH',
             'build_type',
             'CRYPT_SHARED_LIB_PATH',  # Set by run-orchestration.sh in "start_mongod".
             'cse_aws_access_key_id',
@@ -23,16 +28,15 @@ class Test(Function):
             'cse_gcp_privatekey',
             'disable_slow_tests',
             'distro_id',
-            'example_projects_cc',
-            'example_projects_cxx',
-            'example_projects_cxx_standard',
             'example_projects_cxxflags',
             'example_projects_ldflags',
             'generator',
             'MONGOCXX_TEST_TOPOLOGY',
             'MONGODB_API_VERSION',
             'platform',
+            'REQUIRED_CXX_STANDARD',
             'TEST_WITH_ASAN',
+            'TEST_WITH_CSFLE',
             'TEST_WITH_UBSAN',
             'TEST_WITH_VALGRIND',
             'use_mongocryptd',

@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/bulk_write-fwd.hpp> // IWYU pragma: export
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -29,7 +31,7 @@ class write;
 namespace mongocxx {
 namespace model {
 
-using ::mongocxx::v_noabi::model::write;
+using v_noabi::model::write;
 
 } // namespace model
 } // namespace mongocxx
@@ -39,4 +41,7 @@ using ::mongocxx::v_noabi::model::write;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::model::write.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/bulk_write-fwd.hpp
 ///

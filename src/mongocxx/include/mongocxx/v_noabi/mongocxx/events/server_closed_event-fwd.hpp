@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/events/server_closed-fwd.hpp> // IWYU pragma: export
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -29,7 +31,7 @@ class server_closed_event;
 namespace mongocxx {
 namespace events {
 
-using ::mongocxx::v_noabi::events::server_closed_event;
+using v_noabi::events::server_closed_event;
 
 } // namespace events
 } // namespace mongocxx
@@ -39,4 +41,7 @@ using ::mongocxx::v_noabi::events::server_closed_event;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::events::server_closed_event.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/events/server_closed-fwd.hpp
 ///

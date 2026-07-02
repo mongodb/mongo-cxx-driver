@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/exception/write_exception-fwd.hpp>
+#include <mongocxx/exception/write_exception-fwd.hpp> // IWYU pragma: export
 
 #include <mongocxx/exception/operation_exception.hpp>
 

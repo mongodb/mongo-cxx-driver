@@ -12,7 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "operations.hh"
+#include "./operations.hh"
+
+#include <bsoncxx/v1/array/value.hpp>
+#include <bsoncxx/v1/document/value.hpp>
+
+#include <mongocxx/v1/hint.hpp>
 
 #include <sstream>
 #include <vector>
@@ -22,6 +27,8 @@
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
 
+#include <mongocxx/client.hpp>
+#include <mongocxx/client_bulk_write.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 
@@ -336,6 +343,230 @@ void set_sort(Model& model, mongocxx::document::element const& sort) {
     model.sort(sort.get_document().value);
 }
 
+namespace {
+
+bsoncxx::v1::document::value to_v1_value(document::view v) {
+    return bsoncxx::v1::document::value{bsoncxx::v_noabi::to_v1(v)};
+}
+
+bsoncxx::v1::array::value to_v1_value(array::view v) {
+    return bsoncxx::v1::array::value{bsoncxx::v_noabi::to_v1(v)};
+}
+
+template <typename Opts>
+void append_update(
+    mongocxx::client_bulk_write& client_bulk_write,
+    bsoncxx::stdx::string_view ns,
+    bsoncxx::v1::document::view filter,
+    document::element const& update_element,
+    Opts const& opts) {
+    if (update_element.type() == type::k_document) {
+        client_bulk_write.append(ns, filter, bsoncxx::v_noabi::to_v1(update_element.get_document().value), opts);
+    } else {
+        client_bulk_write.append(
+            ns, filter, mongocxx::v_noabi::to_v1(build_pipeline(update_element.get_array().value)), opts);
+    }
+}
+
+mongocxx::v1::hint make_v1_hint(document::element hint_elem) {
+    if (hint_elem.type() == type::k_string) {
+        return mongocxx::v1::hint{std::string{hint_elem.get_string().value}};
+    }
+    return mongocxx::v1::hint{to_v1_value(hint_elem.get_document().value)};
+}
+
+client_bulk_write::options make_client_bulk_write_options(document::view args) {
+    client_bulk_write::options opts;
+
+    if (auto const ordered = args["ordered"]) {
+        opts.ordered(ordered.get_bool().value);
+    }
+
+    if (auto const bypass = args["bypassDocumentValidation"]) {
+        opts.bypass_document_validation(bypass.get_bool().value);
+    }
+
+    if (auto const verbose = args["verboseResults"]) {
+        opts.verbose_results(verbose.get_bool().value);
+    }
+
+    if (auto const let = args["let"]) {
+        opts.let(to_v1_value(let.get_document().value));
+    }
+
+    if (auto const comment = args["comment"]) {
+        opts.comment(bsoncxx::v1::types::value{comment.type_value()});
+    }
+
+    if (auto wc = operations::lookup_write_concern(args)) {
+        opts.write_concern(v_noabi::to_v1(std::move(*wc)));
+    }
+
+    return opts;
+}
+
+client_bulk_write::update_one_options make_update_one_options(document::view args) {
+    client_bulk_write::update_one_options opts;
+
+    if (auto const sort = args["sort"]) {
+        opts.sort(to_v1_value(sort.get_document().value));
+    }
+
+    if (auto const upsert = args["upsert"]) {
+        opts.upsert(upsert.get_bool().value);
+    }
+
+    if (auto const hint = args["hint"]) {
+        opts.hint(make_v1_hint(hint));
+    }
+
+    if (auto const collation = args["collation"]) {
+        opts.collation(to_v1_value(collation.get_document().value));
+    }
+
+    if (auto const af = args["arrayFilters"]) {
+        opts.array_filters(to_v1_value(af.get_array().value));
+    }
+
+    return opts;
+}
+
+client_bulk_write::update_many_options make_update_many_options(document::view args) {
+    client_bulk_write::update_many_options opts;
+
+    if (auto const upsert = args["upsert"]) {
+        opts.upsert(upsert.get_bool().value);
+    }
+
+    if (auto const hint = args["hint"]) {
+        opts.hint(make_v1_hint(hint));
+    }
+
+    if (auto const collation = args["collation"]) {
+        opts.collation(to_v1_value(collation.get_document().value));
+    }
+
+    if (auto const af = args["arrayFilters"]) {
+        opts.array_filters(to_v1_value(af.get_array().value));
+    }
+
+    return opts;
+}
+
+client_bulk_write::replace_one_options make_replace_one_options(document::view args) {
+    client_bulk_write::replace_one_options opts;
+
+    if (auto const sort = args["sort"]) {
+        opts.sort(to_v1_value(sort.get_document().value));
+    }
+
+    if (auto const upsert = args["upsert"]) {
+        opts.upsert(upsert.get_bool().value);
+    }
+
+    if (auto const hint = args["hint"]) {
+        opts.hint(make_v1_hint(hint));
+    }
+
+    if (auto const collation = args["collation"]) {
+        opts.collation(to_v1_value(collation.get_document().value));
+    }
+
+    return opts;
+}
+
+client_bulk_write::delete_one_options make_delete_one_options(document::view args) {
+    client_bulk_write::delete_one_options opts;
+
+    if (auto const hint = args["hint"]) {
+        opts.hint(make_v1_hint(hint));
+    }
+
+    if (auto const collation = args["collation"]) {
+        opts.collation(to_v1_value(collation.get_document().value));
+    }
+
+    return opts;
+}
+
+client_bulk_write::delete_many_options make_delete_many_options(document::view args) {
+    client_bulk_write::delete_many_options opts;
+
+    if (auto const hint = args["hint"]) {
+        opts.hint(make_v1_hint(hint));
+    }
+
+    if (auto const collation = args["collation"]) {
+        opts.collation(to_v1_value(collation.get_document().value));
+    }
+
+    return opts;
+}
+
+} // namespace
+
+document::value run_client_bulk_write(mongocxx::client& client, client_session* session, document::view op) {
+    using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_document;
+
+    auto client_bulk_write = session ? client.create_bulk_write(*session) : client.create_bulk_write();
+
+    auto const arguments = op["arguments"].get_document().value;
+    auto const opts = make_client_bulk_write_options(arguments);
+
+    auto const models = arguments["models"].get_array().value;
+
+    for (auto&& model_elem : models) {
+        auto const model_doc = model_elem.get_document().value;
+        auto const op_name = model_doc.begin()->key();
+        auto const model_args = model_doc[op_name].get_document().value;
+        CAPTURE(to_json(model_args), op_name);
+
+        auto const ns = model_args["namespace"].get_string().value;
+
+        if (op_name == "insertOne") {
+            client_bulk_write.append(
+                ns,
+                bsoncxx::v_noabi::to_v1(model_args["document"].get_document().value),
+                client_bulk_write::insert_one_options{});
+        } else if (op_name == "updateOne") {
+            append_update(
+                client_bulk_write,
+                ns,
+                bsoncxx::v_noabi::to_v1(model_args["filter"].get_document().value),
+                model_args["update"],
+                make_update_one_options(model_args));
+        } else if (op_name == "updateMany") {
+            append_update(
+                client_bulk_write,
+                ns,
+                bsoncxx::v_noabi::to_v1(model_args["filter"].get_document().value),
+                model_args["update"],
+                make_update_many_options(model_args));
+        } else if (op_name == "replaceOne") {
+            client_bulk_write.append(
+                ns,
+                bsoncxx::v_noabi::to_v1(model_args["filter"].get_document().value),
+                bsoncxx::v_noabi::to_v1(model_args["replacement"].get_document().value),
+                make_replace_one_options(model_args));
+        } else if (op_name == "deleteOne") {
+            client_bulk_write.append(
+                ns,
+                bsoncxx::v_noabi::to_v1(model_args["filter"].get_document().value),
+                make_delete_one_options(model_args));
+        } else if (op_name == "deleteMany") {
+            client_bulk_write.append(
+                ns,
+                bsoncxx::v_noabi::to_v1(model_args["filter"].get_document().value),
+                make_delete_many_options(model_args));
+        } else {
+            FAIL("unrecognized clientBulkWrite model: " + string::to_string(op_name));
+        }
+    }
+
+    return operations::make_client_bulk_write_result_doc(client_bulk_write.execute(opts));
+}
+
 document::value run_bulk_write(collection& coll, client_session* session, document::view op) {
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
@@ -618,20 +849,22 @@ document::value replace_one(collection& coll, client_session* session, document:
     }
 
     auto result = builder::basic::document{};
-    result.append(builder::basic::kvp(
-        "result", [matched_count, modified_count, upserted_count, upserted_id](builder::basic::sub_document subdoc) {
-            subdoc.append(builder::basic::kvp("matchedCount", matched_count));
+    result.append(
+        builder::basic::kvp(
+            "result",
+            [matched_count, modified_count, upserted_count, upserted_id](builder::basic::sub_document subdoc) {
+                subdoc.append(builder::basic::kvp("matchedCount", matched_count));
 
-            if (modified_count) {
-                subdoc.append(builder::basic::kvp("modifiedCount", *modified_count));
-            }
+                if (modified_count) {
+                    subdoc.append(builder::basic::kvp("modifiedCount", *modified_count));
+                }
 
-            subdoc.append(builder::basic::kvp("upsertedCount", upserted_count));
+                subdoc.append(builder::basic::kvp("upsertedCount", upserted_count));
 
-            if (upserted_id) {
-                subdoc.append(builder::basic::kvp("upsertedId", *upserted_id));
-            }
-        }));
+                if (upserted_id) {
+                    subdoc.append(builder::basic::kvp("upsertedId", *upserted_id));
+                }
+            }));
 
     return result.extract();
 }
@@ -1911,6 +2144,8 @@ document::value operations::run(
     CAPTURE(name, object, to_json(op_view));
     if (name == "find")
         return find(entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
+    if (name == "clientBulkWrite")
+        return run_client_bulk_write(entity_map.get_client(object), get_session(op_view, entity_map), op_view);
     if (name == "bulkWrite")
         return run_bulk_write(entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
     if (name == "insertMany")
@@ -2290,6 +2525,36 @@ document::value operations::run(
     }
 
     throw std::logic_error{"unsupported operation: " + name};
+}
+
+bsoncxx::document::value operations::make_client_bulk_write_result_doc(
+    bsoncxx::stdx::optional<mongocxx::client_bulk_write::result> const& result) {
+    builder::basic::document doc;
+    doc.append(kvp("result", [&](builder::basic::sub_document subdoc) {
+        if (!result) {
+            return;
+        }
+
+        subdoc.append(kvp("insertedCount", result->inserted_count()));
+        subdoc.append(kvp("upsertedCount", result->upserted_count()));
+        subdoc.append(kvp("matchedCount", result->matched_count()));
+        subdoc.append(kvp("modifiedCount", result->modified_count()));
+        subdoc.append(kvp("deletedCount", result->deleted_count()));
+
+        if (auto const v = result->insert_results()) {
+            subdoc.append(kvp("insertResults", static_cast<document::view>(*v)));
+        }
+
+        if (auto const v = result->update_results()) {
+            subdoc.append(kvp("updateResults", static_cast<document::view>(*v)));
+        }
+
+        if (auto const v = result->delete_results()) {
+            subdoc.append(kvp("deleteResults", static_cast<document::view>(*v)));
+        }
+    }));
+
+    return doc.extract();
 }
 
 bsoncxx::stdx::optional<read_concern> operations::lookup_read_concern(document::view doc) {

@@ -18,7 +18,8 @@
 
 #include <bsoncxx/v1/detail/macros.hpp>
 
-#include <type_traits>
+#include <cstddef>
+#include <type_traits> // IWYU pragma: export
 #include <utility>
 
 namespace bsoncxx {
@@ -378,10 +379,7 @@ static constexpr struct invoke_fn {
     // @cond DOXYGEN_DISABLE "Found ';' while parsing initializer list!"
     template <typename F, typename... Args, typename Fd = remove_cvref_t<F>>
     constexpr auto operator()(F&& fn, Args&&... args) const
-        BSONCXX_PRIVATE_RETURNS(impl_invoke::invoker<
-                                std::is_member_object_pointer<Fd>::value,
-                                std::is_member_function_pointer<
-                                    Fd>::value>::apply(static_cast<F&&>(fn), static_cast<Args&&>(args)...));
+        BSONCXX_PRIVATE_RETURNS(impl_invoke::invoker<std::is_member_object_pointer<Fd>::value, std::is_member_function_pointer<Fd>::value>::apply(static_cast<F&&>(fn), static_cast<Args&&>(args)...));
     // @endcond
 } invoke;
 
@@ -482,6 +480,8 @@ struct is_equality_comparable : decltype(is_equality_comparable_f<L, R>(0)) {};
 template <typename L, typename R>
 std::false_type is_partially_ordered_with_f(rank<0>);
 
+BSONCXX_PRIVATE_WARNINGS_PUSH();
+BSONCXX_PRIVATE_WARNINGS_DISABLE(Clang("-Wordered-compare-function-pointers"));
 template <typename L, typename R>
 auto is_partially_ordered_with_f(rank<1>) -> true_t<
     decltype(std::declval<L const&>() > std::declval<R const&>()),
@@ -492,6 +492,7 @@ auto is_partially_ordered_with_f(rank<1>) -> true_t<
     decltype(std::declval<R const&>() > std::declval<L const&>()),
     decltype(std::declval<R const&>() <= std::declval<L const&>()),
     decltype(std::declval<R const&>() >= std::declval<L const&>())>;
+BSONCXX_PRIVATE_WARNINGS_POP();
 
 template <typename T, typename U>
 struct is_partially_ordered_with : decltype(is_partially_ordered_with_f<T, U>(rank<1>{})) {};

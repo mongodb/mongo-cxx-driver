@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/tls-fwd.hpp>
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -29,7 +31,7 @@ class tls;
 namespace mongocxx {
 namespace options {
 
-using ::mongocxx::v_noabi::options::tls;
+using v_noabi::options::tls;
 
 } // namespace options
 } // namespace mongocxx
@@ -39,4 +41,7 @@ using ::mongocxx::v_noabi::options::tls;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::options::tls.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/tls-fwd.hpp
 ///

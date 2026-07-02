@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+#
+# format.sh
+#
+# Usage:
+#   uv run --frozen etc/shfmt-format-all.sh
+#
+# This script is meant to be run from the project root directory.
+
+set -o errexit
+set -o pipefail
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+root_dir="$(cd "${script_dir:?}/.." && pwd)"
+
+command -v find >/dev/null
+
+include=(
+  "${root_dir:?}/.evergreen"
+  "${root_dir:?}/etc"
+  "${root_dir:?}/examples"
+)
+
+mapfile -t files < <(find "${include[@]:?}" -name '*.sh' -type f)
+
+for file in "${files[@]:?}"; do
+  uv run --frozen --group format-scripts shfmt -i 2 -w "${file:?}"
+done

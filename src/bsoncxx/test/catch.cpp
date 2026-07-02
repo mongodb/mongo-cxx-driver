@@ -19,10 +19,10 @@
 #include <bsoncxx/v1/config/export.hpp>
 
 #include <cstdlib>
-#include <iostream>
+#include <iostream> // IWYU pragma: keep: for `WSAGuard::WSAGuard()`.
 #include <system_error>
 
-#include <bsoncxx/private/bson.hh> // <winsock.h> via <bson/bson-compat.h>
+#include <bsoncxx/private/bson.hh> // IWYU pragma: keep: <winsock.h> via <bson/bson-compat.h>
 
 #include <catch2/catch_session.hpp>
 

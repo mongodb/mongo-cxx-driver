@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/test/v_noabi/client_helpers.hh>
+
 #include <fstream>
 
 #include <bsoncxx/document/view.hpp>
@@ -24,7 +26,6 @@
 #include <bsoncxx/test/catch.hh>
 #include <bsoncxx/test/exception_guard.hh>
 
-#include <mongocxx/test/client_helpers.hh>
 #include <mongocxx/test/spec/operation.hh>
 #include <mongocxx/test/spec/util.hh>
 
@@ -190,7 +191,6 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
 }
 
 TEST_CASE("Command Monitoring Spec Tests", "[command_monitoring_spec]") {
-    instance::current();
     char* command_monitoring_tests_path = std::getenv("COMMAND_MONITORING_TESTS_PATH");
     REQUIRE(command_monitoring_tests_path);
 

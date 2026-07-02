@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/apm-fwd.hpp> // IWYU pragma: export
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -29,7 +31,7 @@ class apm;
 namespace mongocxx {
 namespace options {
 
-using ::mongocxx::v_noabi::options::apm;
+using v_noabi::options::apm;
 
 } // namespace options
 } // namespace mongocxx
@@ -39,4 +41,7 @@ using ::mongocxx::v_noabi::options::apm;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::options::apm.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/apm-fwd.hpp
 ///

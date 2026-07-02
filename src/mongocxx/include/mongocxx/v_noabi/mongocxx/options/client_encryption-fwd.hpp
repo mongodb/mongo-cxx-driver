@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/client_encryption-fwd.hpp> // IWYU pragma: export
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -29,7 +31,7 @@ class client_encryption;
 namespace mongocxx {
 namespace options {
 
-using ::mongocxx::v_noabi::options::client_encryption;
+using v_noabi::options::client_encryption;
 
 } // namespace options
 } // namespace mongocxx
@@ -39,4 +41,7 @@ using ::mongocxx::v_noabi::options::client_encryption;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::options::client_encryption.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/client_encryption-fwd.hpp
 ///

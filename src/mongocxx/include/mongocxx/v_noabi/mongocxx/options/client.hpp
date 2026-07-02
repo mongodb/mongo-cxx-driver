@@ -14,9 +14,15 @@
 
 #pragma once
 
-#include <string>
+#include <mongocxx/options/client-fwd.hpp> // IWYU pragma: export
 
-#include <mongocxx/options/client-fwd.hpp>
+//
+
+#include <mongocxx/v1/client.hpp> // IWYU pragma: export
+#include <mongocxx/v1/oidc_callback.hpp>
+
+#include <string> // IWYU pragma: keep: backward compatibility, to be removed.
+#include <utility>
 
 #include <bsoncxx/stdx/optional.hpp>
 
@@ -37,6 +43,11 @@ namespace options {
 class client {
    public:
     ///
+    /// Default initialization.
+    ///
+    client() = default;
+
+    ///
     /// Sets the SSL-related options.
     ///
     /// @param ssl_opts
@@ -49,7 +60,9 @@ class client {
     /// @deprecated
     ///   Please use tls_opts instead.
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(client&) ssl_opts(tls ssl_opts);
+    MONGOCXX_DEPRECATED client& ssl_opts(tls ssl_opts) {
+        return this->tls_opts(std::move(ssl_opts));
+    }
 
     ///
     /// Sets the TLS-related options.
@@ -61,7 +74,10 @@ class client {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(client&) tls_opts(tls tls_opts);
+    client& tls_opts(tls tls_opts) {
+        _tls_opts = std::move(tls_opts);
+        return *this;
+    }
 
     ///
     /// The current SSL-related options.
@@ -70,14 +86,18 @@ class client {
     ///
     /// @deprecated Please use tls_opts instead.
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<tls> const&) ssl_opts() const;
+    MONGOCXX_DEPRECATED bsoncxx::v_noabi::stdx::optional<tls> const& ssl_opts() const {
+        return this->tls_opts();
+    }
 
     ///
     /// The current TLS-related options.
     ///
     /// @return The TLS-related options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<tls> const&) tls_opts() const;
+    bsoncxx::v_noabi::stdx::optional<tls> const& tls_opts() const {
+        return _tls_opts;
+    }
 
     ///
     /// Sets the automatic encryption options.
@@ -89,7 +109,10 @@ class client {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(client&) auto_encryption_opts(auto_encryption auto_encryption_opts);
+    client& auto_encryption_opts(auto_encryption auto_encryption_opts) {
+        _auto_encrypt_opts = std::move(auto_encryption_opts);
+        return *this;
+    }
 
     ///
     /// Gets the current automatic encryption options.
@@ -97,8 +120,9 @@ class client {
     /// @return
     ///   The automatic encryption opts.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<auto_encryption> const&)
-    auto_encryption_opts() const;
+    bsoncxx::v_noabi::stdx::optional<auto_encryption> const& auto_encryption_opts() const {
+        return _auto_encrypt_opts;
+    }
 
     ///
     /// Sets the APM-related options.
@@ -110,14 +134,19 @@ class client {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(client&) apm_opts(apm apm_opts);
+    client& apm_opts(apm apm_opts) {
+        _apm_opts = std::move(apm_opts);
+        return *this;
+    }
 
     ///
     /// The current APM-related options.
     ///
     /// @return The APM-related options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<apm> const&) apm_opts() const;
+    bsoncxx::v_noabi::stdx::optional<apm> const& apm_opts() const {
+        return _apm_opts;
+    }
 
     ///
     /// Sets the server API options.
@@ -129,7 +158,10 @@ class client {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(client&) server_api_opts(server_api server_api_opts);
+    client& server_api_opts(server_api server_api_opts) {
+        _server_api_opts = std::move(server_api_opts);
+        return *this;
+    }
 
     ///
     /// Gets the current server API options or returns a disengaged optional if there are no server
@@ -138,17 +170,89 @@ class client {
     /// @return
     ///   The server API options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<server_api> const&)
-    server_api_opts() const;
+    bsoncxx::v_noabi::stdx::optional<server_api> const& server_api_opts() const {
+        return _server_api_opts;
+    }
+
+    ///
+    /// Sets the OIDC callback.
+    ///
+    /// @param oidc_callback
+    ///   The OIDC callback.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called. This facilitates
+    ///   method chaining.
+    ///
+    client& oidc_callback(v1::oidc_callback oidc_callback) {
+        _oidc_callback = std::move(oidc_callback);
+        return *this;
+    }
+
+    ///
+    /// The current OIDC callback.
+    ///
+    /// @return The OIDC callback.
+    ///
+    bsoncxx::v_noabi::stdx::optional<v1::oidc_callback> const& oidc_callback() const {
+        return _oidc_callback;
+    }
+
+    class internal;
 
    private:
     bsoncxx::v_noabi::stdx::optional<tls> _tls_opts;
     bsoncxx::v_noabi::stdx::optional<apm> _apm_opts;
     bsoncxx::v_noabi::stdx::optional<auto_encryption> _auto_encrypt_opts;
     bsoncxx::v_noabi::stdx::optional<server_api> _server_api_opts;
+    bsoncxx::v_noabi::stdx::optional<v1::oidc_callback> _oidc_callback;
+
+    /* explicit(false) */ client(v1::client::options opts);
+
+    explicit operator v1::client::options() const;
 };
 
 } // namespace options
+} // namespace v_noabi
+} // namespace mongocxx
+
+namespace mongocxx {
+namespace v_noabi {
+
+///
+/// Convert to the @ref mongocxx::v_noabi equivalent of `v`.
+///
+/// @important The `auto_encryption_opts` field in the resulting object is unset when not explicitly provided as an
+/// argument to this conversion function.
+///
+/// @{
+MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::options::client) from_v1(v1::client::options v);
+
+inline v_noabi::options::client from_v1(v1::client::options v, v_noabi::options::auto_encryption opts) {
+    auto ret = from_v1(std::move(v));
+    ret.auto_encryption_opts(std::move(opts));
+    return ret;
+}
+/// @}
+///
+
+///
+/// Convert to the @ref mongocxx::v1 equivalent of `v`.
+///
+/// @important The `auto_encryption_opts` field in the resulting object is unset when not explicitly provided as an
+/// argument to this conversion function.
+///
+/// @{
+MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v1::client::options) to_v1(v_noabi::options::client const& v);
+
+inline v1::client::options to_v1(v_noabi::options::client const& v, v1::auto_encryption_options opts) {
+    auto ret = to_v1(v);
+    ret.auto_encryption_opts(std::move(opts));
+    return ret;
+}
+/// @}
+///
+
 } // namespace v_noabi
 } // namespace mongocxx
 
@@ -157,4 +261,7 @@ class client {
 ///
 /// @file
 /// Provides @ref mongocxx::v_noabi::options::client.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/client.hpp
 ///

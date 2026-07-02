@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/v1/aggregate_options-fwd.hpp> // IWYU pragma: export
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -29,7 +31,7 @@ class aggregate;
 namespace mongocxx {
 namespace options {
 
-using ::mongocxx::v_noabi::options::aggregate;
+using v_noabi::options::aggregate;
 
 } // namespace options
 } // namespace mongocxx
@@ -39,4 +41,7 @@ using ::mongocxx::v_noabi::options::aggregate;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::options::aggregate.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/aggregate_options-fwd.hpp
 ///

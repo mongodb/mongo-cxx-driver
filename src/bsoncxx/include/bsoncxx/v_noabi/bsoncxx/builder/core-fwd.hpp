@@ -29,7 +29,7 @@ class core;
 namespace bsoncxx {
 namespace builder {
 
-using ::bsoncxx::v_noabi::builder::core;
+using v_noabi::builder::core;
 
 } // namespace builder
 } // namespace bsoncxx

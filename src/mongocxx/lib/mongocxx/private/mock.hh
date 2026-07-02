@@ -16,8 +16,11 @@
 
 #include <bsoncxx/v1/detail/macros.hpp>
 
+#include <mongocxx/v1/config/export.hpp>
+
 #include <array>
 #include <cassert>
+#include <cstddef>
 #include <functional>
 #include <iostream>
 #include <memory>

@@ -14,6 +14,9 @@
 
 #pragma once
 
+#include <mongocxx/v1/delete_many_result-fwd.hpp> // IWYU pragma: export
+#include <mongocxx/v1/delete_one_result-fwd.hpp>  // IWYU pragma: export
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -29,7 +32,7 @@ class delete_result;
 namespace mongocxx {
 namespace result {
 
-using ::mongocxx::v_noabi::result::delete_result;
+using v_noabi::result::delete_result;
 
 } // namespace result
 } // namespace mongocxx
@@ -39,4 +42,8 @@ using ::mongocxx::v_noabi::result::delete_result;
 ///
 /// @file
 /// Declares @ref mongocxx::v_noabi::result::delete_result.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/delete_many_result-fwd.hpp
+/// - @ref mongocxx/v1/delete_one_result-fwd.hpp
 ///
