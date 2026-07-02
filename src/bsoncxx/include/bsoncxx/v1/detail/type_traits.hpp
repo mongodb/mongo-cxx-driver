@@ -67,24 +67,11 @@ using remove_cvref_t = remove_cv_t<remove_reference_t<T>>;
 template <typename T>
 using const_reference_t = add_lvalue_reference_t<remove_cvref_t<T> const>;
 
-// Workaround for CWG issue 1558.
-template <typename...>
-struct just_void {
-    using type = void;
-};
-
 // A "do-nothing" alias template that always evaluates to void.
 //
 // @tparam Ts Zero or more type arguments, all discarded
 template <typename... Ts>
-using void_t =
-#if defined(_MSC_VER) && _MSC_VER < 1910
-    // Old MSVC requires that the type parameters actually be "used" to trigger SFINAE at caller.
-    // This was resolved by CWG issue 1558.
-    typename just_void<Ts...>::type;
-#else
-    void;
-#endif
+using void_t = void;
 
 // Alias for integral_constant<bool, B>.
 template <bool B>
