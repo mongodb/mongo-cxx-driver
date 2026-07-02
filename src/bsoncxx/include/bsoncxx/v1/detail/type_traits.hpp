@@ -395,10 +395,6 @@ namespace swap_detection {
 
 using std::swap;
 
-// Declare an unusable variadic swap. If not present, MSVC 19.00 (VS2015) errors in
-// this header and complains "'std::swap': function does not take 1 arguments" (???).
-void swap(...) = delete;
-
 template <typename T, typename U>
 auto is_swappable_f(rank<0>) -> std::false_type;
 
