@@ -61,8 +61,13 @@ using namespace spec;
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 
-using schema_versions_t = std::array<std::array<int, 3 /* major.minor.patch */>, 3 /* supported version */>;
-constexpr schema_versions_t schema_versions{{{{1, 1, 0}}, {{1, 8, 0}}, {{1, 19, 0}}}};
+using schema_versions_t = std::array<std::array<int, 3 /* major.minor.patch */>, 4 /* supported version */>;
+constexpr schema_versions_t schema_versions{{
+    {{1, 1, 0}},
+    {{1, 8, 0}},
+    {{1, 19, 0}},
+    {{1, 28, 0}} // Partially supported for { accessToken: { $$placeholder: 1 } }
+}};
 
 std::pair<std::unordered_map<std::string, spec::apm_checker>&, entity::map&> init_maps() {
     // Below initializes the static apm map and entity map if needed, in that order. This will also
@@ -111,11 +116,13 @@ bsoncxx::document::value get_kms_values() {
             make_document(
                 kvp("tenantId", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_TENANT_ID")),
                 kvp("clientId", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_ID")),
-                kvp("clientSecret", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_SECRET")))),
+                kvp("clientSecret", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_SECRET")),
+                kvp("accessToken", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_ACCESS_TOKEN")))),
         kvp("gcp",
             make_document(
                 kvp("email", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_EMAIL")),
-                kvp("privateKey", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_PRIVATEKEY")))),
+                kvp("privateKey", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_PRIVATEKEY")),
+                kvp("accessToken", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_ACCESS_TOKEN")))),
         kvp("kmip", make_document(kvp("endpoint", "localhost:5698"))),
         kvp("local", make_document(kvp("key", local_master_key))));
 
