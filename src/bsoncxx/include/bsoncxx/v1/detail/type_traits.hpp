@@ -67,24 +67,11 @@ using remove_cvref_t = remove_cv_t<remove_reference_t<T>>;
 template <typename T>
 using const_reference_t = add_lvalue_reference_t<remove_cvref_t<T> const>;
 
-// Workaround for CWG issue 1558.
-template <typename...>
-struct just_void {
-    using type = void;
-};
-
 // A "do-nothing" alias template that always evaluates to void.
 //
 // @tparam Ts Zero or more type arguments, all discarded
 template <typename... Ts>
-using void_t =
-#if defined(_MSC_VER) && _MSC_VER < 1910
-    // Old MSVC requires that the type parameters actually be "used" to trigger SFINAE at caller.
-    // This was resolved by CWG issue 1558.
-    typename just_void<Ts...>::type;
-#else
-    void;
-#endif
+using void_t = void;
 
 // Alias for integral_constant<bool, B>.
 template <bool B>
@@ -135,18 +122,6 @@ struct detection<true> {
     using f = Oper<Args...>;
 };
 
-// Workaround: MSVC 14.0 forgets whether a type resulting from the evaluation
-// of a template-template parameter to an alias template is a reference.
-template <typename Dflt, typename Void, template <class...> class Oper, typename... Args>
-struct vc140_detection {
-    using type = Dflt;
-};
-
-template <typename Dflt, template <class...> class Oper, typename... Args>
-struct vc140_detection<Dflt, void_t<Oper<Args...>>, Oper, Args...> {
-    using type = Oper<Args...>;
-};
-
 } // namespace impl_detection
 
 // The type yielded by detected_t if the given type operator does not yield a type.
@@ -171,12 +146,7 @@ struct is_detected : decltype(impl_detection::is_detected_f<Oper>(static_cast<mp
 // @tparam Args The arguments to give to the Oper metafunction
 template <typename Dflt, template <class...> class Oper, typename... Args>
 using detected_or =
-#if defined(_MSC_VER) && _MSC_VER < 1910
-    typename impl_detection::vc140_detection<Dflt, void, Oper, Args...>::type
-#else
-    typename impl_detection::detection<is_detected<Oper, Args...>::value>::template f<Dflt, Oper, Args...>
-#endif
-    ;
+    typename impl_detection::detection<is_detected<Oper, Args...>::value>::template f<Dflt, Oper, Args...>;
 
 // If Oper<Args...> evaluates to a type, yields that type. Otherwise, yields the sentinel type
 // `nonesuch`.
@@ -330,7 +300,7 @@ struct requirement<Constraint, enable_if_t<Constraint::value>> {
 // @tparam Traits A list of type traits with nested ::value members
 template <typename Type, typename... Traits>
 #if defined _MSC_VER && _MSC_VER < 1920
-// VS 2015 has trouble with expression SFINAE.
+// VS 2017 and older has trouble with expression SFINAE.
 using requires_t = enable_if_t<conjunction<Traits...>::value, Type>;
 #else
 // Generates better error messages in case of substitution failure than a plain enable_if_t:
@@ -395,12 +365,7 @@ using invoke_result_t = decltype(invoke(std::declval<F>(), std::declval<Args>().
 // @tparam F A invocable: A function pointer or callable object, or a member pointer
 // @tparam Args The arguments to match against
 template <typename F, typename... Args>
-#if defined(_MSC_VER) && _MSC_VER < 1910
-using is_invocable = is_detected<invoke_result_t, F, Args...>;
-#else
-struct is_invocable : is_detected<invoke_result_t, F, Args...> {
-};
-#endif
+struct is_invocable : is_detected<invoke_result_t, F, Args...> {};
 
 // Trait detects whether the given types are the same after the removal of top-level CV-ref
 // qualifiers
@@ -424,10 +389,6 @@ struct rank<0> {};
 namespace swap_detection {
 
 using std::swap;
-
-// Declare an unusable variadic swap. If not present, MSVC 19.00 (VS2015) errors in
-// this header and complains "'std::swap': function does not take 1 arguments" (???).
-void swap(...) = delete;
 
 template <typename T, typename U>
 auto is_swappable_f(rank<0>) -> std::false_type;
