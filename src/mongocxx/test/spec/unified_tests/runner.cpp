@@ -719,6 +719,90 @@ database create_database(document::view object) {
     return db;
 }
 
+options::auto_encryption get_auto_encryption_options(document::view auto_encrypt_opts_doc) {
+    options::auto_encryption auto_encrypt_opts;
+
+    bsoncxx::stdx::optional<bsoncxx::document::view> extra_options_from_test;
+
+    for (auto const& element : auto_encrypt_opts_doc) {
+        auto const key = element.key();
+        if (key == "kmsProviders") {
+            auto const providers = element.get_document().value;
+            auto_encrypt_opts.kms_providers(parse_kms_doc(providers));
+
+            if (!providers.empty()) {
+                // Configure TLS options.
+                auto tls_opts = make_document(
+                    kvp("kmip",
+                        make_document(
+                            kvp("tlsCAFile", test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CA_FILE")),
+                            kvp("tlsCertificateKeyFile",
+                                test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CERTIFICATE_KEY_FILE")))));
+                auto_encrypt_opts.tls_opts(std::move(tls_opts));
+            }
+        } else if (key == "keyVaultNamespace") {
+            auto const ns_string = std::string(element.get_string().value);
+            auto const dot = ns_string.find(".");
+            std::string const db = ns_string.substr(0, dot);
+            std::string const coll = ns_string.substr(dot + 1);
+            auto_encrypt_opts.key_vault_namespace({db, coll});
+        } else if (key == "bypassAutoEncryption") {
+            auto_encrypt_opts.bypass_auto_encryption(element.get_bool().value);
+        } else if (key == "bypassQueryAnalysis") {
+            auto_encrypt_opts.bypass_query_analysis(element.get_bool().value);
+        } else if (key == "schemaMap") {
+            auto_encrypt_opts.schema_map(element.get_document().value);
+        } else if (key == "encryptedFieldsMap") {
+            auto_encrypt_opts.encrypted_fields_map(element.get_document().value);
+        } else if (key == "extraOptions") {
+            extra_options_from_test = element.get_document().value; // Applied later.
+        } else {
+            throw std::logic_error{"unsupported field in autoEncryptOpts: " + string::to_string(key)};
+        }
+    }
+
+    // Apply extra options from environment if not set in test.
+    auto extra_options = bsoncxx::builder::basic::document{};
+
+    auto const mongocryptd_path = std::getenv("MONGOCRYPTD_PATH");
+    auto const bypass_spawn = std::getenv("ENCRYPTION_TESTS_BYPASS_SPAWN");
+    auto const shared_lib_path = std::getenv("CRYPT_SHARED_LIB_PATH");
+
+    auto has_extra_option_from_test = [&](std::string const& key) {
+        return extra_options_from_test && (*extra_options_from_test)[key];
+    };
+
+    if (shared_lib_path) {
+        if (!has_extra_option_from_test("cryptSharedLibPath")) {
+            extra_options.append(kvp("cryptSharedLibPath", shared_lib_path));
+        }
+        if (!has_extra_option_from_test("cryptSharedLibRequired")) {
+            extra_options.append(kvp("cryptSharedLibRequired", true));
+        }
+    }
+
+    if (bypass_spawn && strcmp(bypass_spawn, "TRUE") == 0) {
+        if (!has_extra_option_from_test("mongocryptdBypassSpawn")) {
+            extra_options.append(bsoncxx::builder::basic::kvp("mongocryptdBypassSpawn", true));
+        }
+    }
+
+    if (mongocryptd_path) {
+        if (!has_extra_option_from_test("mongocryptdSpawnPath")) {
+            extra_options.append(bsoncxx::builder::basic::kvp("mongocryptdSpawnPath", mongocryptd_path));
+        }
+    }
+
+    // Add extra options (if any) from test.
+    if (extra_options_from_test) {
+        extra_options.append(bsoncxx::builder::concatenate(extra_options_from_test.value()));
+    }
+
+    auto_encrypt_opts.extra_options(extra_options.extract());
+
+    return auto_encrypt_opts;
+}
+
 client create_client(document::view object) {
     auto const conn = "mongodb://" + get_hostnames(object) + "/?" + uri_options_to_string(object);
     auto apm_opts = options::apm{};
@@ -727,6 +811,9 @@ client create_client(document::view object) {
     if (object["serverApi"]) {
         auto const server_api_opts = create_server_api(object);
         client_opts.server_api_opts(server_api_opts);
+    }
+    if (object["autoEncryptOpts"]) {
+        client_opts.auto_encryption_opts(get_auto_encryption_options(object["autoEncryptOpts"].get_document().value));
     }
     {
         auto const auth_mechanism = object["uriOptions"]["authMechanism"];
@@ -853,13 +940,28 @@ void add_data_to_collection(array::element const& data) {
 
     auto const coll_name = data["collectionName"].get_string().value;
 
-    if (db.has_collection(coll_name))
-        db[coll_name].drop();
-
-    auto coll = db.create_collection(coll_name, {}, wc);
-    insert_opts.write_concern(wc);
+    // Drop `coll_name` and its Queryable Encryption auxiliary collections, if any.
+    for (auto const& drop_name : {
+             string::to_string(coll_name),
+             "enxcol_." + string::to_string(coll_name) + ".esc",
+             "enxcol_." + string::to_string(coll_name) + ".ecoc",
+         }) {
+        if (db.has_collection(drop_name))
+            db[drop_name].drop();
+    }
 
     auto const to_insert = array_elements_to_documents(data["documents"].get_array().value);
+
+    if (auto const create_options = data["createOptions"]) {
+        db.create_collection(coll_name, create_options.get_document().value, wc);
+    } else if (to_insert.empty()) {
+        db.create_collection(coll_name, {}, wc);
+    }
+
+    auto insert_opts = mongocxx::options::insert();
+    insert_opts.write_concern(wc);
+
+    auto coll = db[coll_name];
     REQUIRE((to_insert.empty() || coll.insert_many(to_insert, insert_opts)->result().inserted_count() != 0));
 }
 
