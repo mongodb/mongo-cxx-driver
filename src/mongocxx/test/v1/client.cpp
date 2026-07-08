@@ -2167,5 +2167,40 @@ TEST_CASE("reset", "[mongocxx][v1][client]") {
     (void)mocks.make().reset();
 }
 
+TEST_CASE("append_metadata", "[mongocxx][v1][client]") {
+    client_mocks_type mocks;
+
+    bool called = false;
+
+    auto append_metadata = libmongoc::client_append_metadata.create_instance();
+    append_metadata
+        ->interpose([&](mongoc_client_t* ptr, char const* name, char const* version, char const* platform) -> bool {
+            CHECK(ptr == mocks.client_id);
+            CHECK(bsoncxx::v1::stdx::string_view{name} == "name");
+            CHECK(bsoncxx::v1::stdx::string_view{version} == "version");
+            CHECK(bsoncxx::v1::stdx::string_view{platform} == "platform");
+            called = true;
+            return true;
+        })
+        .forever();
+
+    CHECK_NOTHROW(mocks.make().append_metadata("name", "version", "platform"));
+    CHECK(called);
+}
+
+TEST_CASE("append_metadata failure", "[mongocxx][v1][client]") {
+    client_mocks_type mocks;
+
+    auto append_metadata = libmongoc::client_append_metadata.create_instance();
+    append_metadata
+        ->interpose([&](mongoc_client_t* ptr, char const*, char const*, char const*) -> bool {
+            CHECK(ptr == mocks.client_id);
+            return false;
+        })
+        .forever();
+
+    CHECK_THROWS_WITH_CODE(mocks.make().append_metadata("name", "version", "platform"), code::append_metadata_failure);
+}
+
 } // namespace v1
 } // namespace mongocxx

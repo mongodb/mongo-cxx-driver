@@ -928,5 +928,41 @@ TEST_CASE("database", "[mongocxx][v1][pool][entry]") {
     CHECK(v1::database::internal::as_mongoc(db) == database_id);
 }
 
+TEST_CASE("append_metadata", "[mongocxx][v1][pool]") {
+    pool_mocks_type mocks;
+
+    bool called = false;
+
+    auto append_metadata = libmongoc::client_pool_append_metadata.create_instance();
+    append_metadata
+        ->interpose(
+            [&](mongoc_client_pool_t* ptr, char const* name, char const* version, char const* platform) -> bool {
+                CHECK(ptr == mocks.pool_id);
+                CHECK_THAT(name, Catch::Matchers::Equals("name"));
+                CHECK_THAT(version, Catch::Matchers::Equals("version"));
+                CHECK_THAT(platform, Catch::Matchers::Equals("platform"));
+                called = true;
+                return true;
+            })
+        .forever();
+
+    CHECK_NOTHROW(mocks.make().append_metadata("name", "version", "platform"));
+    CHECK(called);
+}
+
+TEST_CASE("append_metadata failure", "[mongocxx][v1][pool]") {
+    pool_mocks_type mocks;
+
+    auto append_metadata = libmongoc::client_pool_append_metadata.create_instance();
+    append_metadata
+        ->interpose([&](mongoc_client_pool_t* ptr, char const*, char const*, char const*) -> bool {
+            CHECK(ptr == mocks.pool_id);
+            return false;
+        })
+        .forever();
+
+    CHECK_THROWS_WITH_CODE(mocks.make().append_metadata("name", "version", "platform"), code::append_metadata_failure);
+}
+
 } // namespace v1
 } // namespace mongocxx

@@ -382,6 +382,13 @@ v1::client_bulk_write client::create_bulk_write(v1::client_session& session) {
     return bulk_write;
 }
 
+void client::append_metadata(
+    bsoncxx::v1::stdx::string_view /*name*/,
+    bsoncxx::v1::stdx::string_view /*version*/,
+    bsoncxx::v1::stdx::string_view /*platform*/) {
+    throw v1::exception::internal::make(errc::zero); // TODO: CXX-3274 not yet implemented.
+}
+
 void client::reset() {
     libmongoc::client_reset(impl::with(this)->_client);
 }

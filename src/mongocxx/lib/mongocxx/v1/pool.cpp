@@ -192,6 +192,13 @@ bsoncxx::v1::stdx::optional<pool::entry> pool::try_acquire() {
     return {};
 }
 
+void pool::append_metadata(
+    bsoncxx::v1::stdx::string_view /*name*/,
+    bsoncxx::v1::stdx::string_view /*version*/,
+    bsoncxx::v1::stdx::string_view /*platform*/) {
+    throw v1::exception::internal::make(code::zero); // TODO: CXX-3274 not yet implemented.
+}
+
 std::error_category const& pool::error_category() {
     class type final : public std::error_category {
         char const* name() const noexcept override {
