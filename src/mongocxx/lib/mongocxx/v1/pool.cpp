@@ -193,10 +193,16 @@ bsoncxx::v1::stdx::optional<pool::entry> pool::try_acquire() {
 }
 
 void pool::append_metadata(
-    bsoncxx::v1::stdx::string_view /*name*/,
-    bsoncxx::v1::stdx::string_view /*version*/,
-    bsoncxx::v1::stdx::string_view /*platform*/) {
-    throw v1::exception::internal::make(code::zero); // TODO: CXX-3274 not yet implemented.
+    bsoncxx::v1::stdx::string_view name,
+    bsoncxx::v1::stdx::string_view version,
+    bsoncxx::v1::stdx::string_view platform) {
+    if (!libmongoc::client_pool_append_metadata(
+            impl::with(this)->_pool,
+            std::string{name}.c_str(),
+            std::string{version}.c_str(),
+            std::string{platform}.c_str())) {
+        throw v1::exception::internal::make(code::append_metadata_failure);
+    }
 }
 
 std::error_category const& pool::error_category() {
@@ -211,6 +217,8 @@ std::error_category const& pool::error_category() {
                     return "zero";
                 case code::wait_queue_timeout:
                     return "failed to acquire a client object due to waitQueueTimeoutMS";
+                case code::append_metadata_failure:
+                    return "could not append the given metadata";
                 default:
                     return std::string(this->name()) + ':' + std::to_string(v);
             }
@@ -224,6 +232,7 @@ std::error_category const& pool::error_category() {
 
                 switch (static_cast<code>(v)) {
                     case code::wait_queue_timeout:
+                    case code::append_metadata_failure:
                         return source == condition::mongocxx;
 
                     case code::zero:
@@ -240,6 +249,8 @@ std::error_category const& pool::error_category() {
                 switch (static_cast<code>(v)) {
                     case code::wait_queue_timeout:
                         return type == condition::runtime_error;
+                    case code::append_metadata_failure:
+                        return type == condition::invalid_argument;
 
                     case code::zero:
                     default:
