@@ -479,6 +479,31 @@ class client {
     /// @}
 
     ///
+    /// Append the given metadata to the handshake command sent as part of the initial connection handshake.
+    ///
+    /// @param name
+    ///   The name of the wrapping driver. Must not be empty.
+    /// @param version
+    ///   The optional version of the wrapping driver.
+    /// @param platform
+    ///   The optional information about the current platform, for example configure options or compile flags.
+    ///
+    /// @throws mongocxx::v1::exception with @ref mongocxx::v1::client::errc::append_metadata_failure when one
+    /// of the following occurs:
+    /// - `this` is from @ref "mongocxx::v_noabi::pool": use @ref mongocxx::v_noabi::pool::append_metadata instead.
+    /// - The resulting handshake document would exceed the size limit.
+    ///
+    /// @see
+    /// - [hello (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/command/hello/)
+    ///
+    void append_metadata(
+        bsoncxx::v_noabi::stdx::string_view name,
+        bsoncxx::v_noabi::stdx::string_view version,
+        bsoncxx::v_noabi::stdx::string_view platform) {
+        _client.append_metadata(name, version, platform);
+    }
+
+    ///
     /// Prevents resource cleanup in the child process from interfering
     /// with the parent process after forking.
     ///

@@ -152,6 +152,29 @@ class pool {
     ///
     MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<entry>) try_acquire();
 
+    ///
+    /// Append the given metadata to the handshake command sent as part of the initial connection handshake.
+    ///
+    /// @param name
+    ///   The name of the wrapping driver. Must not be empty.
+    /// @param version
+    ///   The optional version of the wrapping driver.
+    /// @param platform
+    ///   The optional information about the current platform, for example configure options or compile flags.
+    ///
+    /// @throws mongocxx::v1::exception with @ref mongocxx::v1::pool::errc::append_metadata_failure if the resulting
+    /// handshake document would exceed the size limit.
+    ///
+    /// @see
+    /// - [hello (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/command/hello/)
+    ///
+    void append_metadata(
+        bsoncxx::v1::stdx::string_view name,
+        bsoncxx::v1::stdx::string_view version,
+        bsoncxx::v1::stdx::string_view platform) {
+        _pool.append_metadata(name, version, platform);
+    }
+
     class internal;
 };
 
