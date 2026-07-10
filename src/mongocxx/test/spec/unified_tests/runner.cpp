@@ -672,13 +672,17 @@ gridfs::bucket create_bucket(document::view object) {
     return bucket;
 }
 
-client_session create_session(document::view object) {
+client_session create_session(document::view object, bsoncxx::stdx::optional<document::value> const& cluster_time) {
     auto const id = string::to_string(object["client"].get_string().value);
     auto& map = get_entity_map();
     auto& client = map.get_client(id);
 
     auto const opts = get_session_options(object);
     auto session = client.start_session(opts);
+
+    // Advance cluster time following spec "MigrationConflict Errors on Sharded Clusters".
+    if (cluster_time)
+        session.advance_cluster_time(cluster_time->view());
 
     CAPTURE(id);
     return session;
@@ -840,7 +844,7 @@ client create_client(document::view object) {
     return client{uri{conn}, client_opts.apm_opts(apm_opts)};
 }
 
-bool add_to_map(array::element const& obj) {
+bool add_to_map(array::element const& obj, bsoncxx::stdx::optional<document::value> const& cluster_time) {
     // Spec: This object MUST contain exactly one top-level key that identifies the entity type and
     // maps to a nested object, which specifies a unique name for the entity ('id' key) and any
     // other parameters necessary for its construction.
@@ -859,7 +863,7 @@ bool add_to_map(array::element const& obj) {
     } else if (type == "bucket") {
         return map.insert(id, create_bucket(params));
     } else if (type == "session") {
-        return map.insert(id, create_session(params));
+        return map.insert(id, create_session(params, cluster_time));
     } else if (type == "clientEncryption") {
         return map.insert(id, create_client_encryption(params));
     }
@@ -869,14 +873,16 @@ bool add_to_map(array::element const& obj) {
     return false;
 }
 
-void create_entities(document::view const test) {
+void create_entities(document::view const test, bsoncxx::stdx::optional<document::value> const& cluster_time) {
     if (!test["createEntities"])
         return;
 
     get_entity_map().clear();
     get_apm_map().clear();
     auto const entities = test["createEntities"].get_array().value;
-    REQUIRE(std::all_of(std::begin(entities), std::end(entities), add_to_map));
+    REQUIRE(std::all_of(std::begin(entities), std::end(entities), [&](array::element const& obj) {
+        return add_to_map(obj, cluster_time);
+    }));
 }
 
 document::value parse_test_file(std::string const& test_path) {
@@ -929,9 +935,8 @@ mongocxx::client get_internal_client() {
     return mongocxx::client{uri0, test_util::add_test_server_api()};
 }
 
-void add_data_to_collection(array::element const& data) {
+void add_data_to_collection(array::element const& data, mongocxx::client& client, mongocxx::client_session& session) {
     auto const db_name = data["databaseName"].get_string().value;
-    auto client = get_internal_client();
     auto db = client.database(db_name);
 
     auto wc = write_concern{};
@@ -947,31 +952,42 @@ void add_data_to_collection(array::element const& data) {
              "enxcol_." + string::to_string(coll_name) + ".ecoc",
          }) {
         if (db.has_collection(drop_name))
-            db[drop_name].drop();
+            db[drop_name].drop(session, wc);
     }
 
     auto const to_insert = array_elements_to_documents(data["documents"].get_array().value);
 
     if (auto const create_options = data["createOptions"]) {
-        db.create_collection(coll_name, create_options.get_document().value, wc);
+        db.create_collection(session, coll_name, create_options.get_document().value, wc);
     } else if (to_insert.empty()) {
-        db.create_collection(coll_name, {}, wc);
+        db.create_collection(session, coll_name, {}, wc);
     }
 
     auto insert_opts = mongocxx::options::insert();
     insert_opts.write_concern(wc);
 
     auto coll = db[coll_name];
-    REQUIRE((to_insert.empty() || coll.insert_many(to_insert, insert_opts)->result().inserted_count() != 0));
+    REQUIRE((to_insert.empty() || coll.insert_many(session, to_insert, insert_opts)->result().inserted_count() != 0));
 }
 
-void load_initial_data(document::view test) {
+// Load `initialData` (if any) and return the latest cluster time observed while doing so, for use
+// in advancing session entities (see `create_session`).
+bsoncxx::stdx::optional<document::value> load_initial_data(document::view test) {
     if (!test["initialData"])
-        return;
+        return bsoncxx::stdx::nullopt;
+
+    auto client = get_internal_client();
+    auto session = client.start_session();
 
     auto const data = test["initialData"].get_array().value;
     for (auto&& d : data)
-        add_data_to_collection(d);
+        add_data_to_collection(d, client, session);
+
+    auto const cluster_time = session.cluster_time();
+    if (!cluster_time.empty())
+        return document::value{cluster_time};
+
+    return bsoncxx::stdx::nullopt;
 }
 
 void assert_result(array::element const& ops, document::view actual_result, bool is_array_of_root_docs) {
@@ -1508,8 +1524,8 @@ void run_tests_in_file(std::string const& test_path) {
 
     auto const description = test_spec_view["description"].get_string().value;
     CAPTURE(description);
-    create_entities(test_spec_view);
-    load_initial_data(test_spec_view);
+    auto const cluster_time = load_initial_data(test_spec_view);
+    create_entities(test_spec_view, cluster_time);
     run_tests(description, test_spec_view);
 }
 
