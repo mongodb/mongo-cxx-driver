@@ -446,8 +446,9 @@ std::error_category const& client::error_category() {
                 switch (static_cast<code>(v)) {
                     case code::tls_not_enabled:
                     case code::tls_not_supported:
-                    case code::append_metadata_failure:
                         return type == condition::invalid_argument;
+                    case code::append_metadata_failure:
+                        return type == condition::runtime_error;
 
                     case code::zero:
                     default:

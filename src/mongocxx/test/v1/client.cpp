@@ -113,11 +113,13 @@ TEST_CASE("error code", "[mongocxx][v1][client][error]") {
     SECTION("source") {
         CHECK(make_error_code(code::tls_not_enabled) == source_errc::mongocxx);
         CHECK(make_error_code(code::tls_not_supported) == source_errc::mongocxx);
+        CHECK(make_error_code(code::append_metadata_failure) == source_errc::mongocxx);
     }
 
     SECTION("type") {
         CHECK(make_error_code(code::tls_not_enabled) == type_errc::invalid_argument);
         CHECK(make_error_code(code::tls_not_supported) == type_errc::invalid_argument);
+        CHECK(make_error_code(code::append_metadata_failure) == type_errc::runtime_error);
     }
 }
 

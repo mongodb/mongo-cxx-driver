@@ -97,10 +97,12 @@ TEST_CASE("error code", "[mongocxx][v1][pool][error]") {
 
     SECTION("source") {
         CHECK(make_error_code(code::wait_queue_timeout) == source_errc::mongocxx);
+        CHECK(make_error_code(code::append_metadata_failure) == source_errc::mongocxx);
     }
 
     SECTION("type") {
         CHECK(make_error_code(code::wait_queue_timeout) == type_errc::runtime_error);
+        CHECK(make_error_code(code::append_metadata_failure) == type_errc::runtime_error);
     }
 }
 

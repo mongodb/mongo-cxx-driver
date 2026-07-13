@@ -248,9 +248,8 @@ std::error_category const& pool::error_category() {
 
                 switch (static_cast<code>(v)) {
                     case code::wait_queue_timeout:
-                        return type == condition::runtime_error;
                     case code::append_metadata_failure:
-                        return type == condition::invalid_argument;
+                        return type == condition::runtime_error;
 
                     case code::zero:
                     default:
