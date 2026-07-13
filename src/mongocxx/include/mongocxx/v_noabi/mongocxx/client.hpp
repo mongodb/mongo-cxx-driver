@@ -18,6 +18,8 @@
 
 //
 
+#include <bsoncxx/v1/stdx/string_view.hpp>
+
 #include <mongocxx/v1/client.hpp> // IWYU pragma: export
 
 #include <list>   // IWYU pragma: keep: backward compatibility, to be removed.
@@ -497,9 +499,9 @@ class client {
     /// - [hello (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/command/hello/)
     ///
     void append_metadata(
-        bsoncxx::v_noabi::stdx::string_view name,
-        bsoncxx::v_noabi::stdx::string_view version,
-        bsoncxx::v_noabi::stdx::string_view platform) {
+        bsoncxx::v1::stdx::string_view name,
+        bsoncxx::v1::stdx::string_view version,
+        bsoncxx::v1::stdx::string_view platform) {
         _client.append_metadata(name, version, platform);
     }
 

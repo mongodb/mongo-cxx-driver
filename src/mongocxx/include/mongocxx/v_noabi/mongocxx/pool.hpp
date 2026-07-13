@@ -18,6 +18,8 @@
 
 //
 
+#include <bsoncxx/v1/stdx/string_view.hpp>
+
 #include <mongocxx/v1/pool.hpp> // IWYU pragma: export
 
 #include <cstddef>
