@@ -164,18 +164,15 @@ class pool {
     /// @param platform
     ///   The optional information about the current platform, for example configure options or compile flags.
     ///
-    /// @throws mongocxx::v1::exception with @ref mongocxx::v1::pool::errc::append_metadata_failure if the resulting
-    /// handshake document would exceed the size limit.
+    /// @throws mongocxx::v_noabi::operation_exception if the resulting handshake document would exceed the size limit.
     ///
     /// @see
     /// - [hello (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/command/hello/)
     ///
-    void append_metadata(
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void) append_metadata(
         bsoncxx::v1::stdx::string_view name,
         bsoncxx::v1::stdx::string_view version,
-        bsoncxx::v1::stdx::string_view platform) {
-        _pool.append_metadata(name, version, platform);
-    }
+        bsoncxx::v1::stdx::string_view platform);
 
     class internal;
 };

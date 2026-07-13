@@ -490,20 +490,17 @@ class client {
     /// @param platform
     ///   The optional information about the current platform, for example configure options or compile flags.
     ///
-    /// @throws mongocxx::v1::exception with @ref mongocxx::v1::client::errc::append_metadata_failure when one
-    /// of the following occurs:
+    /// @throws mongocxx::v_noabi::operation_exception when of the following occurs:
     /// - `this` is from @ref "mongocxx::v_noabi::pool": use @ref mongocxx::v_noabi::pool::append_metadata instead.
     /// - The resulting handshake document would exceed the size limit.
     ///
     /// @see
     /// - [hello (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/command/hello/)
     ///
-    void append_metadata(
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void) append_metadata(
         bsoncxx::v1::stdx::string_view name,
         bsoncxx::v1::stdx::string_view version,
-        bsoncxx::v1::stdx::string_view platform) {
-        _client.append_metadata(name, version, platform);
-    }
+        bsoncxx::v1::stdx::string_view platform);
 
     ///
     /// Prevents resource cleanup in the child process from interfering
