@@ -218,7 +218,7 @@ std::error_category const& pool::error_category() {
                 case code::wait_queue_timeout:
                     return "failed to acquire a client object due to waitQueueTimeoutMS";
                 case code::append_metadata_failure:
-                    return "could not append the given metadata";
+                    return "could not append client metadata";
                 default:
                     return std::string(this->name()) + ':' + std::to_string(v);
             }

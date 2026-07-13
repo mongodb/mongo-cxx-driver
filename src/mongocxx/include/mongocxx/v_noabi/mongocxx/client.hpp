@@ -479,7 +479,7 @@ class client {
     /// @}
 
     ///
-    /// Append the given metadata to the handshake command sent as part of the initial connection handshake.
+    /// Append client metadata to the handshake command sent as part of the initial connection handshake.
     ///
     /// @param name
     ///   The name of the wrapping driver. Must not be empty.

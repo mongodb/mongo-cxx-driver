@@ -146,7 +146,7 @@ class pool {
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<entry>) try_acquire();
 
     ///
-    /// Append the given metadata to the handshake command sent as part of the initial connection handshake.
+    /// Append client metadata to the handshake command sent as part of the initial connection handshake.
     ///
     /// @param name
     ///   The name of the wrapping driver. Must not be empty.
@@ -173,7 +173,7 @@ class pool {
     enum class errc {
         zero,                    ///< Zero.
         wait_queue_timeout,      ///< Failed to acquire a client object due to "waitQueueTimeoutMS".
-        append_metadata_failure, ///< Failed to append the given metadata.
+        append_metadata_failure, ///< Failed to append client metadata.
     };
 
     ///

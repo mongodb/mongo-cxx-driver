@@ -414,7 +414,7 @@ std::error_category const& client::error_category() {
                 case code::tls_not_supported:
                     return "TLS is not supported by the mongoc library";
                 case code::append_metadata_failure:
-                    return "could not append the given metadata";
+                    return "could not append client metadata";
                 default:
                     return std::string(this->name()) + ':' + std::to_string(v);
             }

@@ -255,7 +255,7 @@ class client {
     ///
 
     ///
-    /// Append the given metadata to the handshake command sent as part of the initial connection handshake.
+    /// Append client metadata to the handshake command sent as part of the initial connection handshake.
     ///
     /// @param name
     ///   The name of the wrapping driver. Must not be empty.
@@ -301,7 +301,7 @@ class client {
         zero,                    ///< Zero.
         tls_not_enabled,         ///< TLS is not enabled by URI options.
         tls_not_supported,       ///< TLS is not supported by the mongoc library.
-        append_metadata_failure, ///< Failed to append the given metadata.
+        append_metadata_failure, ///< Failed to append client metadata.
     };
 
     ///

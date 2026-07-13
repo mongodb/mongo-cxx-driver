@@ -153,7 +153,7 @@ class pool {
     MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<entry>) try_acquire();
 
     ///
-    /// Append the given metadata to the handshake command sent as part of the initial connection handshake.
+    /// Append client metadata to the handshake command sent as part of the initial connection handshake.
     ///
     /// @param name
     ///   The name of the wrapping driver. Must not be empty.
