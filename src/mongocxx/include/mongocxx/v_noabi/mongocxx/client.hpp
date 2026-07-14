@@ -490,7 +490,7 @@ class client {
     /// @param platform
     ///   The optional information about the current platform, for example configure options or compile flags.
     ///
-    /// @throws mongocxx::v_noabi::operation_exception when of the following occurs:
+    /// @throws mongocxx::v_noabi::operation_exception when one of the following occurs:
     /// - `this` is from @ref "mongocxx::v_noabi::pool": use @ref mongocxx::v_noabi::pool::append_metadata instead.
     /// - The resulting handshake document would exceed the size limit.
     ///
