@@ -330,7 +330,7 @@ void client::append_metadata(
     bsoncxx::v1::stdx::string_view name,
     bsoncxx::v1::stdx::string_view version,
     bsoncxx::v1::stdx::string_view platform) try {
-    _client.append_metadata(name, version, platform);
+    check_moved_from(_client).append_metadata(name, version, platform);
 } catch (v1::server_error const&) {
     MONGOCXX_PRIVATE_UNREACHABLE; // Only client errors or `v_noabi::operation_exception`.
 } catch (v1::exception const& ex) {
