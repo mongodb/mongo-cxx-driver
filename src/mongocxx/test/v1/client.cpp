@@ -2178,9 +2178,9 @@ TEST_CASE("append_metadata", "[mongocxx][v1][client]") {
     append_metadata
         ->interpose([&](mongoc_client_t* ptr, char const* name, char const* version, char const* platform) -> bool {
             CHECK(ptr == mocks.client_id);
-            CHECK(bsoncxx::v1::stdx::string_view{name} == "name");
-            CHECK(bsoncxx::v1::stdx::string_view{version} == "version");
-            CHECK(bsoncxx::v1::stdx::string_view{platform} == "platform");
+            CHECK_THAT(name, Catch::Matchers::Equals("name"));
+            CHECK_THAT(version, Catch::Matchers::Equals("version"));
+            CHECK_THAT(platform, Catch::Matchers::Equals("platform"));
             called = true;
             return true;
         })
