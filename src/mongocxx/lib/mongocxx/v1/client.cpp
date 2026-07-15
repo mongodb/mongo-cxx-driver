@@ -384,8 +384,8 @@ v1::client_bulk_write client::create_bulk_write(v1::client_session& session) {
 
 void client::append_metadata(
     bsoncxx::v1::stdx::string_view name,
-    bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> const& version,
-    bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> const& platform) {
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> version,
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> platform) {
     if (!libmongoc::client_append_metadata(
             impl::with(this)->_client,
             std::string{name}.c_str(),

@@ -194,8 +194,8 @@ bsoncxx::v1::stdx::optional<pool::entry> pool::try_acquire() {
 
 void pool::append_metadata(
     bsoncxx::v1::stdx::string_view name,
-    bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> const& version,
-    bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> const& platform) {
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> version,
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> platform) {
     if (!libmongoc::client_pool_append_metadata(
             impl::with(this)->_pool,
             std::string{name}.c_str(),

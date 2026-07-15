@@ -501,8 +501,8 @@ class client {
     ///
     MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void) append_metadata(
         bsoncxx::v1::stdx::string_view name,
-        bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> const& version = {},
-        bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> const& platform = {});
+        bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> version = {},
+        bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> platform = {});
 
     ///
     /// Prevents resource cleanup in the child process from interfering
