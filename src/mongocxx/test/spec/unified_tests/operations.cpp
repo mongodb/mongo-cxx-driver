@@ -2117,6 +2117,20 @@ document::value list_search_indexes(collection& coll, document::view operation) 
     return result.extract();
 }
 
+document::value get_snapshot_time(entity::map& map, std::string const& object, document::view operation) {
+    auto& session = map.get_client_session(object);
+    auto const snapshot_time = session.snapshot_time();
+
+    types::bson_value::value result =
+        snapshot_time ? types::bson_value::value{*snapshot_time} : types::bson_value::value{types::b_null{}};
+
+    if (auto const save_result_as_entity = operation["saveResultAsEntity"]) {
+        map.insert(string::to_string(save_result_as_entity.get_string().value), types::bson_value::value{result});
+    }
+
+    return make_document(kvp("result", result));
+}
+
 document::value update_search_index(collection& coll, document::view operation) {
     auto arguments = operation["arguments"];
 
@@ -2311,6 +2325,9 @@ document::value operations::run(
         auto session_name = string::to_string(op["arguments"]["session"].get_string().value);
         auto& session = entity_map.get_client_session(session_name);
         return assert_session_transaction_state(session, op_view);
+    }
+    if (name == "getSnapshotTime") {
+        return get_snapshot_time(entity_map, object, op_view);
     }
     if (name == "assertSessionPinned") {
         auto& session = entity_map.get_client_session(string::to_string(op["arguments"]["session"].get_string().value));
