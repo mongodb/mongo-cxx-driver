@@ -962,7 +962,7 @@ TEST_CASE("append_metadata", "[mongocxx][v1][pool]") {
         expected_version = "";
         expected_platform = "";
 
-        CHECK_NOTHROW(mocks.make().append_metadata("name", bsoncxx::v1::stdx::nullopt, bsoncxx::v1::stdx::nullopt));
+        CHECK_NOTHROW(mocks.make().append_metadata("name"));
     }
 
     CHECK(called);
@@ -979,7 +979,7 @@ TEST_CASE("append_metadata failure", "[mongocxx][v1][pool]") {
         })
         .forever();
 
-    CHECK_THROWS_WITH_CODE(mocks.make().append_metadata("name", "version", "platform"), code::append_metadata_failure);
+    CHECK_THROWS_WITH_CODE(mocks.make().append_metadata("name"), code::append_metadata_failure);
 }
 
 } // namespace v1
