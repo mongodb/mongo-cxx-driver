@@ -935,20 +935,36 @@ TEST_CASE("append_metadata", "[mongocxx][v1][pool]") {
 
     bool called = false;
 
+    std::string expected_version;
+    std::string expected_platform;
+
     auto append_metadata = libmongoc::client_pool_append_metadata.create_instance();
     append_metadata
         ->interpose(
             [&](mongoc_client_pool_t* ptr, char const* name, char const* version, char const* platform) -> bool {
                 CHECK(ptr == mocks.pool_id);
                 CHECK_THAT(name, Catch::Matchers::Equals("name"));
-                CHECK_THAT(version, Catch::Matchers::Equals("version"));
-                CHECK_THAT(platform, Catch::Matchers::Equals("platform"));
+                CHECK_THAT(version, Catch::Matchers::Equals(expected_version));
+                CHECK_THAT(platform, Catch::Matchers::Equals(expected_platform));
                 called = true;
                 return true;
             })
         .forever();
 
-    CHECK_NOTHROW(mocks.make().append_metadata("name", "version", "platform"));
+    SECTION("all fields set") {
+        expected_version = "version";
+        expected_platform = "platform";
+
+        CHECK_NOTHROW(mocks.make().append_metadata("name", "version", "platform"));
+    }
+
+    SECTION("optional fields unset") {
+        expected_version = "";
+        expected_platform = "";
+
+        CHECK_NOTHROW(mocks.make().append_metadata("name", bsoncxx::v1::stdx::nullopt, bsoncxx::v1::stdx::nullopt));
+    }
+
     CHECK(called);
 }
 

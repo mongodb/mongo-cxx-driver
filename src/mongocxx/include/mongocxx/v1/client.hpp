@@ -275,8 +275,8 @@ class client {
     MONGOCXX_ABI_EXPORT_CDECL(void)
     append_metadata(
         bsoncxx::v1::stdx::string_view name,
-        bsoncxx::v1::stdx::string_view version,
-        bsoncxx::v1::stdx::string_view platform);
+        bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> const& version,
+        bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> const& platform);
 
     ///
     /// Invalidate this client object without invaliding existing cursors or sessions.

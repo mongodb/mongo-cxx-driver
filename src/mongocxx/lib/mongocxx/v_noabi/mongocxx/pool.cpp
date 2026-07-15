@@ -132,8 +132,8 @@ bsoncxx::v_noabi::stdx::optional<pool::entry> pool::try_acquire() {
 
 void pool::append_metadata(
     bsoncxx::v1::stdx::string_view name,
-    bsoncxx::v1::stdx::string_view version,
-    bsoncxx::v1::stdx::string_view platform) try {
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> const& version,
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> const& platform) try {
     _pool.append_metadata(name, version, platform);
 } catch (v1::server_error const&) {
     MONGOCXX_PRIVATE_UNREACHABLE; // Only client errors or `v_noabi::operation_exception`.
