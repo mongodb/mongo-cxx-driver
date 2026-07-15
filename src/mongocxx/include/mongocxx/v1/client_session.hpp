@@ -146,6 +146,19 @@ class client_session {
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::types::b_timestamp) operation_time() const;
 
     ///
+    /// Return this session's current snapshot time ("atClusterTime") value.
+    ///
+    /// The snapshot time is either the value configured via @ref options::snapshot_time or the value
+    /// established by the server on the first read operation of a snapshot session.
+    ///
+    /// @returns Empty when the snapshot time has not yet been established.
+    ///
+    /// @throws mongocxx::v1::exception when this session is not a snapshot session.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::b_timestamp>)
+    snapshot_time() const;
+
+    ///
     /// Return the ID of the current pinned server.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::uint32_t) server_id() const;
@@ -341,6 +354,21 @@ class client_session::options {
     /// Return the current "snapshot" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bool) snapshot() const;
+
+    ///
+    /// Set the "snapshotTime" ("atClusterTime") field.
+    ///
+    /// When set, this value is used as the snapshot time for a snapshot session instead of a value
+    /// determined from the first read operation.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(options&) snapshot_time(bsoncxx::v1::types::b_timestamp v);
+
+    ///
+    /// Return the current "snapshotTime" ("atClusterTime") field.
+    ///
+    /// @returns Empty when one is not set.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::types::b_timestamp>) snapshot_time() const;
 
     ///
     /// Set the "defaultTransactionOptions" field.
