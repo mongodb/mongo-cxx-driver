@@ -268,6 +268,7 @@ class client {
     /// following occurs:
     /// - `this` is from @ref "mongocxx::v1::pool": use @ref mongocxx::v1::pool::append_metadata instead.
     /// - The resulting handshake document would exceed the size limit.
+    /// - A string argument contains the metadata delimiter " / ".
     ///
     /// @see
     /// - [hello (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/command/hello/)

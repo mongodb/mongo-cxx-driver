@@ -494,6 +494,7 @@ class client {
     /// @throws mongocxx::v_noabi::operation_exception when one of the following occurs:
     /// - `this` is from @ref "mongocxx::v_noabi::pool": use @ref mongocxx::v_noabi::pool::append_metadata instead.
     /// - The resulting handshake document would exceed the size limit.
+    /// - A string argument contains the metadata delimiter " / ".
     ///
     /// @see
     /// - [hello (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/command/hello/)

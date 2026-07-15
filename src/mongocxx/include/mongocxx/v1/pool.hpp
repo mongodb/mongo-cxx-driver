@@ -155,8 +155,10 @@ class pool {
     /// @param platform
     ///   The optional information about the current platform, for example configure options or compile flags.
     ///
-    /// @throws mongocxx::v1::exception with @ref mongocxx::v1::pool::errc::append_metadata_failure if the resulting
-    /// handshake document would exceed the size limit.
+    /// @throws mongocxx::v1::exception with @ref mongocxx::v1::pool::errc::append_metadata_failure when one of the
+    /// following occurs:
+    /// - The resulting handshake document would exceed the size limit.
+    /// - A string argument contains the metadata delimiter " / ".
     ///
     /// @see
     /// - [hello (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/command/hello/)

@@ -165,7 +165,9 @@ class pool {
     /// @param platform
     ///   The optional information about the current platform, for example configure options or compile flags.
     ///
-    /// @throws mongocxx::v_noabi::operation_exception if the resulting handshake document would exceed the size limit.
+    /// @throws mongocxx::v_noabi::operation_exception when one of the following occurs:
+    /// - The resulting handshake document would exceed the size limit.
+    /// - A string argument contains the metadata delimiter " / ".
     ///
     /// @see
     /// - [hello (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/command/hello/)
