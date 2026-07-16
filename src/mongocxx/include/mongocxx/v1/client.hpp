@@ -29,6 +29,7 @@
 #include <mongocxx/v1/database-fwd.hpp>
 #include <mongocxx/v1/pipeline-fwd.hpp>
 #include <mongocxx/v1/server_api-fwd.hpp>
+#include <mongocxx/v1/structured_logging-fwd.hpp>
 #include <mongocxx/v1/tls-fwd.hpp>
 #include <mongocxx/v1/uri-fwd.hpp>
 
@@ -305,6 +306,7 @@ class client {
 /// - `auto_encryption_opts`
 /// - `oidc_callback`
 /// - `server_api_opts`
+/// - `structured_logging_opts`
 /// - `tls_opts`
 ///
 class client::options {
@@ -403,6 +405,16 @@ class client::options {
     /// Return the current "server_api_opts" field.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::server_api>) server_api_opts() const;
+
+    ///
+    /// Set the "structured_logging_opts" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(options&) structured_logging_opts(v1::structured_logging v);
+
+    ///
+    /// Return the current "structured_logging_opts" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::structured_logging>) structured_logging_opts() const;
 
     class internal;
 };

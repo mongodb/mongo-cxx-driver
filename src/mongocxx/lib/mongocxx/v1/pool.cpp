@@ -27,6 +27,7 @@
 #include <mongocxx/v1/exception.hh>
 #include <mongocxx/v1/oidc_callback.hh>
 #include <mongocxx/v1/server_api.hh>
+#include <mongocxx/v1/structured_logging.hh>
 #include <mongocxx/v1/tls.hh>
 #include <mongocxx/v1/uri.hh>
 
@@ -52,6 +53,7 @@ class pool::impl {
     mongoc_client_pool_t* _pool;
     v1::apm _apm;
     v1::oidc_callback _oidc_callback;
+    v1::structured_logging _structured_logging;
 
     ~impl() {
         libmongoc::client_pool_destroy(_pool);
@@ -123,6 +125,10 @@ pool::pool(v1::uri const& uri, options opts) : pool{uri} {
 
     if (auto& opt = v1::client::options::internal::oidc_callback(client_opts)) {
         internal::set_oidc_callback(*this, std::move(*opt));
+    }
+
+    if (auto& opt = v1::client::options::internal::structured_logging_opts(client_opts)) {
+        internal::set_structured_logging(*this, std::move(*opt));
     }
 
     if (auto const& opt = v1::client::options::internal::auto_encryption_opts(client_opts)) {
@@ -418,6 +424,12 @@ void pool::internal::set_oidc_callback(pool& self, v1::oidc_callback v) {
     auto& _oidc_callback = impl::with(self)._oidc_callback;
     _oidc_callback = std::move(v);
     v1::set_oidc_callback(impl::with(self)._pool, _oidc_callback);
+}
+
+void pool::internal::set_structured_logging(pool& self, v1::structured_logging v) {
+    auto& _structured_logging = impl::with(self)._structured_logging;
+    _structured_logging = std::move(v);
+    v1::structured_logging::internal::apply_to(impl::with(self)._pool, _structured_logging);
 }
 
 v1::client::options& pool::options::internal::client_opts(options& self) {

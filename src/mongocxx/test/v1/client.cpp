@@ -20,6 +20,8 @@
 #include <mongocxx/v1/exception.hpp>
 #include <mongocxx/v1/pipeline.hpp>
 #include <mongocxx/v1/server_api.hpp>
+#include <mongocxx/v1/structured_log.hpp>
+#include <mongocxx/v1/structured_logging.hpp>
 
 #include <mongocxx/v1/auto_encryption_options.hh>
 #include <mongocxx/v1/change_stream.hh>
@@ -617,6 +619,7 @@ TEST_CASE("default", "[mongocxx][v1][client][options]") {
     CHECK_FALSE(opts.auto_encryption_opts().has_value());
     CHECK_FALSE(opts.apm_opts().has_value());
     CHECK_FALSE(opts.server_api_opts().has_value());
+    CHECK_FALSE(opts.structured_logging_opts().has_value());
 }
 
 TEST_CASE("tls_opts", "[mongocxx][v1][client]") {
@@ -1081,6 +1084,47 @@ TEST_CASE("apm_opts", "[mongocxx][v1][client]") {
             CHECK(counters[i] == 0);
         }
     }
+}
+
+TEST_CASE("structured_logging_opts", "[mongocxx][v1][client]") {
+    client_mocks_type mocks;
+
+    identity_type opts_identity;
+    auto const opts_id = reinterpret_cast<mongoc_structured_log_opts_t*>(&opts_identity);
+
+    auto opts_new = libmongoc::structured_log_opts_new.create_instance();
+    opts_new->interpose([&]() -> mongoc_structured_log_opts_t* { return opts_id; }).forever();
+
+    auto opts_destroy = libmongoc::structured_log_opts_destroy.create_instance();
+    opts_destroy->interpose([&](mongoc_structured_log_opts_t* ptr) { CHECK(ptr == opts_id); }).forever();
+
+    auto set_handler = libmongoc::structured_log_opts_set_handler.create_instance();
+    set_handler->interpose(
+        [&](mongoc_structured_log_opts_t* ptr, mongoc_structured_log_func_t func, void* ctx) -> void {
+            CHECK(ptr == opts_id);
+            CHECK(func != nullptr);
+            CHECK(ctx != nullptr);
+        });
+
+    bool installed = false;
+    auto set_opts = libmongoc::client_set_structured_log_opts.create_instance();
+    set_opts->interpose([&](mongoc_client_t* client, mongoc_structured_log_opts_t const* opts) -> bool {
+        CHECK(client == mocks.client_id);
+        CHECK(opts == opts_id);
+        installed = true;
+        return true;
+    });
+
+    v1::structured_logging cfg;
+    cfg.handler([](structured_log_entry const&) {});
+
+    {
+        client::options opts;
+        CHECK_NOTHROW(opts.structured_logging_opts(std::move(cfg)));
+        (void)mocks.make(std::move(opts));
+    }
+
+    CHECK(installed);
 }
 
 TEST_CASE("server_api_opts", "[mongocxx][v1][client]") {

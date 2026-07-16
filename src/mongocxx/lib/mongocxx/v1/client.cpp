@@ -36,6 +36,7 @@
 #include <mongocxx/v1/oidc_callback.hh>
 #include <mongocxx/v1/pipeline.hh>
 #include <mongocxx/v1/server_api.hh>
+#include <mongocxx/v1/structured_logging.hh>
 #include <mongocxx/v1/tls.hh>
 #include <mongocxx/v1/uri.hh>
 
@@ -62,6 +63,7 @@ class client::impl {
     mongoc_client_t* _client;
     v1::apm _apm;
     v1::oidc_callback _oidc_callback;
+    v1::structured_logging _structured_logging;
 
     ~impl() {
         libmongoc::client_destroy(_client);
@@ -133,6 +135,10 @@ client::client(v1::uri uri, options opts) : client{new impl{v1::uri::internal::a
 
     if (auto& opt = options::internal::oidc_callback(opts)) {
         internal::set_oidc_callback(*this, std::move(*opt));
+    }
+
+    if (auto& opt = options::internal::structured_logging_opts(opts)) {
+        internal::set_structured_logging(*this, std::move(*opt));
     }
 
     if (auto const& opt = options::internal::auto_encryption_opts(opts)) {
@@ -465,6 +471,12 @@ void client::internal::set_oidc_callback(client& self, v1::oidc_callback v) {
     v1::set_oidc_callback(impl::with(self)._client, _oidc_callback);
 }
 
+void client::internal::set_structured_logging(client& self, v1::structured_logging v) {
+    auto& _structured_logging = impl::with(self)._structured_logging;
+    _structured_logging = std::move(v);
+    v1::structured_logging::internal::apply_to(impl::with(self)._client, _structured_logging);
+}
+
 mongoc_client_t* client::internal::release(client& self) {
     return exchange(impl::with(self)._client, nullptr);
 }
@@ -484,6 +496,7 @@ class client::options::impl {
     bsoncxx::v1::stdx::optional<v1::apm> _apm_opts;
     bsoncxx::v1::stdx::optional<v1::oidc_callback> _oidc_callback;
     bsoncxx::v1::stdx::optional<v1::server_api> _server_api_opts;
+    bsoncxx::v1::stdx::optional<v1::structured_logging> _structured_logging_opts;
 
     static impl const& with(options const& self) {
         return *static_cast<impl const*>(self._impl);
@@ -581,6 +594,15 @@ bsoncxx::v1::stdx::optional<v1::server_api> client::options::server_api_opts() c
     return impl::with(this)->_server_api_opts;
 }
 
+client::options& client::options::structured_logging_opts(v1::structured_logging v) {
+    impl::with(this)->_structured_logging_opts = std::move(v);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<v1::structured_logging> client::options::structured_logging_opts() const {
+    return impl::with(this)->_structured_logging_opts;
+}
+
 bsoncxx::v1::stdx::optional<v1::tls>& client::options::internal::tls_opts(options& self) {
     return impl::with(self)._tls_opts;
 }
@@ -600,6 +622,10 @@ bsoncxx::v1::stdx::optional<v1::oidc_callback>& client::options::internal::oidc_
 
 bsoncxx::v1::stdx::optional<v1::server_api>& client::options::internal::server_api_opts(options& self) {
     return impl::with(self)._server_api_opts;
+}
+
+bsoncxx::v1::stdx::optional<v1::structured_logging>& client::options::internal::structured_logging_opts(options& self) {
+    return impl::with(self)._structured_logging_opts;
 }
 
 } // namespace v1

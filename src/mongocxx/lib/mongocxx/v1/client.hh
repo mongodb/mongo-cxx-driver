@@ -21,6 +21,7 @@
 #include <mongocxx/v1/apm-fwd.hpp>
 #include <mongocxx/v1/auto_encryption_options-fwd.hpp>
 #include <mongocxx/v1/server_api-fwd.hpp>
+#include <mongocxx/v1/structured_logging-fwd.hpp>
 #include <mongocxx/v1/tls-fwd.hpp>
 
 #include <bsoncxx/v1/stdx/optional.hpp>
@@ -39,6 +40,7 @@ class client::internal {
 
     static void set_apm(client& self, v1::apm v);
     static void set_oidc_callback(client& self, v1::oidc_callback v);
+    static void set_structured_logging(client& self, v1::structured_logging v);
 
     static mongoc_client_t* release(client& self);
 
@@ -53,6 +55,7 @@ class client::options::internal {
     static bsoncxx::v1::stdx::optional<v1::apm>& apm_opts(options& self);
     static bsoncxx::v1::stdx::optional<v1::oidc_callback>& oidc_callback(options& self);
     static bsoncxx::v1::stdx::optional<v1::server_api>& server_api_opts(options& self);
+    static bsoncxx::v1::stdx::optional<v1::structured_logging>& structured_logging_opts(options& self);
 };
 
 } // namespace v1

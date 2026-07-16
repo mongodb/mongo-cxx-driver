@@ -20,6 +20,8 @@
 #include <mongocxx/v1/auto_encryption_options.hpp>
 #include <mongocxx/v1/exception.hpp>
 #include <mongocxx/v1/server_api.hpp>
+#include <mongocxx/v1/structured_log.hpp>
+#include <mongocxx/v1/structured_logging.hpp>
 #include <mongocxx/v1/tls.hpp>
 
 #include <mongocxx/v1/client.hh>
@@ -514,6 +516,7 @@ TEST_CASE("default", "[mongocxx][v1][pool][options]") {
     CHECK_FALSE(client_opts.auto_encryption_opts().has_value());
     CHECK_FALSE(client_opts.apm_opts().has_value());
     CHECK_FALSE(client_opts.server_api_opts().has_value());
+    CHECK_FALSE(client_opts.structured_logging_opts().has_value());
 }
 
 namespace {
@@ -580,6 +583,44 @@ TEST_CASE("apm_opts", "[mongocxx][v1][pool]") {
     }
 
     CHECK(counter == 1);
+}
+
+// Defer thorough test coverage to v1::client::options.
+TEST_CASE("structured_logging_opts", "[mongocxx][v1][pool]") {
+    pool_mocks_type mocks;
+
+    identity_type opts_identity;
+    auto const opts_id = reinterpret_cast<mongoc_structured_log_opts_t*>(&opts_identity);
+
+    auto opts_new = libmongoc::structured_log_opts_new.create_instance();
+    opts_new->interpose([&]() -> mongoc_structured_log_opts_t* { return opts_id; }).forever();
+
+    auto opts_destroy = libmongoc::structured_log_opts_destroy.create_instance();
+    opts_destroy->interpose([&](mongoc_structured_log_opts_t* ptr) { CHECK(ptr == opts_id); }).forever();
+
+    auto set_handler = libmongoc::structured_log_opts_set_handler.create_instance();
+    set_handler->interpose([&](mongoc_structured_log_opts_t*, mongoc_structured_log_func_t, void*) -> void {})
+        .forever();
+
+    bool installed = false;
+    auto set_opts = libmongoc::client_pool_set_structured_log_opts.create_instance();
+    set_opts->interpose([&](mongoc_client_pool_t* ptr, mongoc_structured_log_opts_t const* opts) -> bool {
+        CHECK(ptr == mocks.pool_id);
+        CHECK(opts == opts_id);
+        installed = true;
+        return true;
+    });
+
+    v1::structured_logging cfg;
+    cfg.handler([](structured_log_entry const&) {});
+
+    {
+        client::options opts;
+        CHECK_NOTHROW(opts.structured_logging_opts(std::move(cfg)));
+        (void)mocks.make(std::move(opts));
+    }
+
+    CHECK(installed);
 }
 
 // Defer thorough test coverage to v1::client::options.
