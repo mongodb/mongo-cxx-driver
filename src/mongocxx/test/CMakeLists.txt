@@ -175,6 +175,7 @@ set(mongocxx_test_sources_v1
     v1/server_api.cpp
     v1/server_error.cpp
     v1/structured_log.cpp
+    v1/structured_logging.cpp
     v1/text_options.cpp
     v1/tls.cpp
     v1/transaction_options.cpp

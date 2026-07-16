@@ -196,6 +196,7 @@ set(mongocxx_sources_v1
     mongocxx/v1/server_api.cpp
     mongocxx/v1/server_error.cpp
     mongocxx/v1/structured_log.cpp
+    mongocxx/v1/structured_logging.cpp
     mongocxx/v1/text_options.cpp
     mongocxx/v1/tls.cpp
     mongocxx/v1/transaction_options.cpp
