@@ -113,11 +113,13 @@ TEST_CASE("error code", "[mongocxx][v1][client][error]") {
     SECTION("source") {
         CHECK(make_error_code(code::tls_not_enabled) == source_errc::mongocxx);
         CHECK(make_error_code(code::tls_not_supported) == source_errc::mongocxx);
+        CHECK(make_error_code(code::append_metadata_failure) == source_errc::mongocxx);
     }
 
     SECTION("type") {
         CHECK(make_error_code(code::tls_not_enabled) == type_errc::invalid_argument);
         CHECK(make_error_code(code::tls_not_supported) == type_errc::invalid_argument);
+        CHECK(make_error_code(code::append_metadata_failure) == type_errc::runtime_error);
     }
 }
 
@@ -2165,6 +2167,57 @@ TEST_CASE("reset", "[mongocxx][v1][client]") {
     reset->interpose([&](mongoc_client_t* ptr) -> void { CHECK(ptr == mocks.client_id); });
 
     (void)mocks.make().reset();
+}
+
+TEST_CASE("append_metadata", "[mongocxx][v1][client]") {
+    client_mocks_type mocks;
+
+    bool called = false;
+
+    std::string expected_version;
+    std::string expected_platform;
+
+    auto append_metadata = libmongoc::client_append_metadata.create_instance();
+    append_metadata
+        ->interpose([&](mongoc_client_t* ptr, char const* name, char const* version, char const* platform) -> bool {
+            CHECK(ptr == mocks.client_id);
+            CHECK_THAT(name, Catch::Matchers::Equals("name"));
+            CHECK_THAT(version, Catch::Matchers::Equals(expected_version));
+            CHECK_THAT(platform, Catch::Matchers::Equals(expected_platform));
+            called = true;
+            return true;
+        })
+        .forever();
+
+    SECTION("all fields set") {
+        expected_version = "version";
+        expected_platform = "platform";
+
+        CHECK_NOTHROW(mocks.make().append_metadata("name", "version", "platform"));
+    }
+
+    SECTION("optional fields unset") {
+        expected_version = "";
+        expected_platform = "";
+
+        CHECK_NOTHROW(mocks.make().append_metadata("name"));
+    }
+
+    CHECK(called);
+}
+
+TEST_CASE("append_metadata failure", "[mongocxx][v1][client]") {
+    client_mocks_type mocks;
+
+    auto append_metadata = libmongoc::client_append_metadata.create_instance();
+    append_metadata
+        ->interpose([&](mongoc_client_t* ptr, char const*, char const*, char const*) -> bool {
+            CHECK(ptr == mocks.client_id);
+            return false;
+        })
+        .forever();
+
+    CHECK_THROWS_WITH_CODE(mocks.make().append_metadata("name"), code::append_metadata_failure);
 }
 
 } // namespace v1

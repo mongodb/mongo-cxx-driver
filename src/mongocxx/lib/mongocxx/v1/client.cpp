@@ -382,6 +382,19 @@ v1::client_bulk_write client::create_bulk_write(v1::client_session& session) {
     return bulk_write;
 }
 
+void client::append_metadata(
+    bsoncxx::v1::stdx::string_view name,
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> version,
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> platform) {
+    if (!libmongoc::client_append_metadata(
+            impl::with(this)->_client,
+            std::string{name}.c_str(),
+            std::string{version.value_or("")}.c_str(),
+            std::string{platform.value_or("")}.c_str())) {
+        throw v1::exception::internal::make(errc::append_metadata_failure);
+    }
+}
+
 void client::reset() {
     libmongoc::client_reset(impl::with(this)->_client);
 }
@@ -400,6 +413,8 @@ std::error_category const& client::error_category() {
                     return "TLS is not enabled by the URI option";
                 case code::tls_not_supported:
                     return "TLS is not supported by the mongoc library";
+                case code::append_metadata_failure:
+                    return "could not append client metadata";
                 default:
                     return std::string(this->name()) + ':' + std::to_string(v);
             }
@@ -414,6 +429,7 @@ std::error_category const& client::error_category() {
                 switch (static_cast<code>(v)) {
                     case code::tls_not_enabled:
                     case code::tls_not_supported:
+                    case code::append_metadata_failure:
                         return source == condition::mongocxx;
 
                     case code::zero:
@@ -431,6 +447,8 @@ std::error_category const& client::error_category() {
                     case code::tls_not_enabled:
                     case code::tls_not_supported:
                         return type == condition::invalid_argument;
+                    case code::append_metadata_failure:
+                        return type == condition::runtime_error;
 
                     case code::zero:
                     default:
