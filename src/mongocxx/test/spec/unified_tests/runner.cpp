@@ -61,8 +61,13 @@ using namespace spec;
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 
-using schema_versions_t = std::array<std::array<int, 3 /* major.minor.patch */>, 3 /* supported version */>;
-constexpr schema_versions_t schema_versions{{{{1, 1, 0}}, {{1, 8, 0}}, {{1, 19, 0}}}};
+using schema_versions_t = std::array<std::array<int, 3 /* major.minor.patch */>, 4 /* supported version */>;
+constexpr schema_versions_t schema_versions{{
+    {{1, 1, 0}},
+    {{1, 8, 0}},
+    {{1, 19, 0}},
+    {{1, 28, 0}} // Partially supported for { accessToken: { $$placeholder: 1 } }
+}};
 
 std::pair<std::unordered_map<std::string, spec::apm_checker>&, entity::map&> init_maps() {
     // Below initializes the static apm map and entity map if needed, in that order. This will also
@@ -111,11 +116,13 @@ bsoncxx::document::value get_kms_values() {
             make_document(
                 kvp("tenantId", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_TENANT_ID")),
                 kvp("clientId", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_ID")),
-                kvp("clientSecret", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_SECRET")))),
+                kvp("clientSecret", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_SECRET")),
+                kvp("accessToken", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_ACCESS_TOKEN")))),
         kvp("gcp",
             make_document(
                 kvp("email", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_EMAIL")),
-                kvp("privateKey", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_PRIVATEKEY")))),
+                kvp("privateKey", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_PRIVATEKEY")),
+                kvp("accessToken", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_ACCESS_TOKEN")))),
         kvp("kmip", make_document(kvp("endpoint", "localhost:5698"))),
         kvp("local", make_document(kvp("key", local_master_key))));
 
@@ -665,13 +672,17 @@ gridfs::bucket create_bucket(document::view object) {
     return bucket;
 }
 
-client_session create_session(document::view object) {
+client_session create_session(document::view object, bsoncxx::stdx::optional<document::value> const& cluster_time) {
     auto const id = string::to_string(object["client"].get_string().value);
     auto& map = get_entity_map();
     auto& client = map.get_client(id);
 
     auto const opts = get_session_options(object);
     auto session = client.start_session(opts);
+
+    // Advance cluster time following spec "MigrationConflict Errors on Sharded Clusters".
+    if (cluster_time)
+        session.advance_cluster_time(cluster_time->view());
 
     CAPTURE(id);
     return session;
@@ -712,6 +723,90 @@ database create_database(document::view object) {
     return db;
 }
 
+options::auto_encryption get_auto_encryption_options(document::view auto_encrypt_opts_doc) {
+    options::auto_encryption auto_encrypt_opts;
+
+    bsoncxx::stdx::optional<bsoncxx::document::view> extra_options_from_test;
+
+    for (auto const& element : auto_encrypt_opts_doc) {
+        auto const key = element.key();
+        if (key == "kmsProviders") {
+            auto const providers = element.get_document().value;
+            auto_encrypt_opts.kms_providers(parse_kms_doc(providers));
+
+            if (!providers.empty()) {
+                // Configure TLS options.
+                auto tls_opts = make_document(
+                    kvp("kmip",
+                        make_document(
+                            kvp("tlsCAFile", test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CA_FILE")),
+                            kvp("tlsCertificateKeyFile",
+                                test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CERTIFICATE_KEY_FILE")))));
+                auto_encrypt_opts.tls_opts(std::move(tls_opts));
+            }
+        } else if (key == "keyVaultNamespace") {
+            auto const ns_string = std::string(element.get_string().value);
+            auto const dot = ns_string.find(".");
+            std::string const db = ns_string.substr(0, dot);
+            std::string const coll = ns_string.substr(dot + 1);
+            auto_encrypt_opts.key_vault_namespace({db, coll});
+        } else if (key == "bypassAutoEncryption") {
+            auto_encrypt_opts.bypass_auto_encryption(element.get_bool().value);
+        } else if (key == "bypassQueryAnalysis") {
+            auto_encrypt_opts.bypass_query_analysis(element.get_bool().value);
+        } else if (key == "schemaMap") {
+            auto_encrypt_opts.schema_map(element.get_document().value);
+        } else if (key == "encryptedFieldsMap") {
+            auto_encrypt_opts.encrypted_fields_map(element.get_document().value);
+        } else if (key == "extraOptions") {
+            extra_options_from_test = element.get_document().value; // Applied later.
+        } else {
+            throw std::logic_error{"unsupported field in autoEncryptOpts: " + string::to_string(key)};
+        }
+    }
+
+    // Apply extra options from environment if not set in test.
+    auto extra_options = bsoncxx::builder::basic::document{};
+
+    auto const mongocryptd_path = std::getenv("MONGOCRYPTD_PATH");
+    auto const bypass_spawn = std::getenv("ENCRYPTION_TESTS_BYPASS_SPAWN");
+    auto const shared_lib_path = std::getenv("CRYPT_SHARED_LIB_PATH");
+
+    auto has_extra_option_from_test = [&](std::string const& key) {
+        return extra_options_from_test && (*extra_options_from_test)[key];
+    };
+
+    if (shared_lib_path) {
+        if (!has_extra_option_from_test("cryptSharedLibPath")) {
+            extra_options.append(kvp("cryptSharedLibPath", shared_lib_path));
+        }
+        if (!has_extra_option_from_test("cryptSharedLibRequired")) {
+            extra_options.append(kvp("cryptSharedLibRequired", true));
+        }
+    }
+
+    if (bypass_spawn && strcmp(bypass_spawn, "TRUE") == 0) {
+        if (!has_extra_option_from_test("mongocryptdBypassSpawn")) {
+            extra_options.append(bsoncxx::builder::basic::kvp("mongocryptdBypassSpawn", true));
+        }
+    }
+
+    if (mongocryptd_path) {
+        if (!has_extra_option_from_test("mongocryptdSpawnPath")) {
+            extra_options.append(bsoncxx::builder::basic::kvp("mongocryptdSpawnPath", mongocryptd_path));
+        }
+    }
+
+    // Add extra options (if any) from test.
+    if (extra_options_from_test) {
+        extra_options.append(bsoncxx::builder::concatenate(extra_options_from_test.value()));
+    }
+
+    auto_encrypt_opts.extra_options(extra_options.extract());
+
+    return auto_encrypt_opts;
+}
+
 client create_client(document::view object) {
     auto const conn = "mongodb://" + get_hostnames(object) + "/?" + uri_options_to_string(object);
     auto apm_opts = options::apm{};
@@ -720,6 +815,9 @@ client create_client(document::view object) {
     if (object["serverApi"]) {
         auto const server_api_opts = create_server_api(object);
         client_opts.server_api_opts(server_api_opts);
+    }
+    if (object["autoEncryptOpts"]) {
+        client_opts.auto_encryption_opts(get_auto_encryption_options(object["autoEncryptOpts"].get_document().value));
     }
     {
         auto const auth_mechanism = object["uriOptions"]["authMechanism"];
@@ -746,7 +844,7 @@ client create_client(document::view object) {
     return client{uri{conn}, client_opts.apm_opts(apm_opts)};
 }
 
-bool add_to_map(array::element const& obj) {
+bool add_to_map(array::element const& obj, bsoncxx::stdx::optional<document::value> const& cluster_time) {
     // Spec: This object MUST contain exactly one top-level key that identifies the entity type and
     // maps to a nested object, which specifies a unique name for the entity ('id' key) and any
     // other parameters necessary for its construction.
@@ -765,7 +863,7 @@ bool add_to_map(array::element const& obj) {
     } else if (type == "bucket") {
         return map.insert(id, create_bucket(params));
     } else if (type == "session") {
-        return map.insert(id, create_session(params));
+        return map.insert(id, create_session(params, cluster_time));
     } else if (type == "clientEncryption") {
         return map.insert(id, create_client_encryption(params));
     }
@@ -775,14 +873,16 @@ bool add_to_map(array::element const& obj) {
     return false;
 }
 
-void create_entities(document::view const test) {
+void create_entities(document::view const test, bsoncxx::stdx::optional<document::value> const& cluster_time) {
     if (!test["createEntities"])
         return;
 
     get_entity_map().clear();
     get_apm_map().clear();
     auto const entities = test["createEntities"].get_array().value;
-    REQUIRE(std::all_of(std::begin(entities), std::end(entities), add_to_map));
+    REQUIRE(std::all_of(std::begin(entities), std::end(entities), [&](array::element const& obj) {
+        return add_to_map(obj, cluster_time);
+    }));
 }
 
 document::value parse_test_file(std::string const& test_path) {
@@ -824,11 +924,20 @@ std::vector<document::view> array_elements_to_documents(array::view array) {
     return docs;
 }
 
-void add_data_to_collection(array::element const& data) {
+mongocxx::client get_internal_client() {
+    auto uri0 = mongocxx::uri{"mongodb://localhost:27017"};
+    if (auto const* oidc_user = std::getenv("OIDC_ADMIN_USER")) {
+        auto const* oidc_pwd = std::getenv("OIDC_ADMIN_PWD");
+        REQUIRE(oidc_pwd);
+        // The OIDC test server requires auth. For test setup, use username/password.
+        uri0 = mongocxx::uri{"mongodb://" + std::string(oidc_user) + ":" + std::string(oidc_pwd) + "@localhost:27017"};
+    }
+    return mongocxx::client{uri0, test_util::add_test_server_api()};
+}
+
+void add_data_to_collection(array::element const& data, mongocxx::client& client, mongocxx::client_session& session) {
     auto const db_name = data["databaseName"].get_string().value;
-    auto& map = get_entity_map();
-    auto& db = map.get_database_by_name(db_name);
-    auto insert_opts = mongocxx::options::insert();
+    auto db = client.database(db_name);
 
     auto wc = write_concern{};
     wc.acknowledge_level(write_concern::level::k_majority);
@@ -836,23 +945,49 @@ void add_data_to_collection(array::element const& data) {
 
     auto const coll_name = data["collectionName"].get_string().value;
 
-    if (db.has_collection(coll_name))
-        db[coll_name].drop();
-
-    auto coll = db.create_collection(coll_name, {}, wc);
-    insert_opts.write_concern(wc);
+    // Drop `coll_name` and its Queryable Encryption auxiliary collections, if any.
+    for (auto const& drop_name : {
+             string::to_string(coll_name),
+             "enxcol_." + string::to_string(coll_name) + ".esc",
+             "enxcol_." + string::to_string(coll_name) + ".ecoc",
+         }) {
+        if (db.has_collection(drop_name))
+            db[drop_name].drop(session, wc);
+    }
 
     auto const to_insert = array_elements_to_documents(data["documents"].get_array().value);
-    REQUIRE((to_insert.empty() || coll.insert_many(to_insert, insert_opts)->result().inserted_count() != 0));
+
+    if (auto const create_options = data["createOptions"]) {
+        db.create_collection(session, coll_name, create_options.get_document().value, wc);
+    } else if (to_insert.empty()) {
+        db.create_collection(session, coll_name, {}, wc);
+    }
+
+    auto insert_opts = mongocxx::options::insert();
+    insert_opts.write_concern(wc);
+
+    auto coll = db[coll_name];
+    REQUIRE((to_insert.empty() || coll.insert_many(session, to_insert, insert_opts)->result().inserted_count() != 0));
 }
 
-void load_initial_data(document::view test) {
+// Load `initialData` (if any) and return the latest cluster time observed while doing so, for use
+// in advancing session entities (see `create_session`).
+bsoncxx::stdx::optional<document::value> load_initial_data(document::view test) {
     if (!test["initialData"])
-        return;
+        return bsoncxx::stdx::nullopt;
+
+    auto client = get_internal_client();
+    auto session = client.start_session();
 
     auto const data = test["initialData"].get_array().value;
     for (auto&& d : data)
-        add_data_to_collection(d);
+        add_data_to_collection(d, client, session);
+
+    auto const cluster_time = session.cluster_time();
+    if (!cluster_time.empty())
+        return document::value{cluster_time};
+
+    return bsoncxx::stdx::nullopt;
 }
 
 void assert_result(array::element const& ops, document::view actual_result, bool is_array_of_root_docs) {
@@ -1112,7 +1247,8 @@ void assert_outcome(array::element const& test) {
         auto const coll_name = outcome["collectionName"].get_string().value;
         auto const docs = outcome["documents"].get_array().value;
 
-        auto const db = get_entity_map().get_database_by_name(db_name);
+        auto client = get_internal_client();
+        auto db = client.database(db_name);
         auto coll = db.collection(coll_name);
 
         struct coll_state_guard_type {
@@ -1388,8 +1524,8 @@ void run_tests_in_file(std::string const& test_path) {
 
     auto const description = test_spec_view["description"].get_string().value;
     CAPTURE(description);
-    create_entities(test_spec_view);
-    load_initial_data(test_spec_view);
+    auto const cluster_time = load_initial_data(test_spec_view);
+    create_entities(test_spec_view, cluster_time);
     run_tests(description, test_spec_view);
 }
 
