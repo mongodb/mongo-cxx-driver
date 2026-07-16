@@ -114,6 +114,7 @@ set(mongocxx_sources_v_noabi
     mongocxx/v_noabi/mongocxx/result/update.cpp
     mongocxx/v_noabi/mongocxx/search_index_model.cpp
     mongocxx/v_noabi/mongocxx/search_index_view.cpp
+    mongocxx/v_noabi/mongocxx/structured_log.cpp
     mongocxx/v_noabi/mongocxx/uri.cpp
     mongocxx/v_noabi/mongocxx/validation_criteria.cpp
     mongocxx/v_noabi/mongocxx/write_concern.cpp
@@ -194,6 +195,7 @@ set(mongocxx_sources_v1
     mongocxx/v1/search_indexes.cpp
     mongocxx/v1/server_api.cpp
     mongocxx/v1/server_error.cpp
+    mongocxx/v1/structured_log.cpp
     mongocxx/v1/text_options.cpp
     mongocxx/v1/tls.cpp
     mongocxx/v1/transaction_options.cpp
