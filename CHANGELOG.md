@@ -9,6 +9,22 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ## 4.5.0 [Unreleased]
 
+### Added
+
+- Structured logging support wrapping libmongoc's per-client/per-pool structured
+  logging (`mongoc-structured-log.h`):
+  - `mongocxx::structured_log_level` and `mongocxx::structured_log_component`
+    enums, with `to_string()` and `structured_log_level_from_string()` /
+    `structured_log_component_from_string()` helpers.
+  - `mongocxx::structured_log_entry`, a view over a structured log message with
+    `level()`, `component()`, `message()`, and `message_as_bson()` accessors.
+  - `mongocxx::structured_log_handler`, a `std::function` handler type for
+    structured log messages.
+  - `mongocxx::options::structured_logging`, configuring a handler, per-component
+    and all-component maximum levels, maximum document length, and environment
+    overrides, applied per-client and per-pool via
+    `mongocxx::options::client::structured_logging_opts()`.
+
 ### Removed
 
 - Support for Visual Studio 2015 (EOL since Oct 2025). Use Visual Studio 2017 15.9 (MSVC 19.16.27023) or newer.
