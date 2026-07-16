@@ -122,6 +122,9 @@ class instance {
     /// @throws mongocxx::v1::exception with @ref mongocxx::v1::instance::errc::multiple_instances if an `instance`
     /// object has already been created.
     ///
+    /// Use @ref mongocxx::v1::set_global_logger (or @ref mongocxx::v1::logger_guard) to configure
+    /// the logger at any time after the instance object has been created.
+    ///
     /// @see
     /// - [Custom Log Handlers (mongoc)](https://mongoc.org/libmongoc/current/unstructured_log.html#custom-log-handlers)
     ///

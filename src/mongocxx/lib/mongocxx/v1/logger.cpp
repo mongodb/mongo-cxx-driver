@@ -18,6 +18,13 @@
 
 #include <bsoncxx/v1/stdx/string_view.hpp>
 
+#include <mongocxx/v1/logger.hh>
+
+#include <memory>
+#include <utility>
+
+#include <bsoncxx/private/make_unique.hh>
+
 #include <mongocxx/private/mongoc.hh>
 
 namespace mongocxx {
@@ -53,6 +60,90 @@ bsoncxx::v1::stdx::string_view to_string(log_level level) {
 }
 
 logger::~logger() = default;
+
+// The C callback registered with mongoc; recovers the `logger_function` from `user_data`.
+// Declared in <mongocxx/v1/logger.hh> so `exchange_global_logger` can reference it.
+void custom_log_handler(
+    mongoc_log_level_t log_level,
+    char const* domain,
+    char const* message,
+    void* user_data) noexcept {
+    (*static_cast<logger_function*>(user_data))(
+        static_cast<v1::log_level>(log_level),
+        bsoncxx::v1::stdx::string_view(domain),
+        bsoncxx::v1::stdx::string_view(message));
+}
+
+namespace {
+
+// Build a `logging_config` for a custom-handler request: a stored copy of `handler` when non-empty,
+// or the disabled state when empty (null).
+logging_config make_custom_config(logger_function handler) {
+    if (handler) {
+        return logging_config{log_mode::k_custom, bsoncxx::make_unique<logger_function>(std::move(handler))};
+    }
+
+    return logging_config{log_mode::k_disabled, nullptr};
+}
+
+} // namespace
+
+logging_config exchange_global_logger(logging_config next) {
+    // The process-global logging configuration.
+    //
+    // This is not thread-safe: concurrent exchanges (or an exchange concurrent with unstructured
+    // logging) are the caller's responsibility to avoid. See `v1::set_global_logger`.
+    static logging_config config;
+
+    switch (next.mode) {
+        case log_mode::k_custom:
+            libmongoc::log_set_handler(&custom_log_handler, next.handler.get());
+            break;
+        case log_mode::k_default:
+            libmongoc::log_set_handler(mongoc_log_default_handler, nullptr);
+            break;
+        case log_mode::k_disabled:
+            libmongoc::log_set_handler(nullptr, nullptr);
+            break;
+    }
+
+    using std::swap;
+    swap(config, next);
+
+    // `next` now holds the previous configuration; returning it transfers ownership of any
+    // previously-installed custom handler to the caller.
+    return next;
+}
+
+void set_global_logger(logger_function handler) {
+    exchange_global_logger(make_custom_config(std::move(handler)));
+}
+
+void set_global_logger(v1::default_logger) {
+    exchange_global_logger(logging_config{log_mode::k_default, nullptr});
+}
+
+class logger_guard::impl {
+   public:
+    logging_config previous;
+
+    explicit impl(logging_config previous) : previous{std::move(previous)} {}
+};
+
+logger_guard::~logger_guard() {
+    // Restore the captured configuration; the configuration this guard installed is returned and
+    // destroyed here (freeing its custom handler, if any).
+    exchange_global_logger(std::move(_impl->previous));
+}
+
+logger_guard::logger_guard(logger_function handler)
+    : _impl{bsoncxx::make_unique<impl>(exchange_global_logger(make_custom_config(std::move(handler))))} {}
+
+logger_guard::logger_guard(v1::default_logger tag) {
+    (void)tag;
+
+    _impl = bsoncxx::make_unique<impl>(exchange_global_logger(logging_config{log_mode::k_default, nullptr}));
+}
 
 } // namespace v1
 } // namespace mongocxx

@@ -23,6 +23,7 @@
 #include <mongocxx/v1/logger.hpp>
 
 #include <mongocxx/v1/exception.hh>
+#include <mongocxx/v1/logger.hh>
 
 #include <atomic>
 #include <memory>
@@ -53,27 +54,15 @@ namespace {
 // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables): support `code::multiple_instances`.
 std::atomic_int instance_state{0};
 
-void custom_log_handler(
-    mongoc_log_level_t log_level,
-    char const* domain,
-    char const* message,
-    void* user_data) noexcept {
-    (*static_cast<v1::logger*>(user_data))(
-        static_cast<v1::log_level>(log_level),
-        bsoncxx::v1::stdx::string_view(domain),
-        bsoncxx::v1::stdx::string_view(message));
-}
-
 } // namespace
 
 class instance::impl {
    public:
-    std::unique_ptr<v1::logger> _handler;
-
     ~impl() {
-        if (_handler) {
-            libmongoc::log_set_handler(nullptr, nullptr);
-        }
+        // Disable unstructured logging and free any custom handler installed via this instance
+        // (or via `set_global_logger`/`logger_guard`) before mongoc cleanup, so no late log
+        // message can be routed to a freed handler.
+        (void)exchange_global_logger(logging_config{log_mode::k_disabled, nullptr});
 
         libmongoc::cleanup();
 
@@ -85,34 +74,46 @@ class instance::impl {
     impl(impl const&) = delete;
     impl& operator=(impl const&) = delete;
 
-    explicit impl(std::unique_ptr<v1::logger> handler) : _handler{std::move(handler)} {
-        this->init(true);
+    explicit impl(std::unique_ptr<v1::logger> handler) {
+        this->reserve();
+
+        // Adapt the `v1::logger` handler into a `logger_function`. A shared_ptr is used
+        // so the resulting invocable is copyable, as required by `logger_function` (std::function).
+        v1::logger_function fn;
+        if (handler) {
+            fn = [logger = std::shared_ptr<v1::logger>{std::move(handler)}](
+                     v1::log_level level,
+                     bsoncxx::v1::stdx::string_view domain,
+                     bsoncxx::v1::stdx::string_view message) { (*logger)(level, domain, message); };
+        }
+
+        // Install the handler before `init()` so that any log messages emitted during
+        // initialization are routed to it.
+        set_global_logger(std::move(fn));
+
+        this->init();
     }
 
     explicit impl(v1::default_logger tag) {
         (void)tag;
-        this->init(false);
+        this->reserve();
+
+        // Leave mongoc's default handler in place (do not register a handler).
+        this->init();
     }
 
    private:
-    void init(bool set_custom_handler) {
-        {
-            int expected = 0;
+    // Reserve the single-instance slot, throwing if an instance already exists.
+    void reserve() {
+        int expected = 0;
 
-            if (!instance_state.compare_exchange_strong(
-                    expected, 1, std::memory_order_acquire, std::memory_order_relaxed)) {
-                throw v1::exception::internal::make(std::error_code{code::multiple_instances});
-            }
+        if (!instance_state.compare_exchange_strong(
+                expected, 1, std::memory_order_acquire, std::memory_order_relaxed)) {
+            throw v1::exception::internal::make(std::error_code{code::multiple_instances});
         }
+    }
 
-        if (set_custom_handler) {
-            if (auto ptr = _handler.get()) {
-                libmongoc::log_set_handler(&custom_log_handler, ptr);
-            } else {
-                libmongoc::log_set_handler(nullptr, nullptr);
-            }
-        }
-
+    void init() {
         libmongoc::init();
 
         {
