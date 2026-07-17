@@ -77,11 +77,13 @@ class instance::impl {
     explicit impl(std::unique_ptr<v1::logger> handler) {
         this->reserve();
 
-        // Adapt the `v1::logger` handler into a `logger_function`. A shared_ptr is used
-        // so the resulting invocable is copyable, as required by `logger_function` (std::function).
+        // Adapt the `v1::logger` handler into a `logger_function`. A shared_ptr is used (captured by
+        // value) so the resulting invocable is copyable, as required by `logger_function`
+        // (std::function).
         v1::logger_function fn;
         if (handler) {
-            fn = [logger = std::shared_ptr<v1::logger>{std::move(handler)}](
+            std::shared_ptr<v1::logger> const logger{std::move(handler)};
+            fn = [logger](
                      v1::log_level level,
                      bsoncxx::v1::stdx::string_view domain,
                      bsoncxx::v1::stdx::string_view message) { (*logger)(level, domain, message); };
