@@ -132,7 +132,7 @@ class structured_logging {
     ///
     /// Applied after any programmatic level settings, so environment values take precedence.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(structured_logging&) max_levels_from_env();
+    MONGOCXX_ABI_EXPORT_CDECL(structured_logging&) max_levels_from_env(bool toggle);
 
     ///
     /// Set the maximum length (in bytes) of an embedded document before truncation.
@@ -151,7 +151,7 @@ class structured_logging {
     /// Applied after any programmatic document-length setting, so the environment value takes
     /// precedence.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(structured_logging&) max_document_length_from_env();
+    MONGOCXX_ABI_EXPORT_CDECL(structured_logging&) max_document_length_from_env(bool toggle);
 
     class internal;
 };

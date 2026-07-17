@@ -110,8 +110,8 @@ bsoncxx::v1::stdx::optional<v1::structured_log_level> structured_logging::max_le
     return impl::with(*this)._all_components_level;
 }
 
-structured_logging& structured_logging::max_levels_from_env() {
-    impl::with(*this)._max_levels_from_env = true;
+structured_logging& structured_logging::max_levels_from_env(bool toggle) {
+    impl::with(*this)._max_levels_from_env = toggle;
     return *this;
 }
 
@@ -124,8 +124,8 @@ bsoncxx::v1::stdx::optional<std::size_t> structured_logging::max_document_length
     return impl::with(*this)._max_document_length;
 }
 
-structured_logging& structured_logging::max_document_length_from_env() {
-    impl::with(*this)._max_document_length_from_env = true;
+structured_logging& structured_logging::max_document_length_from_env(bool toggle) {
+    impl::with(*this)._max_document_length_from_env = toggle;
     return *this;
 }
 
