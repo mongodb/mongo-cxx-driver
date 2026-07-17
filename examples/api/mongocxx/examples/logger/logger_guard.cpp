@@ -28,7 +28,7 @@ namespace {
 void example() {
     mongocxx::instance instance;
 
-    // A handler may be any invocable compatible with mongocxx::logger_function.
+    // A handler may be any invocable compatible with mongocxx::log_handler.
     auto handler =
         [](mongocxx::log_level level, bsoncxx::stdx::string_view domain, bsoncxx::stdx::string_view message) {
             std::cout << mongocxx::to_string(level) << ": " << domain << ": " << message << "\n";

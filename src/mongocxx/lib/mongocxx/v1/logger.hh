@@ -44,11 +44,11 @@ enum class log_mode {
 // are used to keep this a movable, C++11-compatible type.
 struct logging_config {
     log_mode mode;
-    std::unique_ptr<logger_function> handler;
+    std::unique_ptr<log_handler> handler;
 
     logging_config() noexcept : mode{log_mode::k_default} {}
 
-    logging_config(log_mode mode, std::unique_ptr<logger_function> handler) noexcept
+    logging_config(log_mode mode, std::unique_ptr<log_handler> handler) noexcept
         : mode{mode}, handler{std::move(handler)} {}
 };
 

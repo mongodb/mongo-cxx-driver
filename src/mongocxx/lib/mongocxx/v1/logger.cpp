@@ -61,14 +61,14 @@ bsoncxx::v1::stdx::string_view to_string(log_level level) {
 
 logger::~logger() = default;
 
-// The C callback registered with mongoc; recovers the `logger_function` from `user_data`.
+// The C callback registered with mongoc; recovers the `log_handler` from `user_data`.
 // Declared in <mongocxx/v1/logger.hh> so `exchange_global_logger` can reference it.
 void custom_log_handler(
     mongoc_log_level_t log_level,
     char const* domain,
     char const* message,
     void* user_data) noexcept {
-    (*static_cast<logger_function*>(user_data))(
+    (*static_cast<log_handler*>(user_data))(
         static_cast<v1::log_level>(log_level),
         bsoncxx::v1::stdx::string_view(domain),
         bsoncxx::v1::stdx::string_view(message));
@@ -78,9 +78,9 @@ namespace {
 
 // Build a `logging_config` for a custom-handler request: a stored copy of `handler` when non-empty,
 // or the disabled state when empty (null).
-logging_config make_custom_config(logger_function handler) {
+logging_config make_custom_config(log_handler handler) {
     if (handler) {
-        return logging_config{log_mode::k_custom, bsoncxx::make_unique<logger_function>(std::move(handler))};
+        return logging_config{log_mode::k_custom, bsoncxx::make_unique<log_handler>(std::move(handler))};
     }
 
     return logging_config{log_mode::k_disabled, nullptr};
@@ -115,7 +115,7 @@ logging_config exchange_global_logger(logging_config next) {
     return next;
 }
 
-void set_global_logger(logger_function handler) {
+void set_global_logger(log_handler handler) {
     exchange_global_logger(make_custom_config(std::move(handler)));
 }
 
@@ -136,7 +136,7 @@ logger_guard::~logger_guard() {
     exchange_global_logger(std::move(_impl->previous));
 }
 
-logger_guard::logger_guard(logger_function handler)
+logger_guard::logger_guard(log_handler handler)
     : _impl{bsoncxx::make_unique<impl>(exchange_global_logger(make_custom_config(std::move(handler))))} {}
 
 logger_guard::logger_guard(v1::default_logger tag) {

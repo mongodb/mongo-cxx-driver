@@ -59,7 +59,7 @@ MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) to_string(log_level le
 /// - @ref mongocxx::v1::set_global_logger
 /// - @ref mongocxx::v1::logger_guard
 ///
-using logger_function =
+using log_handler =
     std::function<void MONGOCXX_ABI_CDECL(log_level, bsoncxx::v1::stdx::string_view, bsoncxx::v1::stdx::string_view)>;
 
 BSONCXX_PRIVATE_WARNINGS_PUSH();
@@ -149,7 +149,7 @@ class default_logger {};
 /// @see
 /// - [Custom Log Handlers (mongoc)](https://mongoc.org/libmongoc/current/unstructured_log.html#custom-log-handlers)
 ///
-MONGOCXX_ABI_EXPORT_CDECL(void) set_global_logger(logger_function handler);
+MONGOCXX_ABI_EXPORT_CDECL(void) set_global_logger(log_handler handler);
 
 ///
 /// Set the process-global unstructured log message handler to mongoc's default handler.
@@ -182,7 +182,7 @@ MONGOCXX_ABI_EXPORT_CDECL(void) set_global_logger(v1::default_logger tag);
 /// ```
 ///
 /// @warning Construction and destruction are NOT thread-safe with respect to unstructured logging.
-/// See @ref mongocxx::v1::set_global_logger(logger_function).
+/// See @ref mongocxx::v1::set_global_logger(log_handler).
 ///
 /// @important A guard's lifetime must be nested strictly within the lifetime of a
 /// @ref mongocxx::v1::instance object.
@@ -206,7 +206,7 @@ class logger_guard {
     ///
     /// @param handler The handler to register. Disable unstructured logging when null (empty).
     ///
-    explicit MONGOCXX_ABI_EXPORT_CDECL() logger_guard(logger_function handler);
+    explicit MONGOCXX_ABI_EXPORT_CDECL() logger_guard(log_handler handler);
 
     ///
     /// Install mongoc's default unstructured log message handler for the lifetime of this guard.

@@ -11,7 +11,7 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ### Added
 
-- `mongocxx::v1::logger_function`, a `std::function` handler type for
+- `mongocxx::v1::log_handler`, a `std::function` handler type for
   unstructured log messages.
 - `mongocxx::v1::set_global_logger()` to configure the unstructured log message
   handler at runtime (with any compatible invocable), independent of

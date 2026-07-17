@@ -27,7 +27,7 @@ namespace v_noabi {
 
 using v1::to_string;
 
-using v1::logger_function;
+using v1::log_handler;
 
 using v1::set_global_logger;
 
@@ -38,7 +38,7 @@ namespace mongocxx {
 
 using v1::to_string;
 
-using v1::logger_function;
+using v1::log_handler;
 
 using v1::set_global_logger;
 
