@@ -310,13 +310,30 @@ lib/
 
 ### Export Macros
 
-- Use `BSONCXX_ABI_EXPORT_CDECL` to export functions and operator overloads.
-    - The `v` in `BSONCXX_ABI_EXPORT_CDECL(v)` must be the return type. For constructor and destructors, use `BSONCXX_ABI_EXPORT_CDECL()` without any `v`.
-    - `BSONCXX_ABI_EXPORT_CDECL` must be immediately before the name of the function or operator overload, after any and all specifiers (e.g. `static`, `explicit`, etc.).
-- Use `BSONCXX_ABI_EXPORT` to export variables and class declarations.
-- Only polymorphic classes (e.g. exceptions) should be declared with `BSONCXX_ABI_EXPORT`.
+- Use `BSONCXX_ABI_EXPORT_CDECL` to export functions and operator overloads from
+  non-polymorphic classes.
+    - The `v` in `BSONCXX_ABI_EXPORT_CDECL(v)` must be the return type. For
+      constructor and destructors, use `BSONCXX_ABI_EXPORT_CDECL()` without any
+      `v`.
+    - `BSONCXX_ABI_EXPORT_CDECL` must be immediately before the name of the
+      function or operator overload, after any and all specifiers (e.g.
+      `static`, `explicit`, etc.).
+    - Polymorphic classes are exported using a different method explained below.
+- Use `BSONCXX_ABI_EXPORT` to export variables.
+- All (and only) polymorphic classes (i.e. classes which declare `virtual`
+  member functions or inherit from a polymorphic classes, e.g. exceptions)
+  should be exported by being declared with `BSONCXX_ABI_EXPORT`.
     - `BSONCXX_ABI_EXPORT` must be applied to the _first_ declaration of the class (e.g. in the forward header when applicable).
-    - All polymorphic classes must define _at least one_ virtual function (e.g. the virtual destructor) out-of-line within the implementation file as the ["key function"](https://itanium-cxx-abi.github.io/cxx-abi/abi.html#vague-vtable).
+    - Member functions within an exported class should not use
+      `BSONCXX_ABI_EXPORT_CDECL`, as the exporting attribute is already applied
+      to all member function automatically by the class-level export.
+    - All polymorphic classes must define _at least one_ virtual function (e.g.
+      the virtual destructor) out-of-line within the implementation file as the
+      ["key
+      function"](https://itanium-cxx-abi.github.io/cxx-abi/abi.html#vague-vtable).
+    - Note: For non-polymorphic classes (which are declared without being
+      exported), member functions should still be exported with
+      `BSONCXX_ABI_EXPORT_CDECL`
 - Use `BSONCXX_ABI_CDECL` to declare all (pointer to) function types which are referenced by the ABI with the `__cdecl` calling convention.
     - For function types: `ReturnType BSONCXX_ABI_CDECL(Params...)`.
     - For pointer-to-function types: `ReturnType (BSONCXX_ABI_CDECL*)(Params...)`.
