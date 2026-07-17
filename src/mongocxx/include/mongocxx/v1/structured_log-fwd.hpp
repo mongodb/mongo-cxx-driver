@@ -16,8 +16,6 @@
 
 #include <mongocxx/v1/detail/prelude.hpp>
 
-#include <mongocxx/v1/config/export.hpp>
-
 namespace mongocxx {
 namespace v1 {
 
@@ -25,7 +23,7 @@ enum class structured_log_level;
 
 enum class structured_log_component;
 
-class MONGOCXX_ABI_EXPORT structured_log_entry;
+class structured_log_entry;
 
 } // namespace v1
 } // namespace mongocxx
