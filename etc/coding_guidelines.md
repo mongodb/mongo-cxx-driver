@@ -87,8 +87,10 @@ src/<library>/
 └── ...
 ```
 
-> [!NOTE] For `v_noabi` components, the path includes an extra `<library>/`
-> subdirectory: `include/<library>/v_noabi/<library>/foo.hpp` rather than
+> [!NOTE]
+>
+> The path for `v_noabi` components includes an extra `<library>/` subdirectory:
+> `include/<library>/v_noabi/<library>/foo.hpp` rather than
 > `include/<library>/v_noabi/foo.hpp`. See
 > [Unstable ABI Headers](#unstable-abi-headers) for the reason.
 
@@ -257,10 +259,11 @@ ABI namespace `vN`.
 Headers under `v_noabi/` declare both unstable (`v_noabi`) AND stable ABI
 interfaces.
 
-> [!IMPORTANT] Headers under `v_noabi/` MUST be placed under the additional
-> `bsoncxx/` (or `mongocxx`) subdirectory for backward compatibility with
-> unstable ABI header direct include style:
-> `#include <bsoncxx/document/element.hpp>`.
+> [!IMPORTANT]
+>
+> Headers under `v_noabi/` MUST be placed under the additional `bsoncxx/` (or
+> `mongocxx`) subdirectory for backward compatibility with unstable ABI header
+> direct include style: `#include <bsoncxx/document/element.hpp>`.
 
 #### Generated Headers
 
@@ -336,7 +339,9 @@ lib/
 └── CMakeLists.txt # Responsible for configuration, generation, and installation.
 ```
 
-> [!NOTE] Some source files may only contain a single include directive of the
+> [!NOTE]
+>
+> Some source files may only contain a single include directive of the
 > corresponding (public/internal) header. This is deliberate to ensure the
 > header is standalone-includeable.
 
@@ -373,10 +378,13 @@ lib/
       implementation file.
     - Only export an extern variable when it is required by the public API.
 
-> [!NOTE] - `inline` variables require C++17 and newer. - `constexpr` implies
-> `inline` for variables only in C++17 and newer. - Before C++17, non-`inline`
-> `constexpr` variables which are ODR-used require an out-of-line definition. -
-> Use `BSONCXX_PRIVATE_INLINE_CXX17` for pre-C++17 compatibility.
+> [!NOTE]
+>
+> - `inline` variables require C++17 and newer.
+> - `constexpr` implies `inline` for variables only in C++17 and newer.
+> - Before C++17, non-`inline` `constexpr` variables which are ODR-used
+>   require an out-of-line definition.
+> - Use `BSONCXX_PRIVATE_INLINE_CXX17` for pre-C++17 compatibility.
 
 ### Export Macros
 
@@ -443,13 +451,17 @@ mongocxx library.
       cannot fail (throw an exception, terminate, or lead to undefined
       behavior).
 
-> [!NOTE] Use implicit single-argument constructors and UDCFs sparingly. Prefer
-> explicit to implicit. The "convenience" of supporting implicit conversion must
+> [!NOTE]
+>
+> Use implicit single-argument constructors and UDCFs sparingly. Prefer explicit
+> to implicit. The "convenience" of supporting implicit conversion must
 > sufficiently outweigh the possibility of introducing ambiguous overloads, both
 > with types provided by the library and types defined by the user.
 
-> [!NOTE] Application of `explicit` to non-single-argument constructors is
-> beyond the scope of these guidelines.
+> [!NOTE]
+>
+> Application of `explicit` to non-single-argument constructors is beyond the
+> scope of these guidelines.
 
 ### Exception Specification
 
@@ -487,9 +499,11 @@ if /* constexpr */ (is_nothrow<T>::value) {
     - `std::is_nothrow_assignable<To, From>` where `From != To`.
     - `std::hash<T>::operator()`.
 
-> [!NOTE] Support for non-throwing overloads of throwing functions (e.g. as
-> implemented by `std::filesystem`) is currently out-of-scope for these
-> guidelines and the codebase.
+> [!NOTE]
+>
+> Support for non-throwing overloads of throwing functions (e.g. as implemented
+> by `std::filesystem`) is currently out-of-scope for these guidelines and the
+> codebase.
 
 ### Error Codes
 
@@ -554,5 +568,7 @@ private:
 };
 ```
 
-> [!IMPORTANT] Any non-defaulted special member function MUST be defined
-> out-of-line as an exported ABI function to support ABI compatibility.
+> [!IMPORTANT]
+>
+> Any non-defaulted special member function MUST be defined out-of-line as an
+> exported ABI function to support ABI compatibility.
