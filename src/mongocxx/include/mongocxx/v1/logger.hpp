@@ -59,7 +59,8 @@ MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) to_string(log_level le
 /// - @ref mongocxx::v1::set_global_logger
 /// - @ref mongocxx::v1::logger_guard
 ///
-using logger_function = std::function<void(log_level, bsoncxx::v1::stdx::string_view, bsoncxx::v1::stdx::string_view)>;
+using logger_function =
+    std::function<void MONGOCXX_ABI_CDECL(log_level, bsoncxx::v1::stdx::string_view, bsoncxx::v1::stdx::string_view)>;
 
 BSONCXX_PRIVATE_WARNINGS_PUSH();
 BSONCXX_PRIVATE_WARNINGS_DISABLE(MSVC(4251));
