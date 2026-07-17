@@ -66,6 +66,10 @@ TEST_CASE("set_global_logger and logger_guard", "[mongocxx][test][v1][logger]") 
     using Catch::Matchers::ContainsSubstring;
     using mongocxx::test::capture_stderr;
 
+#ifdef _WIN32
+    SKIP("Test cases that capture stderr cannot run on Windows");
+#endif
+
     // Recorded state of the most recent custom-handler invocation.
     int count = 0;
     log_level level = log_level::k_error;
