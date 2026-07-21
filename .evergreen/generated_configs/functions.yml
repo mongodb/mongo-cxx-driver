@@ -399,7 +399,7 @@ functions:
       type: setup
       params:
         updates:
-          - { key: mongoc_version_minimum, value: 2.3.1 }
+          - { key: mongoc_version_minimum, value: 2.3.3 }
     - command: subprocess.exec
       type: setup
       params:
@@ -533,7 +533,7 @@ functions:
           - |
             set -o errexit
             if test -d drivers-evergreen-tools; then
-                pushd drivers-evergreen-tools
+                cd drivers-evergreen-tools
                 .evergreen/run-mongodb.sh stop
             fi
   test:
