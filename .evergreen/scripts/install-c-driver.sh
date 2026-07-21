@@ -75,7 +75,12 @@ if [[ "${SKIP_INSTALL_LIBMONGOCRYPT:-}" != "1" ]]; then
   # Avoid using compile-libmongocrypt.sh (mongo-c-driver) -> compile.sh (libmongocrypt) -> build_all.sh (libmongocrypt),
   # which hardcodes MSVC-specific compiler flags (-EHsc) and does not support the Ninja Multi-Config generator (see:
   # references to the USE_NINJA environment variable).
-  if [[ "${OSTYPE:?}" == cygwin && "${CMAKE_GENERATOR:?}" != Visual\ Studio\ * ]]; then
+  AVOID_COMPILE_LIBMONGOCRYPT=$([[ "${OSTYPE:?}" == cygwin && "${CMAKE_GENERATOR:?}" != Visual\ Studio\ * ]] && echo 1 || echo 0)
+
+  # Avoid using compile-libmongocrypt.sh (gets libmongocrypt 1.21.0-dev) to avoid test failures due to 1.19.0 dropping "textPreview".
+  AVOID_COMPILE_LIBMONGOCRYPT=1 # TODO: remove this line once CXX-3467 is addressed.
+
+  if [[ "${AVOID_COMPILE_LIBMONGOCRYPT:?}" == "1" ]]; then
     (
       git clone -q https://github.com/mongodb/libmongocrypt --branch 1.18.1 --depth 1
 
