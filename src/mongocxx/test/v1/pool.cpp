@@ -97,10 +97,12 @@ TEST_CASE("error code", "[mongocxx][v1][pool][error]") {
 
     SECTION("source") {
         CHECK(make_error_code(code::wait_queue_timeout) == source_errc::mongocxx);
+        CHECK(make_error_code(code::append_metadata_failure) == source_errc::mongocxx);
     }
 
     SECTION("type") {
         CHECK(make_error_code(code::wait_queue_timeout) == type_errc::runtime_error);
+        CHECK(make_error_code(code::append_metadata_failure) == type_errc::runtime_error);
     }
 }
 
@@ -926,6 +928,58 @@ TEST_CASE("database", "[mongocxx][v1][pool][entry]") {
     auto const db = entry[input];
 
     CHECK(v1::database::internal::as_mongoc(db) == database_id);
+}
+
+TEST_CASE("append_metadata", "[mongocxx][v1][pool]") {
+    pool_mocks_type mocks;
+
+    bool called = false;
+
+    std::string expected_version;
+    std::string expected_platform;
+
+    auto append_metadata = libmongoc::client_pool_append_metadata.create_instance();
+    append_metadata
+        ->interpose(
+            [&](mongoc_client_pool_t* ptr, char const* name, char const* version, char const* platform) -> bool {
+                CHECK(ptr == mocks.pool_id);
+                CHECK_THAT(name, Catch::Matchers::Equals("name"));
+                CHECK_THAT(version, Catch::Matchers::Equals(expected_version));
+                CHECK_THAT(platform, Catch::Matchers::Equals(expected_platform));
+                called = true;
+                return true;
+            })
+        .forever();
+
+    SECTION("all fields set") {
+        expected_version = "version";
+        expected_platform = "platform";
+
+        CHECK_NOTHROW(mocks.make().append_metadata("name", "version", "platform"));
+    }
+
+    SECTION("optional fields unset") {
+        expected_version = "";
+        expected_platform = "";
+
+        CHECK_NOTHROW(mocks.make().append_metadata("name"));
+    }
+
+    CHECK(called);
+}
+
+TEST_CASE("append_metadata failure", "[mongocxx][v1][pool]") {
+    pool_mocks_type mocks;
+
+    auto append_metadata = libmongoc::client_pool_append_metadata.create_instance();
+    append_metadata
+        ->interpose([&](mongoc_client_pool_t* ptr, char const*, char const*, char const*) -> bool {
+            CHECK(ptr == mocks.pool_id);
+            return false;
+        })
+        .forever();
+
+    CHECK_THROWS_WITH_CODE(mocks.make().append_metadata("name"), code::append_metadata_failure);
 }
 
 } // namespace v1
