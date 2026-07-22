@@ -42,7 +42,7 @@ working_dir="$(pwd)"
 # TODO: remove "UV_CONSTRAINT" of CMake after the base release is r4.4.1+ to include fix of CXX-3529.
 constraint_file="$(mktemp)"
 echo "cmake<4.4" > "${constraint_file:?}"
-UV_CONSTRAINT="${constraint_file:?}"
+export UV_CONSTRAINT="${constraint_file:?}"
 
 . mongo-cxx-driver/.evergreen/scripts/install-build-tools.sh
 install_build_tools
