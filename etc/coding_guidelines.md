@@ -399,7 +399,7 @@ lib/
     - Polymorphic classes are exported using a different method explained below.
 - Use `BSONCXX_ABI_EXPORT` to export variables.
 - All (and only) polymorphic classes (i.e. classes which declare `virtual`
-  member functions or inherit from a polymorphic classes, e.g. exceptions)
+  member functions or inherit from a polymorphic class, e.g. exceptions)
   should be exported by being declared with `BSONCXX_ABI_EXPORT`.
     - `BSONCXX_ABI_EXPORT` must be applied to the _first_ declaration of the
       class (e.g. in the forward header when applicable).
@@ -412,7 +412,7 @@ lib/
       function"](https://itanium-cxx-abi.github.io/cxx-abi/abi.html#vague-vtable).
     - Note: For non-polymorphic classes (which are declared without being
       exported), member functions should still be exported with
-      `BSONCXX_ABI_EXPORT_CDECL`
+      `BSONCXX_ABI_EXPORT_CDECL`.
 - Use `BSONCXX_ABI_CDECL` to declare all (pointer to) function types which are
   referenced by the ABI with the `__cdecl` calling convention.
     - For function types: `ReturnType BSONCXX_ABI_CDECL(Params...)`.
