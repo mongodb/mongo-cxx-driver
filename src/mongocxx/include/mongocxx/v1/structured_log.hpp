@@ -168,7 +168,7 @@ class structured_log_entry {
 /// @see
 /// - @ref mongocxx::v1::options::structured_logging
 ///
-using structured_log_handler = std::function<void(structured_log_entry const&)>;
+using structured_log_handler = std::function<void MONGOCXX_ABI_CDECL(structured_log_entry const&)>;
 
 } // namespace v1
 } // namespace mongocxx
