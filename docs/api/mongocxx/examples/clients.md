@@ -28,6 +28,10 @@
 
 @snippet api/mongocxx/examples/clients/create/single/options/apm.cpp Example
 
+#### Structured Logging Options
+
+@snippet api/mongocxx/examples/clients/create/single/options/structured_logging.cpp Example
+
 ## Pool
 
 ### Basic Usage

@@ -17,6 +17,7 @@
 //
 
 #include <mongocxx/v1/apm-fwd.hpp>
+#include <mongocxx/v1/structured_logging-fwd.hpp>
 
 #include <mongocxx/v1/oidc_callback.hpp>
 
@@ -34,6 +35,7 @@ class pool::internal {
 
     static void set_apm(pool& self, v1::apm v);
     static void set_oidc_callback(pool& self, v1::oidc_callback v);
+    static void set_structured_logging(pool& self, v1::structured_logging v);
 };
 
 class pool::options::internal {

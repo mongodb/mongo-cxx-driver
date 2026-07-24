@@ -63,6 +63,10 @@ pool::pool(v_noabi::uri const& mongodb_uri, v_noabi::options::pool const& option
         v1::pool::internal::set_oidc_callback(_pool, *opt);
     }
 
+    if (auto const& opt = client_opts.structured_logging_opts()) {
+        v1::pool::internal::set_structured_logging(_pool, *opt);
+    }
+
     if (auto const& opt = client_opts.auto_encryption_opts()) {
         bson_error_t error = {};
 
