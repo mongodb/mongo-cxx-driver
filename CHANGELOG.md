@@ -17,6 +17,12 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 - Support appending client handshake metadata after initialization and per-client/pool. This is useful for projects wrapping the C++ driver to self-identify.
 
+## 4.4.1
+
+### Changed
+
+- Bump the minimum required C Driver version to [2.3.3](https://github.com/mongodb/mongo-c-driver/releases/tag/2.3.3).
+
 ## 4.4.0
 
 > [!IMPORTANT]
