@@ -46,10 +46,9 @@ struct logging_config {
     log_mode mode;
     std::unique_ptr<log_handler> handler;
 
-    logging_config() noexcept : mode{log_mode::k_default} {}
+    logging_config() : mode{log_mode::k_default} {}
 
-    logging_config(log_mode mode, std::unique_ptr<log_handler> handler) noexcept
-        : mode{mode}, handler{std::move(handler)} {}
+    logging_config(log_mode mode, std::unique_ptr<log_handler> handler) : mode{mode}, handler{std::move(handler)} {}
 };
 
 // Install `next` as the process-global logging configuration and return the configuration it

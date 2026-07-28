@@ -52,8 +52,15 @@ MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) to_string(log_level le
 /// The invocable is passed the log level, the message domain, and the message contents (in that
 /// order) for each unstructured log message emitted by mongoc.
 ///
-/// @important The invocable MUST be copyable (a requirement of `std::function`), MUST NOT throw an
-/// exception, and MUST NOT itself emit an unstructured log message.
+/// The invocable must:
+///
+/// - be `std::is_nothrow_destructible<D>`,
+/// - be `std::is_nothrow_move_constructible<D>`,
+/// - not throw an exception when invoked, and
+/// - not itself emit an unstructured log message (no reentrancy).
+///
+/// @important Despite being a `std::function<T>`, @ref log_handler is assumed to behave like a C++23
+/// `std::move_only_function<T>`.
 ///
 /// @see
 /// - @ref mongocxx::v1::set_global_logger
@@ -122,6 +129,8 @@ class logger {
         bsoncxx::v1::stdx::string_view message) noexcept = 0;
 };
 
+BSONCXX_PRIVATE_WARNINGS_POP();
+
 ///
 /// A tag type representing mongoc's default unstructured log handler.
 ///
@@ -164,12 +173,11 @@ MONGOCXX_ABI_EXPORT_CDECL(void) set_global_logger(log_handler handler);
 MONGOCXX_ABI_EXPORT_CDECL(void) set_global_logger(v1::default_logger tag);
 
 ///
-/// A scope guard which temporarily replaces the process-global unstructured log message handler and
-/// restores the prior handler on destruction.
+/// A scope guard to temporarily replace the current unstructured log message handler.
 ///
 /// On construction, captures the current global logging configuration and installs the requested
-/// handler. On destruction, restores the captured configuration. Guards nest: destroying guards in
-/// reverse order of construction restores each prior handler in turn.
+/// handler. On destruction, restores the captured configuration. Nesting is supported: guards restore each prior
+/// handler in reverse order of construction.
 ///
 /// ```cpp
 /// mongocxx::v1::instance instance;
@@ -182,10 +190,9 @@ MONGOCXX_ABI_EXPORT_CDECL(void) set_global_logger(v1::default_logger tag);
 /// ```
 ///
 /// @warning Construction and destruction are NOT thread-safe with respect to unstructured logging.
-/// See @ref mongocxx::v1::set_global_logger(log_handler).
+/// See @ref mongocxx::v1::set_global_logger.
 ///
-/// @important A guard's lifetime must be nested strictly within the lifetime of a
-/// @ref mongocxx::v1::instance object.
+/// @important All guards must be within the lifetime of the @ref mongocxx::v1::instance object.
 ///
 class logger_guard {
    private:
@@ -198,22 +205,6 @@ class logger_guard {
     /// constructed.
     ///
     MONGOCXX_ABI_EXPORT_CDECL() ~logger_guard();
-
-    ///
-    /// Install a custom unstructured log message handler for the lifetime of this guard.
-    ///
-    /// A copy of `handler` is stored via type erasure; any compatible invocable is accepted.
-    ///
-    /// @param handler The handler to register. Disable unstructured logging when null (empty).
-    ///
-    explicit MONGOCXX_ABI_EXPORT_CDECL() logger_guard(log_handler handler);
-
-    ///
-    /// Install mongoc's default unstructured log message handler for the lifetime of this guard.
-    ///
-    /// @param tag Unused: only for overload resolution.
-    ///
-    explicit MONGOCXX_ABI_EXPORT_CDECL() logger_guard(v1::default_logger tag);
 
     ///
     /// This class is not moveable.
@@ -234,9 +225,21 @@ class logger_guard {
     /// This class is not copyable.
     ///
     logger_guard& operator=(logger_guard const&) = delete;
-};
 
-BSONCXX_PRIVATE_WARNINGS_POP();
+    ///
+    /// Register a custom unstructured log message handler for the lifetime of this guard.
+    ///
+    /// @param handler The handler to register. Disable unstructured logging when null (empty).
+    ///
+    explicit MONGOCXX_ABI_EXPORT_CDECL() logger_guard(log_handler handler);
+
+    ///
+    /// Register mongoc's default unstructured log message handler for the lifetime of this guard.
+    ///
+    /// @param tag Unused: only for overload resolution.
+    ///
+    explicit MONGOCXX_ABI_EXPORT_CDECL() logger_guard(v1::default_logger tag);
+};
 
 } // namespace v1
 } // namespace mongocxx

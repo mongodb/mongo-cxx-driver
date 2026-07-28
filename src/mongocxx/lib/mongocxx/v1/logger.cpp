@@ -26,6 +26,7 @@
 #include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/utility.hh>
 
 namespace mongocxx {
 namespace v1 {
@@ -61,8 +62,9 @@ bsoncxx::v1::stdx::string_view to_string(log_level level) {
 
 logger::~logger() = default;
 
+namespace {
+
 // The C callback registered with mongoc; recovers the `log_handler` from `user_data`.
-// Declared in <mongocxx/v1/logger.hh> so `exchange_global_logger` can reference it.
 void custom_log_handler(
     mongoc_log_level_t log_level,
     char const* domain,
@@ -73,8 +75,6 @@ void custom_log_handler(
         bsoncxx::v1::stdx::string_view(domain),
         bsoncxx::v1::stdx::string_view(message));
 }
-
-namespace {
 
 // Build a `logging_config` for a custom-handler request: a stored copy of `handler` when non-empty,
 // or the disabled state when empty (null).
@@ -107,20 +107,17 @@ logging_config exchange_global_logger(logging_config next) {
             break;
     }
 
-    using std::swap;
-    swap(config, next);
-
-    // `next` now holds the previous configuration; returning it transfers ownership of any
+    // Install `next` and return the previous configuration, transferring ownership of any
     // previously-installed custom handler to the caller.
-    return next;
+    return exchange(config, std::move(next));
 }
 
 void set_global_logger(log_handler handler) {
-    exchange_global_logger(make_custom_config(std::move(handler)));
+    (void)exchange_global_logger(make_custom_config(std::move(handler)));
 }
 
 void set_global_logger(v1::default_logger) {
-    exchange_global_logger(logging_config{log_mode::k_default, nullptr});
+    (void)exchange_global_logger(logging_config{log_mode::k_default, nullptr});
 }
 
 class logger_guard::impl {
@@ -133,7 +130,7 @@ class logger_guard::impl {
 logger_guard::~logger_guard() {
     // Restore the captured configuration; the configuration this guard installed is returned and
     // destroyed here (freeing its custom handler, if any).
-    exchange_global_logger(std::move(_impl->previous));
+    (void)exchange_global_logger(std::move(_impl->previous));
 }
 
 logger_guard::logger_guard(log_handler handler)

@@ -192,27 +192,37 @@ TEST_CASE("set_global_logger and logger_guard", "[mongocxx][test][v1][logger]") 
 
         logger_guard const outer{counter(a)};
         mongoc_log(MONGOC_LOG_LEVEL_WARNING, "dom", "a");
-        CHECK((a == 1 && b == 0 && c == 0));
+        CHECK(a == 1);
+        CHECK(b == 0);
+        CHECK(c == 0);
 
         {
             logger_guard const middle{counter(b)};
             mongoc_log(MONGOC_LOG_LEVEL_WARNING, "dom", "b");
-            CHECK((a == 1 && b == 1 && c == 0));
+            CHECK(a == 1);
+            CHECK(b == 1);
+            CHECK(c == 0);
 
             {
                 logger_guard const inner{counter(c)};
                 mongoc_log(MONGOC_LOG_LEVEL_WARNING, "dom", "c");
-                CHECK((a == 1 && b == 1 && c == 1));
+                CHECK(a == 1);
+                CHECK(b == 1);
+                CHECK(c == 1);
             }
 
             // `inner` destroyed: `middle`'s handler is active again.
             mongoc_log(MONGOC_LOG_LEVEL_WARNING, "dom", "b");
-            CHECK((a == 1 && b == 2 && c == 1));
+            CHECK(a == 1);
+            CHECK(b == 2);
+            CHECK(c == 1);
         }
 
         // `middle` destroyed: `outer`'s handler is active again.
         mongoc_log(MONGOC_LOG_LEVEL_WARNING, "dom", "a");
-        CHECK((a == 2 && b == 2 && c == 1));
+        CHECK(a == 2);
+        CHECK(b == 2);
+        CHECK(c == 1);
     }
 }
 
