@@ -12,13 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/v1/logger.hpp>
+#include <mongocxx/v1/logger.hh>
 
 //
 
 #include <bsoncxx/v1/stdx/string_view.hpp>
-
-#include <mongocxx/v1/logger.hh>
 
 #include <memory>
 #include <utility>
