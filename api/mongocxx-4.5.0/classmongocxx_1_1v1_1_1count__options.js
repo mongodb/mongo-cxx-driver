@@ -1,0 +1,25 @@
+var classmongocxx_1_1v1_1_1count__options =
+[
+    [ "~count_options", "classmongocxx_1_1v1_1_1count__options.html#a6a8e3e3a9cd4401fa99bd18115496ff4", null ],
+    [ "count_options", "classmongocxx_1_1v1_1_1count__options.html#ac11627d2c732dd3a6608252deadb2a0f", null ],
+    [ "count_options", "classmongocxx_1_1v1_1_1count__options.html#ac3ce3ad4355d9d695b65c7f302c8b637", null ],
+    [ "count_options", "classmongocxx_1_1v1_1_1count__options.html#a1e1b1b6e9e25d1c4d4f00cf48f5cf4ae", null ],
+    [ "collation", "classmongocxx_1_1v1_1_1count__options.html#aed7080e6621df93502556097704f2b34", null ],
+    [ "collation", "classmongocxx_1_1v1_1_1count__options.html#a81a261e07b412c914d35bc5264c52689", null ],
+    [ "comment", "classmongocxx_1_1v1_1_1count__options.html#a40a1650d00ec0b3adf6e6ea810442493", null ],
+    [ "comment", "classmongocxx_1_1v1_1_1count__options.html#a3e2374641ee341f5e2ddb5c947b8adfd", null ],
+    [ "hint", "classmongocxx_1_1v1_1_1count__options.html#ab81fc4c28f8ddd39d4fcedf91ffcda89", null ],
+    [ "hint", "classmongocxx_1_1v1_1_1count__options.html#afdc5bfa25b701847179468c77d2932f2", null ],
+    [ "limit", "classmongocxx_1_1v1_1_1count__options.html#a6d8cbfdb36798ddfdb00a0334d0de16b", null ],
+    [ "limit", "classmongocxx_1_1v1_1_1count__options.html#a628e1fbd911b9ea8d4ff8e664ecb6ab3", null ],
+    [ "max_time", "classmongocxx_1_1v1_1_1count__options.html#ad401e2430faf9a9e453b157b0a011b61", null ],
+    [ "max_time", "classmongocxx_1_1v1_1_1count__options.html#a9e97a53d37fa183c118660bd5e87998e", null ],
+    [ "operator=", "classmongocxx_1_1v1_1_1count__options.html#aefa29e3179188cdf2ef95e805f2a4f7c", null ],
+    [ "operator=", "classmongocxx_1_1v1_1_1count__options.html#a089f769f196366a140e8b92148b405e8", null ],
+    [ "read_concern", "classmongocxx_1_1v1_1_1count__options.html#a169b770eaaba4ca8f61c1388d0271dd2", null ],
+    [ "read_concern", "classmongocxx_1_1v1_1_1count__options.html#a6326a9ea69ec8e4905f1c67303164fcb", null ],
+    [ "read_preference", "classmongocxx_1_1v1_1_1count__options.html#a9dd9a1587e0b966a6b6f8122c769eef7", null ],
+    [ "read_preference", "classmongocxx_1_1v1_1_1count__options.html#a453c9a86e7ec72e6afb07736e26a2e11", null ],
+    [ "skip", "classmongocxx_1_1v1_1_1count__options.html#aa5ca811c06a3a57480f507f372c2dbe3", null ],
+    [ "skip", "classmongocxx_1_1v1_1_1count__options.html#a2592fc50d39ed32191dcb625cae0fc9b", null ]
+];
