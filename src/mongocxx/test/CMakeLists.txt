@@ -209,6 +209,7 @@ set(mongocxx_test_sources_extra
     v_noabi/client_helpers.cpp
     v_noabi/instance.cpp
     v_noabi/logging.cpp
+    v1/capture_stderr.cpp
     v1/instance.cpp
 )
 
@@ -227,6 +228,7 @@ add_executable(test_driver
     ${mongocxx_test_sources_private}
     ${mongocxx_test_sources_v_noabi}
     ${mongocxx_test_sources_v1}
+    v1/capture_stderr.cpp
     v_noabi/catch_helpers.cpp
 )
 target_link_libraries(test_driver PRIVATE spec_test_common client_helpers)
@@ -235,6 +237,7 @@ add_executable(test_instance
     subprocess.cpp
     v_noabi/instance.cpp
     v_noabi/logging.cpp
+    v1/capture_stderr.cpp
     v1/instance.cpp
 )
 target_compile_definitions(test_instance PRIVATE MONGOCXX_TEST_DISABLE_MAIN_INSTANCE)

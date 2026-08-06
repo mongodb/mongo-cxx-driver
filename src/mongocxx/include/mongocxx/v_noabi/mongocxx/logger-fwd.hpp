@@ -27,6 +27,8 @@ using v1::logger;
 
 using v1::default_logger;
 
+using v1::logger_guard;
+
 } // namespace v_noabi
 } // namespace mongocxx
 
@@ -37,6 +39,8 @@ using v1::log_level;
 using v1::logger;
 
 using v1::default_logger;
+
+using v1::logger_guard;
 
 } // namespace mongocxx
 

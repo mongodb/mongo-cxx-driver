@@ -18,11 +18,9 @@
 
 #include <bsoncxx/test/v1/stdx/string_view.hh>
 
+#include <mongocxx/test/v1/capture_stderr.hh>
 #include <mongocxx/test/v1/logger.hh>
 
-#include <cerrno>
-#include <cstddef>
-#include <cstdio>
 #include <functional>
 #include <string>
 #include <utility>
@@ -38,10 +36,6 @@
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
-
-#if !defined(_WIN32)
-#include <fcntl.h>
-#endif
 
 namespace mongocxx {
 namespace v1 {
@@ -68,71 +62,7 @@ class custom_logger : public logger {
 } // namespace
 
 TEST_CASE("logger", "[mongocxx][v1][instance]") {
-#if !defined(_WIN32)
-    class capture_stderr {
-       private:
-        int _pipes[2];
-        int _stderr; // stderr
-
-       public:
-        ~capture_stderr() {
-            ::dup2(_stderr, STDERR_FILENO); // Restore original stderr.
-        }
-
-        capture_stderr(capture_stderr&&) = delete;
-        capture_stderr& operator=(capture_stderr&&) = delete;
-        capture_stderr(capture_stderr const&) = delete;
-        capture_stderr& operator=(capture_stderr const&) = delete;
-
-        capture_stderr()
-            : _stderr{::dup(STDERR_FILENO)} // Save original stderr.
-        {
-            ::fflush(stderr);
-            REQUIRE(::pipe(_pipes) == 0);                    // Open redirection pipes.
-            REQUIRE(::dup2(_pipes[1], STDERR_FILENO) != -1); // Copy stderr to input pipe.
-            REQUIRE(::close(_pipes[1]) != -1);               // Close original stderr.
-
-            REQUIRE(
-                ::fcntl(_pipes[0], F_SETFL, ::fcntl(_pipes[0], F_GETFL) | O_NONBLOCK) != -1); // Do not block on read.
-        }
-
-        std::string read() {
-            std::string res;
-
-            {
-                // Capture everything up to this point.
-                // Avoid recursive macro expansion of `stderr` due to Catch expression decomposition.
-                auto const res = ::fflush(stderr);
-                REQUIRE(res == 0);
-            }
-
-            while (true) {
-                char buf[BUFSIZ];
-                auto const n = ::read(_pipes[0], buf, std::size_t{BUFSIZ - 1});
-
-                CHECKED_IF(n < 0) {
-                    REQUIRE(errno == EAGAIN); // No data left in stream.
-                    break;
-                }
-                else {
-                    res.append(buf, static_cast<std::size_t>(n));
-                }
-            }
-
-            return res;
-        }
-    };
-
-#else
-
-    class capture_stderr {
-       public:
-        std::string read() {
-            return {};
-        }
-    };
-
-#endif // !defined(_WIN32)
+    using mongocxx::test::capture_stderr;
 
     {
         auto const test_default = [] {

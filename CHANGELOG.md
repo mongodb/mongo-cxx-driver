@@ -13,6 +13,15 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ## 4.5.0
 
+### Added
+
+- `mongocxx::log_handler` (v1): a `std::function` type alias for
+  unstructured log message handlers.
+- `mongocxx::set_global_logger()` (v1) to configure the unstructured log message
+  handler at runtime.
+- `mongocxx::logger_guard` (v1): a scope guard to temporarily replace the current
+  unstructured log message handler.
+
 ### Removed
 
 - Support for Visual Studio 2015 (EOL since Oct 2025). Use Visual Studio 2017 15.9 (MSVC 19.16.27023) or newer.
