@@ -34,7 +34,9 @@ namespace test {
 #if !defined(_WIN32)
 
 capture_stderr::~capture_stderr() {
-    ::dup2(_stderr, STDERR_FILENO); // Restore original stderr.
+    ::dup2(_stderr, STDERR_FILENO);  // Restore original stderr.
+    CHECK(::close(_stderr) != -1);   // Close saved original stderr.
+    CHECK(::close(_pipes[0]) != -1); // Close output pipe.
 }
 
 capture_stderr::capture_stderr()
