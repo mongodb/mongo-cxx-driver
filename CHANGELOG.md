@@ -7,7 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Changes prior to 3.9.0 are documented as [release notes on GitHub](https://github.com/mongodb/mongo-cxx-driver/releases).
 
-## 4.5.0 [Unreleased]
+## 4.6.0 [Unreleased]
+
+<!-- Will contain entries for the next minor release. -->
+
+## 4.5.0
+
+### Added
+
+- `mongocxx::log_handler` (v1): a `std::function` type alias for
+  unstructured log message handlers.
+- `mongocxx::set_global_logger()` (v1) to configure the unstructured log message
+  handler at runtime.
+- `mongocxx::logger_guard` (v1): a scope guard to temporarily replace the current
+  unstructured log message handler.
 
 ### Added
 
@@ -28,6 +41,16 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 ### Removed
 
 - Support for Visual Studio 2015 (EOL since Oct 2025). Use Visual Studio 2017 15.9 (MSVC 19.16.27023) or newer.
+
+### Added
+
+- Support appending client handshake metadata after initialization and per-client/pool. This is useful for projects wrapping the C++ driver to self-identify.
+
+## 4.4.1
+
+### Changed
+
+- Bump the minimum required C Driver version to [2.3.3](https://github.com/mongodb/mongo-c-driver/releases/tag/2.3.3).
 
 ## 4.4.0
 
