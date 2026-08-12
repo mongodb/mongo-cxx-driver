@@ -140,8 +140,6 @@ uv run --frozen etc/ruff-format-all.sh  # Python scripts.
 uv run --frozen etc/shfmt-format-all.sh # Shell scripts.
 ```
 
-`--frozen` ensures the pinned lockfile is used; if it fails with a lockfile error, update it with `uv sync`.
-
 Also run linting when modifying C++ source files:
 
 ```bash

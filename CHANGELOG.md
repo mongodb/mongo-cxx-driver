@@ -7,7 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Changes prior to 3.9.0 are documented as [release notes on GitHub](https://github.com/mongodb/mongo-cxx-driver/releases).
 
-## 4.5.0 [Unreleased]
+## 4.6.0 [Unreleased]
+
+<!-- Will contain entries for the next minor release. -->
+
+## 4.5.0
+
+### Added
+
+- `mongocxx::log_handler` (v1): a `std::function` type alias for
+  unstructured log message handlers.
+- `mongocxx::set_global_logger()` (v1) to configure the unstructured log message
+  handler at runtime.
+- `mongocxx::logger_guard` (v1): a scope guard to temporarily replace the current
+  unstructured log message handler.
 
 ### Removed
 
