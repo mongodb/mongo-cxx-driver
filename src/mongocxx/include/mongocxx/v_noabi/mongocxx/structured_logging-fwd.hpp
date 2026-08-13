@@ -19,28 +19,16 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-namespace v_noabi {
-namespace options {
 
 using v1::structured_logging;
 
-} // namespace options
-} // namespace v_noabi
-} // namespace mongocxx
-
-namespace mongocxx {
-namespace options {
-
-using v_noabi::options::structured_logging;
-
-} // namespace options
 } // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 
 ///
 /// @file
-/// Declares @ref mongocxx::v_noabi::options::structured_logging.
+/// Declares @ref mongocxx::structured_logging.
 ///
 /// @par Includes
 /// - @ref mongocxx/v1/structured_logging-fwd.hpp

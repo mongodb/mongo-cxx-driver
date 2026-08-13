@@ -24,7 +24,7 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ### Added
 
-- Structured logging support wrapping libmongoc's per-client/per-pool structured
+- Structured logging support (v1) wrapping libmongoc's per-client/per-pool structured
   logging (`mongoc-structured-log.h`):
   - `mongocxx::structured_log_level` and `mongocxx::structured_log_component`
     enums, with `to_string()` and `structured_log_level_from_string()` /
@@ -33,10 +33,10 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
     `level()`, `component()`, `message()`, and `message_as_bson()` accessors.
   - `mongocxx::structured_log_handler`, a `std::function` handler type for
     structured log messages.
-  - `mongocxx::options::structured_logging`, configuring a handler, per-component
+  - `mongocxx::structured_logging`, configuring a handler, per-component
     and all-component maximum levels, maximum document length, and environment
     overrides, applied per-client and per-pool via
-    `mongocxx::options::client::structured_logging_opts()`.
+    `structured_logging_opts()`.
 
 ### Removed
 

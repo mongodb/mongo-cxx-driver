@@ -20,6 +20,7 @@
 
 #include <mongocxx/v1/client.hpp> // IWYU pragma: export
 #include <mongocxx/v1/oidc_callback.hpp>
+#include <mongocxx/v1/structured_logging.hpp>
 
 #include <string> // IWYU pragma: keep: backward compatibility, to be removed.
 #include <utility>
@@ -29,7 +30,6 @@
 #include <mongocxx/options/apm.hpp>
 #include <mongocxx/options/auto_encryption.hpp>
 #include <mongocxx/options/server_api.hpp>
-#include <mongocxx/options/structured_logging.hpp>
 #include <mongocxx/options/tls.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -209,7 +209,7 @@ class client {
     ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    client& structured_logging_opts(structured_logging structured_logging_opts) {
+    client& structured_logging_opts(v1::structured_logging structured_logging_opts) {
         _structured_logging_opts = std::move(structured_logging_opts);
         return *this;
     }
@@ -219,7 +219,7 @@ class client {
     ///
     /// @return The structured logging options.
     ///
-    bsoncxx::v_noabi::stdx::optional<structured_logging> const& structured_logging_opts() const {
+    bsoncxx::v_noabi::stdx::optional<v1::structured_logging> const& structured_logging_opts() const {
         return _structured_logging_opts;
     }
 
@@ -231,7 +231,7 @@ class client {
     bsoncxx::v_noabi::stdx::optional<auto_encryption> _auto_encrypt_opts;
     bsoncxx::v_noabi::stdx::optional<server_api> _server_api_opts;
     bsoncxx::v_noabi::stdx::optional<v1::oidc_callback> _oidc_callback;
-    bsoncxx::v_noabi::stdx::optional<structured_logging> _structured_logging_opts;
+    bsoncxx::v_noabi::stdx::optional<v1::structured_logging> _structured_logging_opts;
 
     /* explicit(false) */ client(v1::client::options opts);
 

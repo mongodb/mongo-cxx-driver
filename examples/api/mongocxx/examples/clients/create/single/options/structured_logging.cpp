@@ -16,7 +16,7 @@
 
 #include <mongocxx/client.hpp>
 #include <mongocxx/options/client.hpp>
-#include <mongocxx/options/structured_logging.hpp>
+#include <mongocxx/structured_logging.hpp>
 #include <mongocxx/structured_log.hpp>
 #include <mongocxx/uri.hpp>
 
@@ -27,7 +27,7 @@ namespace {
 
 // [Example]
 void example() {
-    mongocxx::options::structured_logging structured_logging_opts;
+    mongocxx::structured_logging structured_logging_opts;
 
     structured_logging_opts
         .handler([](mongocxx::structured_log_entry const& entry) {

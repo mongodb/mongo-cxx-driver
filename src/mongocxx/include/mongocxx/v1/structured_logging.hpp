@@ -96,7 +96,7 @@ class structured_logging {
     ///
     /// @important When configured on a pool, `handler` MUST be thread-safe.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(structured_logging&) handler(v1::structured_log_handler handler);
+    MONGOCXX_ABI_EXPORT_CDECL(structured_logging&) handler(v1::structured_log_handler v);
 
     ///
     /// Return the current handler.
@@ -118,7 +118,7 @@ class structured_logging {
     ///
     /// Set the maximum (least severe) level emitted for all components.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(structured_logging&) max_level_for_all_components(v1::structured_log_level level);
+    MONGOCXX_ABI_EXPORT_CDECL(structured_logging&) max_level_for_all_components(v1::structured_log_level v);
 
     ///
     /// Return the "all components" maximum level, if one was set on this object.
@@ -137,7 +137,7 @@ class structured_logging {
     ///
     /// Set the maximum length (in bytes) of an embedded document before truncation.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(structured_logging&) max_document_length(std::size_t max_document_length);
+    MONGOCXX_ABI_EXPORT_CDECL(structured_logging&) max_document_length(std::size_t v);
 
     ///
     /// Return the maximum document length, if one was set on this object.

@@ -23,19 +23,6 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-namespace v_noabi {
-
-using v1::to_string;
-
-using v1::structured_log_component_from_string;
-using v1::structured_log_level_from_string;
-
-using v1::structured_log_handler;
-
-} // namespace v_noabi
-} // namespace mongocxx
-
-namespace mongocxx {
 
 using v1::to_string;
 

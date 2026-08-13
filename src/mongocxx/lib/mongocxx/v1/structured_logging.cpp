@@ -80,8 +80,8 @@ structured_logging::structured_logging() : _impl{new impl{}} {}
 
 // NOLINTEND(cppcoreguidelines-owning-memory)
 
-structured_logging& structured_logging::handler(v1::structured_log_handler handler) {
-    impl::with(*this)._handler = std::move(handler);
+structured_logging& structured_logging::handler(v1::structured_log_handler v) {
+    impl::with(*this)._handler = std::move(v);
     return *this;
 }
 
@@ -101,8 +101,8 @@ bsoncxx::v1::stdx::optional<v1::structured_log_level> structured_logging::max_le
     return impl::with(*this)._component_levels[static_cast<std::size_t>(component)];
 }
 
-structured_logging& structured_logging::max_level_for_all_components(v1::structured_log_level level) {
-    impl::with(*this)._all_components_level = level;
+structured_logging& structured_logging::max_level_for_all_components(v1::structured_log_level v) {
+    impl::with(*this)._all_components_level = v;
     return *this;
 }
 
@@ -115,8 +115,8 @@ structured_logging& structured_logging::max_levels_from_env(bool toggle) {
     return *this;
 }
 
-structured_logging& structured_logging::max_document_length(std::size_t max_document_length) {
-    impl::with(*this)._max_document_length = max_document_length;
+structured_logging& structured_logging::max_document_length(std::size_t v) {
+    impl::with(*this)._max_document_length = v;
     return *this;
 }
 

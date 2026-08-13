@@ -40,7 +40,7 @@ namespace v1 {
 ///
 /// @see
 /// - @ref mongocxx::v1::structured_log_entry::level
-/// - @ref mongocxx::v1::options::structured_logging
+/// - @ref mongocxx::v1::structured_logging
 ///
 enum class structured_log_level {
     k_emergency, ///< MONGOC_STRUCTURED_LOG_LEVEL_EMERGENCY
@@ -62,7 +62,7 @@ enum class structured_log_level {
 ///
 /// @see
 /// - @ref mongocxx::v1::structured_log_entry::component
-/// - @ref mongocxx::v1::options::structured_logging
+/// - @ref mongocxx::v1::structured_logging
 ///
 enum class structured_log_component {
     k_command,          ///< MONGOC_STRUCTURED_LOG_COMPONENT_COMMAND
@@ -166,7 +166,7 @@ class structured_log_entry {
 /// it may be invoked concurrently by multiple pooled clients.
 ///
 /// @see
-/// - @ref mongocxx::v1::options::structured_logging
+/// - @ref mongocxx::v1::structured_logging
 ///
 using structured_log_handler = std::function<void MONGOCXX_ABI_CDECL(structured_log_entry const&)>;
 

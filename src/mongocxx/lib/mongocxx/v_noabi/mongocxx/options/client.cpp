@@ -16,13 +16,14 @@
 
 //
 
+#include <mongocxx/v1/structured_logging.hpp>
+
 #include <mongocxx/v1/client.hh>
 
 #include <utility>
 
 #include <mongocxx/options/apm.hpp>
 #include <mongocxx/options/server_api.hpp>
-#include <mongocxx/options/structured_logging.hpp>
 #include <mongocxx/options/tls.hpp>
 
 namespace mongocxx {
