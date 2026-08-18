@@ -1791,9 +1791,7 @@ client_encryption make_prose_test_11_ce(
     return client_encryption(std::move(cse_opts));
 }
 
-// CDRIVER-4181: may fail due to unexpected invalid hostname errors if C Driver was built with VS
-// 2015 and uses Secure Channel (ENABLE_SSL=WINDOWS).
-TEST_CASE("KMS TLS Options Tests", "[client_side_encryption][!mayfail]") {
+TEST_CASE("KMS TLS Options Tests", "[client_side_encryption]") {
     CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
 
     auto setup_client = client(uri(), test_util::add_test_server_api());
@@ -3510,13 +3508,17 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
     }
 
     auto coll_substring = explicit_encrypted_client["db"]["substring"];
-    _drop_and_create_collection("db", "substring", "/explicit-encryption/encryptedFields-substring.json");
-    {
-        auto const encrypt_opts = default_encrypt_opts().text_opts(default_text_opts().substring_opts(substring_opts));
-        auto const encrypted_foobarbaz = client_encryption.encrypt(make_value("foobarbaz"), encrypt_opts);
+    // Only test substringPreview on server < 9.0. Server 9.0 removes support.
+    if (!test_util::server_version_is_at_least("9.0")) {
+        _drop_and_create_collection("db", "substring", "/explicit-encryption/encryptedFields-substring.json");
+        {
+            auto const encrypt_opts =
+                default_encrypt_opts().text_opts(default_text_opts().substring_opts(substring_opts));
+            auto const encrypted_foobarbaz = client_encryption.encrypt(make_value("foobarbaz"), encrypt_opts);
 
-        coll_substring.insert_one(
-            make_document(kvp("_id", 0), kvp("encryptedText", encrypted_foobarbaz)), insert_opts_majority);
+            coll_substring.insert_one(
+                make_document(kvp("_id", 0), kvp("encryptedText", encrypted_foobarbaz)), insert_opts_majority);
+        }
     }
 
     auto const foobarbaz_doc = make_document(kvp("_id", 0), kvp("encryptedText", "foobarbaz"));
@@ -3534,12 +3536,13 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
     };
 
     if (!test_util::server_version_is_at_least("9.0")) {
-        // Skip prefixPreview / suffixPreview (will be changed for CXX-3467).
+        // Skip prefixPreview / suffixPreview. prefix / suffix will be added in CXX-3467.
         _drop_and_create_collection(
             "db", "prefix-suffix-ci-di", "/explicit-encryption/encryptedFields-prefix-suffix-ci-di.json");
+        // Skip substringPreview. substring will be added in CXX-3523.
+        _drop_and_create_collection(
+            "db", "substring-ci-di", "/explicit-encryption/encryptedFields-substring-ci-di.json");
     }
-
-    _drop_and_create_collection("db", "substring-ci-di", "/explicit-encryption/encryptedFields-substring-ci-di.json");
 
     SECTION("Case 1: can find a document by prefix") {
         if (test_util::server_version_is_at_least("9.0")) {
@@ -3618,6 +3621,9 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
     }
 
     SECTION("Case 5: can find a document by substring") {
+        if (test_util::server_version_is_at_least("9.0")) {
+            SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
+        }
         auto const encrypt_opts = default_encrypt_opts()
                                       .query_type(options::encrypt::encryption_query_type::k_substringPreview)
                                       .text_opts(default_text_opts().substring_opts(substring_opts));
@@ -3635,6 +3641,9 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
     }
 
     SECTION("Case 6: assert no document found by substring") {
+        if (test_util::server_version_is_at_least("9.0")) {
+            SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
+        }
         auto const encrypt_opts = default_encrypt_opts()
                                       .query_type(options::encrypt::encryption_query_type::k_substringPreview)
                                       .text_opts(default_text_opts().substring_opts(substring_opts));
@@ -3753,6 +3762,9 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
     }
 
     SECTION("Case 10: can find an auto-encrypted case-insensitively indexed document by substring") {
+        if (test_util::server_version_is_at_least("9.0")) {
+            SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
+        }
         auto_encrypted_client["db"]["substring-ci-di"].insert_one(
             make_document(kvp("encryptedText", "FooBarBaz")), insert_opts_majority);
 
@@ -3772,6 +3784,9 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
     }
 
     SECTION("Case 11: can find an auto-encrypted diacritic-insensitively indexed document by substring") {
+        if (test_util::server_version_is_at_least("9.0")) {
+            SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
+        }
         auto_encrypted_client["db"]["substring-ci-di"].insert_one(
             make_document(kvp("encryptedText", "foocaf" E_ACCENT "baz")), insert_opts_majority);
 

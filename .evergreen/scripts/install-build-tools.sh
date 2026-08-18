@@ -23,7 +23,7 @@ install_build_tools() {
   # PyPI `cmake` requires a sufficiently recent Python version.
   uv python install --no-bin -q || uv python install -q || return
 
-  uv tool install -q cmake || return
+  uv tool install -q "cmake" || return
 
   if [[ -f /etc/redhat-release && -x /opt/mongodbtoolchain/v4/bin/ninja ]]; then
     # Avoid strange "Could NOT find Threads" CMake configuration error on RHEL when using PyPI CMake, PyPI Ninja, and

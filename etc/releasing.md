@@ -751,6 +751,8 @@ Sync the entries in the patch release section to be consistent with the entries 
 > [!TIP]
 > Use `git restore --source=rX.Y.Z --worktree CHANGELOG.md` to obtain the `CHANGELOG.md` in `rX.Y.Z` as unstaged changes.
 
+Apply changes from `README.md` and `etc/apidocmenu.md` for the added release.
+
 #### ... for a Non-Patch Release
 
 Checkout the `releases/vX.Y` release branch.
@@ -775,7 +777,7 @@ Add a section for the next patch release, e.g. following a `1.2.0` release:
 Commit the changes to the `releases/vX.Y` branch:
 
 ```bash
-git commit -m 'Add changelog entry for the next minor release'
+git commit -m 'Add changelog entry for the next patch release'
 ```
 
 Push the branch to the remote repository (a PR is not required for this step).
@@ -797,7 +799,7 @@ Add a section for the next minor release, e.g. following a `1.3.0` release:
 Commit these changes to `post-release-changes`.
 
 ```bash
-git commit -m "Add CHANGELOG section for the next minor release"
+git commit -m "Add changelog entry for the next minor release"
 ```
 
 ### Merge Post-Release Changes

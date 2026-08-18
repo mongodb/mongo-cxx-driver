@@ -22,21 +22,15 @@ if [ "Windows_NT" == "$OS" ]; then
 fi
 export DRIVERS_TOOLS
 
-export MONGODB_BINARIES="${DRIVERS_TOOLS:?}/mongodb/bin"
-export MONGO_ORCHESTRATION_HOME="${DRIVERS_TOOLS:?}/.evergreen/orchestration"
 export MONGODB_VERSION="${mongodb_version:?}"
 export AUTH
 export TOPOLOGY
 export REQUIRE_API_VERSION
 export ORCHESTRATION_FILE
 
-export PATH="${MONGODB_BINARIES:?}:${PATH:-}"
+export PATH="${DRIVERS_TOOLS:?}/mongodb/bin:${PATH:-}"
 
-echo "{ \"releases\": { \"default\": \"${MONGODB_BINARIES:?}\" }}" >"${MONGO_ORCHESTRATION_HOME:?}/orchestration.config"
-./.evergreen/run-orchestration.sh
-
-# MacOS needs some assistance to ensure executable permissions(?).
-chmod +x ${MONGODB_BINARIES:?}/*
+./.evergreen/run-mongodb.sh start
 
 declare mongosh_binary
 if command -v mongosh >/dev/null; then
@@ -92,9 +86,8 @@ if [[ "${TOPOLOGY:-}" == replica_set ]]; then
   echo "Waiting for replset member 27017 to become primary... done."
 fi
 
-# Copy mongocryptd up so other functions can find it later, since we can't share PATHs
-if [ -f "${MONGODB_BINARIES:?}/mongocryptd" ]; then
-  cp "${MONGODB_BINARIES:?}/mongocryptd" ../mongocryptd
+if [ -f "${DRIVERS_TOOLS:?}/mongodb/bin/mongocryptd" ]; then
+  cp "${DRIVERS_TOOLS:?}/mongodb/bin/mongocryptd" ../mongocryptd
 fi
 
 cd ../

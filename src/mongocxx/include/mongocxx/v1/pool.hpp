@@ -146,11 +146,36 @@ class pool {
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<entry>) try_acquire();
 
     ///
+    /// Append client metadata to the handshake command sent as part of the initial connection handshake.
+    ///
+    /// @param name
+    ///   The name of the wrapping driver. Must not be empty.
+    /// @param version
+    ///   The optional version of the wrapping driver.
+    /// @param platform
+    ///   The optional information about the current platform, for example configure options or compile flags.
+    ///
+    /// @throws mongocxx::v1::exception with @ref mongocxx::v1::pool::errc::append_metadata_failure when one of the
+    /// following occurs:
+    /// - The resulting handshake document would exceed the size limit.
+    /// - A string argument contains the metadata delimiter " / ".
+    ///
+    /// @see
+    /// - [hello (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/command/hello/)
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(void)
+    append_metadata(
+        bsoncxx::v1::stdx::string_view name,
+        bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> version = {},
+        bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> platform = {});
+
+    ///
     /// Errors codes which may be returned by @ref mongocxx::v1::pool.
     ///
     enum class errc {
-        zero,               ///< Zero.
-        wait_queue_timeout, ///< Failed to acquire a client object due to "waitQueueTimeoutMS".
+        zero,                    ///< Zero.
+        wait_queue_timeout,      ///< Failed to acquire a client object due to "waitQueueTimeoutMS".
+        append_metadata_failure, ///< Failed to append client metadata.
     };
 
     ///

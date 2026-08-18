@@ -18,7 +18,7 @@ class Test(Function):
         include_expansions_in_env=[
             'ASAN_SYMBOLIZER_PATH',
             'build_type',
-            'CRYPT_SHARED_LIB_PATH',  # Set by run-orchestration.sh in "start_mongod".
+            'CRYPT_SHARED_LIB_PATH',  # Set by run-mongodb.sh in "start_mongod".
             'cse_aws_access_key_id',
             'cse_aws_secret_access_key',
             'cse_azure_client_id',

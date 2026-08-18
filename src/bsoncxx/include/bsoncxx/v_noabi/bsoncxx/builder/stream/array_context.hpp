@@ -105,7 +105,6 @@ class array_context {
     ///
     template <typename T>
     detail::requires_t<v_noabi::array::value, std::is_same<base, closed_context>, detail::is_alike<T, finalize_type>>
-    // VS2015U1 can't resolve the name.
     operator<<(T&&) {
         return _core->extract_array();
     }

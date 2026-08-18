@@ -164,8 +164,6 @@ def make_distro_str(distro_name, compiler, arch) -> str:
 
 def to_cc(compiler):
     return {
-        'vs2015x64': 'Visual Studio 14 2015',
-        'vs2015x86': 'Visual Studio 14 2015',
         'vs2017x64': 'Visual Studio 15 2017',
         'vs2017x86': 'Visual Studio 15 2017',
         'vs2019x64': 'Visual Studio 16 2019',
@@ -177,8 +175,6 @@ def to_cc(compiler):
 
 def to_platform(compiler):
     return {
-        'vs2015x64': 'x64',
-        'vs2015x86': 'Win32',
         'vs2017x64': 'x64',
         'vs2017x86': 'Win32',
         'vs2019x64': 'x64',
