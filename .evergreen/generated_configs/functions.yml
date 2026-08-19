@@ -332,13 +332,13 @@ functions:
       type: setup
       params:
         binary: bash
-        working_dir: drivers-evergreen-tools/.evergreen/csfle
         args:
           - -c
           - |
             set -o errexit
             echo "Preparing CSFLE venv environment..."
-            # This ensures future invocations of activate-kmstlsvenv.sh conducted in
+            cd ./drivers-evergreen-tools/.evergreen/csfle
+            # This function ensures future invocations of activate-kmstlsvenv.sh conducted in
             # parallel do not race to setup a venv environment; it has already been prepared.
             # This primarily addresses the situation where the "test" and "csfle-setup"
             # functions invoke 'activate-kmstlsvenv.sh' simultaneously.
@@ -440,7 +440,7 @@ functions:
       type: setup
       params:
         updates:
-          - { key: mongoc_version_minimum, value: 2.3.1 }
+          - { key: mongoc_version_minimum, value: 2.3.3 }
     - command: subprocess.exec
       type: setup
       params:

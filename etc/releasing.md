@@ -751,6 +751,8 @@ Sync the entries in the patch release section to be consistent with the entries 
 > [!TIP]
 > Use `git restore --source=rX.Y.Z --worktree CHANGELOG.md` to obtain the `CHANGELOG.md` in `rX.Y.Z` as unstaged changes.
 
+Apply changes from `README.md` and `etc/apidocmenu.md` for the added release.
+
 #### ... for a Non-Patch Release
 
 Checkout the `releases/vX.Y` release branch.

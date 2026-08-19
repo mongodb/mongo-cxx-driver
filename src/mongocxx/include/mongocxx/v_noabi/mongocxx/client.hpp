@@ -18,6 +18,9 @@
 
 //
 
+#include <bsoncxx/v1/stdx/optional.hpp>
+#include <bsoncxx/v1/stdx/string_view.hpp>
+
 #include <mongocxx/v1/client.hpp> // IWYU pragma: export
 
 #include <list>   // IWYU pragma: keep: backward compatibility, to be removed.
@@ -477,6 +480,29 @@ class client {
 
     MONGOCXX_ABI_EXPORT_CDECL(v1::client_bulk_write) create_bulk_write(v_noabi::client_session& session);
     /// @}
+
+    ///
+    /// Append client metadata to the handshake command sent as part of the initial connection handshake.
+    ///
+    /// @param name
+    ///   The name of the wrapping driver. Must not be empty.
+    /// @param version
+    ///   The optional version of the wrapping driver.
+    /// @param platform
+    ///   The optional information about the current platform, for example configure options or compile flags.
+    ///
+    /// @throws mongocxx::v_noabi::operation_exception when one of the following occurs:
+    /// - `this` is from @ref "mongocxx::v_noabi::pool": use @ref mongocxx::v_noabi::pool::append_metadata instead.
+    /// - The resulting handshake document would exceed the size limit.
+    /// - A string argument contains the metadata delimiter " / ".
+    ///
+    /// @see
+    /// - [hello (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/command/hello/)
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(void) append_metadata(
+        bsoncxx::v1::stdx::string_view name,
+        bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> version = {},
+        bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> platform = {});
 
     ///
     /// Prevents resource cleanup in the child process from interfering

@@ -130,6 +130,17 @@ bsoncxx::v_noabi::stdx::optional<pool::entry> pool::try_acquire() {
     return ret;
 }
 
+void pool::append_metadata(
+    bsoncxx::v1::stdx::string_view name,
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> version,
+    bsoncxx::v1::stdx::optional<bsoncxx::v1::stdx::string_view> platform) try {
+    _pool.append_metadata(name, version, platform);
+} catch (v1::server_error const&) {
+    MONGOCXX_PRIVATE_UNREACHABLE; // Only client errors or `v_noabi::operation_exception`.
+} catch (v1::exception const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
+}
+
 mongoc_client_pool_t* pool::internal::as_mongoc(pool& self) {
     return v1::pool::internal::as_mongoc(self._pool);
 }
