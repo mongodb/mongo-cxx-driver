@@ -62,6 +62,7 @@
 #include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/namespace_validation.hh>
 
 namespace mongocxx {
 namespace v_noabi {
@@ -278,6 +279,10 @@ v_noabi::collection database::create_collection(
     bsoncxx::v_noabi::stdx::string_view name,
     bsoncxx::v_noabi::document::view_or_value collection_options,
     bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> const& write_concern) {
+    if (!is_valid_collection_name(name)) {
+        throw v_noabi::logic_error{v_noabi::error_code::k_invalid_parameter, "invalid collection name"};
+    }
+
     scoped_bson doc;
 
     doc += to_scoped_bson_view(collection_options);
@@ -296,6 +301,10 @@ v_noabi::collection database::create_collection(
     bsoncxx::v_noabi::stdx::string_view name,
     bsoncxx::v_noabi::document::view_or_value collection_options,
     bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> const& write_concern) {
+    if (!is_valid_collection_name(name)) {
+        throw v_noabi::logic_error{v_noabi::error_code::k_invalid_parameter, "invalid collection name"};
+    }
+
     scoped_bson doc;
 
     doc += to_scoped_bson_view(collection_options);
@@ -362,6 +371,10 @@ void database::read_preference(v_noabi::read_preference rp) {
 }
 
 bool database::has_collection(bsoncxx::v_noabi::string::view_or_value name) const {
+    if (!is_valid_collection_name(name.view())) {
+        throw v_noabi::logic_error{v_noabi::error_code::k_invalid_parameter, "invalid collection name"};
+    }
+
     // Backward compatibility: `has_collection()` is not logically const.
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
     auto& d = const_cast<v1::database&>(check_moved_from(_db));
@@ -391,6 +404,10 @@ v_noabi::write_concern database::write_concern() const {
 }
 
 collection database::collection(bsoncxx::v_noabi::string::view_or_value name) const {
+    if (!is_valid_collection_name(name.view())) {
+        throw v_noabi::logic_error{v_noabi::error_code::k_invalid_parameter, "invalid collection name"};
+    }
+
     // Backward compatibility: `collection()` is not logically const.
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
     auto& d = const_cast<v1::database&>(check_moved_from(_db));

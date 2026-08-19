@@ -39,16 +39,21 @@
 #include <cstdint>
 #include <memory>
 #include <string>
+#include <system_error>
 #include <vector>
 
 #include <bsoncxx/private/bson.hh>
+#include <bsoncxx/private/immortal.hh>
 
 #include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/namespace_validation.hh>
 #include <mongocxx/private/scoped_bson.hh>
 #include <mongocxx/private/utility.hh>
 
 namespace mongocxx {
 namespace v1 {
+
+using code = database::errc;
 
 class database::impl {
    public:
@@ -230,6 +235,10 @@ v1::collection database::create_collection(
     bsoncxx::v1::stdx::string_view name,
     bsoncxx::v1::document::view opts,
     bsoncxx::v1::stdx::optional<v1::write_concern> const& wc) {
+    if (!is_valid_collection_name(name)) {
+        throw v1::exception::internal::make(code::invalid_collection_name);
+    }
+
     scoped_bson doc;
 
     doc += opts;
@@ -247,6 +256,10 @@ v1::collection database::create_collection(
     bsoncxx::v1::stdx::string_view name,
     bsoncxx::v1::document::view opts,
     bsoncxx::v1::stdx::optional<v1::write_concern> const& wc) {
+    if (!is_valid_collection_name(name)) {
+        throw v1::exception::internal::make(code::invalid_collection_name);
+    }
+
     scoped_bson doc;
 
     doc += opts;
@@ -296,6 +309,10 @@ void database::drop(v1::client_session const& session, bsoncxx::v1::stdx::option
 }
 
 bool database::has_collection(bsoncxx::v1::stdx::string_view name) {
+    if (!is_valid_collection_name(name)) {
+        throw v1::exception::internal::make(code::invalid_collection_name);
+    }
+
     bson_error_t error = {};
 
     auto const ret = libmongoc::database_has_collection(impl::with(this)->_db, std::string{name}.c_str(), &error);
@@ -405,6 +422,10 @@ v1::write_concern database::write_concern() const {
 }
 
 v1::collection database::collection(bsoncxx::v1::stdx::string_view name) const {
+    if (!is_valid_collection_name(name)) {
+        throw v1::exception::internal::make(code::invalid_collection_name);
+    }
+
     return v1::collection::internal::make(
         libmongoc::database_get_collection(impl::with(this)->_db, std::string{name}.c_str()),
         impl::with(this)->_client);
@@ -516,6 +537,63 @@ mongoc_client_t* database::internal::get_client(database& self) {
 }
 
 database::database(void* impl) : _impl{impl} {}
+
+std::error_category const& database::error_category() {
+    class type final : public std::error_category {
+        char const* name() const noexcept override {
+            return "mongocxx::v1::database";
+        }
+
+        std::string message(int v) const noexcept override {
+            switch (static_cast<code>(v)) {
+                case code::zero:
+                    return "zero";
+                case code::invalid_collection_name:
+                    return "invalid collection name";
+                default:
+                    return std::string(this->name()) + ':' + std::to_string(v);
+            }
+        }
+
+        bool equivalent(int v, std::error_condition const& ec) const noexcept override {
+            if (ec.category() == v1::source_error_category()) {
+                using condition = v1::source_errc;
+
+                auto const source = static_cast<condition>(ec.value());
+
+                switch (static_cast<code>(v)) {
+                    case code::invalid_collection_name:
+                        return source == condition::mongocxx;
+
+                    case code::zero:
+                    default:
+                        return false;
+                }
+            }
+
+            if (ec.category() == v1::type_error_category()) {
+                using condition = v1::type_errc;
+
+                auto const type = static_cast<condition>(ec.value());
+
+                switch (static_cast<code>(v)) {
+                    case code::invalid_collection_name:
+                        return type == condition::invalid_argument;
+
+                    case code::zero:
+                    default:
+                        return false;
+                }
+            }
+
+            return false;
+        }
+    };
+
+    static bsoncxx::immortal<type> const instance;
+
+    return instance.value();
+}
 
 } // namespace v1
 } // namespace mongocxx
