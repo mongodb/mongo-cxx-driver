@@ -1334,6 +1334,9 @@ class collection {
     /// @exception
     ///   mongocxx::v_noabi::operation_exception if the operation fails.
     ///
+    /// @throws mongocxx::v_noabi::logic_error with
+    /// @ref mongocxx::v_noabi::error_code::k_invalid_parameter if `new_name` is not a valid collection name.
+    ///
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/renameCollection/
     ///
@@ -1360,6 +1363,9 @@ class collection {
     ///
     /// @exception
     ///   mongocxx::v_noabi::operation_exception if the operation fails.
+    ///
+    /// @throws mongocxx::v_noabi::logic_error with
+    /// @ref mongocxx::v_noabi::error_code::k_invalid_parameter if `new_name` is not a valid collection name.
     ///
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/renameCollection/
