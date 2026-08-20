@@ -101,6 +101,12 @@ TEST_CASE("structured_log_component_from_string", "[mongocxx][v1][structured_log
         }
     }
 
+    SECTION("is case-insensitive") {
+        auto const parsed = structured_log_component_from_string("SERVERSELECTION");
+        REQUIRE(parsed);
+        CHECK(*parsed == structured_log_component::k_server_selection);
+    }
+
     SECTION("returns nullopt for an unknown name") {
         CHECK(!structured_log_component_from_string("not-a-component"));
     }

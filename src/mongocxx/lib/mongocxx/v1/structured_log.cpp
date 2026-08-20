@@ -98,9 +98,16 @@ bsoncxx::v1::stdx::string_view to_string(structured_log_level level) {
 }
 
 bsoncxx::v1::stdx::string_view to_string(structured_log_component component) {
-    if (auto const name =
-            libmongoc::structured_log_get_component_name(static_cast<mongoc_structured_log_component_t>(component))) {
-        return name;
+    switch (component) {
+        case structured_log_component::k_command:
+        case structured_log_component::k_topology:
+        case structured_log_component::k_server_selection:
+        case structured_log_component::k_connection:
+            if (auto const name = libmongoc::structured_log_get_component_name(
+                    static_cast<mongoc_structured_log_component_t>(component))) {
+                return name;
+            }
+            break;
     }
 
     return "unknown";
