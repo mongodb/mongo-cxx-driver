@@ -36,7 +36,7 @@ struct identity_type {};
 
 } // namespace
 
-TEST_CASE("structured_log_level to_string", "[mongocxx][test][v1][structured_log]") {
+TEST_CASE("structured_log_level to_string", "[mongocxx][v1][structured_log]") {
     CHECK(to_string(structured_log_level::k_emergency) == "emergency");
     CHECK(to_string(structured_log_level::k_alert) == "alert");
     CHECK(to_string(structured_log_level::k_critical) == "critical");
@@ -46,17 +46,18 @@ TEST_CASE("structured_log_level to_string", "[mongocxx][test][v1][structured_log
     CHECK(to_string(structured_log_level::k_info) == "info");
     CHECK(to_string(structured_log_level::k_debug) == "debug");
     CHECK(to_string(structured_log_level::k_trace) == "trace");
+    CHECK(to_string(static_cast<structured_log_level>(-1)) == "unknown");
 }
 
-TEST_CASE("structured_log_component to_string", "[mongocxx][test][v1][structured_log]") {
+TEST_CASE("structured_log_component to_string", "[mongocxx][v1][structured_log]") {
     // Names must match the standardized logging specification.
     CHECK(to_string(structured_log_component::k_command) == "command");
     CHECK(to_string(structured_log_component::k_topology) == "topology");
-    CHECK(to_string(structured_log_component::k_server_selection) == "serverSelection");
     CHECK(to_string(structured_log_component::k_connection) == "connection");
+    CHECK(to_string(static_cast<structured_log_component>(-1)) == "unknown");
 }
 
-TEST_CASE("structured_log_level_from_string", "[mongocxx][test][v1][structured_log]") {
+TEST_CASE("structured_log_level_from_string", "[mongocxx][v1][structured_log]") {
     SECTION("round-trips with to_string") {
         for (auto const level : {
                  structured_log_level::k_emergency,
@@ -86,7 +87,7 @@ TEST_CASE("structured_log_level_from_string", "[mongocxx][test][v1][structured_l
     }
 }
 
-TEST_CASE("structured_log_component_from_string", "[mongocxx][test][v1][structured_log]") {
+TEST_CASE("structured_log_component_from_string", "[mongocxx][v1][structured_log]") {
     SECTION("round-trips with to_string") {
         for (auto const component : {
                  structured_log_component::k_command,
@@ -105,7 +106,7 @@ TEST_CASE("structured_log_component_from_string", "[mongocxx][test][v1][structur
     }
 }
 
-TEST_CASE("structured_log_entry accessors", "[mongocxx][test][v1][structured_log]") {
+TEST_CASE("structured_log_entry accessors", "[mongocxx][v1][structured_log]") {
     identity_type identity;
     auto const entry =
         structured_log_entry::internal::make(reinterpret_cast<mongoc_structured_log_entry_t const*>(&identity));

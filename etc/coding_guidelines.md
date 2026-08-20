@@ -88,7 +88,7 @@ src/<library>/
 ```
 
 > [!NOTE]
-> 
+>
 > The path for `v_noabi` components includes an extra `<library>/` subdirectory:
 > `include/<library>/v_noabi/<library>/foo.hpp` rather than
 > `include/<library>/v_noabi/foo.hpp`. See
@@ -266,7 +266,7 @@ Headers under `v_noabi/` declare both unstable (`v_noabi`) AND stable ABI
 interfaces.
 
 > [!IMPORTANT]
-> 
+>
 > Headers under `v_noabi/` MUST be placed under the additional `bsoncxx/` (or
 > `mongocxx`) subdirectory for backward compatibility with unstable ABI header
 > direct include style: `#include <bsoncxx/document/element.hpp>`.
@@ -283,19 +283,19 @@ canonical reference for this pattern.
 A v1-only entity is not a `v_noabi` entity, so it is a mistake to have the
 `v_noabi/` headers follow `v_noabi` conventions. For a v1-only entity `foo`:
 
-- The `v_noabi/` re-export headers MUST NOT declare anything in the `v_noabi`
-  namespace. Provide **only** the root namespace redeclaration
-  (`using v1::foo;`); a `mongocxx::v_noabi::foo` redeclaration is wrong.
-- The `v_noabi/` re-export headers MUST mirror the directory layout and name of
-  the `v1` component. Do NOT introduce `v_noabi`-only structure that the `v1`
+- The `v_noabi/` re-export headers should not declare anything in the `v_noabi`
+  namespace. Provide only the root namespace redeclaration (`using v1::foo;`). A
+  `mongocxx::v_noabi::foo` redeclaration is wrong.
+- The `v_noabi/` re-export headers should mirror the directory layout and name
+  of the `v1` component. Do not introduce `v_noabi`-only structure that the `v1`
   component does not have (e.g. an `options/` grouping subdirectory): a
   `mongocxx::v1::foo` entity is re-exported by
   `v_noabi/<library>/foo{-fwd}.hpp`, not
   `v_noabi/<library>/some_group/foo{-fwd}.hpp`.
-- The root namespace redeclarations follow the usual split (see
-  [Component Design](#component-design)): class-type and enumeration
-  redeclarations belong in the forward header; function and variable
-  redeclarations belong in the normal header.
+- The root namespace redeclarations follow the usual split (see [Component
+  Design](#component-design)): class-type and enumeration redeclarations belong
+  in the forward header, function and variable redeclarations belong in the
+  normal header.
 
 The forward header includes the `v1` forward header, wraps the redeclaration in
 the `config/prelude.hpp` / `config/postlude.hpp` macro guards, and redeclares
@@ -412,7 +412,7 @@ lib/
 ```
 
 > [!NOTE]
-> 
+>
 > Some source files may only contain a single include directive of the
 > corresponding (public/internal) header. This is deliberate to ensure the
 > header is standalone-includeable.
@@ -451,7 +451,7 @@ lib/
     - Only export an extern variable when it is required by the public API.
 
 > [!NOTE]
-> 
+>
 > - `inline` variables require C++17 and newer. - `constexpr` implies `inline`
 > for variables only in C++17 and newer. - Before C++17, non-`inline`
 > `constexpr` variables which are ODR-used require an out-of-line definition. -
@@ -523,14 +523,14 @@ mongocxx library.
       behavior).
 
 > [!NOTE]
-> 
+>
 > Use implicit single-argument constructors and UDCFs sparingly. Prefer explicit
 > to implicit. The "convenience" of supporting implicit conversion must
 > sufficiently outweigh the possibility of introducing ambiguous overloads, both
 > with types provided by the library and types defined by the user.
 
 > [!NOTE]
-> 
+>
 > Application of `explicit` to non-single-argument constructors is beyond the
 > scope of these guidelines.
 
@@ -571,7 +571,7 @@ if /* constexpr */ (is_nothrow<T>::value) {
     - `std::hash<T>::operator()`.
 
 > [!NOTE]
-> 
+>
 > Support for non-throwing overloads of throwing functions (e.g. as implemented
 > by `std::filesystem`) is currently out-of-scope for these guidelines and the
 > codebase.
@@ -643,6 +643,6 @@ private:
 ```
 
 > [!IMPORTANT]
-> 
+>
 > Any non-defaulted special member function MUST be defined out-of-line as an
 > exported ABI function to support ABI compatibility.

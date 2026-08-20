@@ -138,7 +138,7 @@ class structured_log_entry {
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) message() const;
 
     ///
-    /// Return an owned copy of the message as a BSON document.
+    /// Return a copy of the message as a BSON document.
     ///
     /// Backed by `mongoc_structured_log_entry_message_as_bson`. Unlike the entry itself, the
     /// returned value may outlive the handler invocation.

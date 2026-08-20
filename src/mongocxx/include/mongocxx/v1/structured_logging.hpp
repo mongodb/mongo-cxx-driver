@@ -107,13 +107,13 @@ class structured_logging {
     /// Set the maximum (least severe) level emitted for a single component.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(structured_logging&)
-    max_level_for_component(v1::structured_log_component component, v1::structured_log_level level);
+    max_level_for_component(v1::structured_log_component component, v1::structured_log_level v);
 
     ///
     /// Return the maximum level configured for a single component, if any was set on this object.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::structured_log_level>)
-    max_level_for_component(v1::structured_log_component component) const;
+    max_level_for_component(v1::structured_log_component v) const;
 
     ///
     /// Set the maximum (least severe) level emitted for all components.
@@ -132,7 +132,7 @@ class structured_logging {
     ///
     /// Applied after any programmatic level settings, so environment values take precedence.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(structured_logging&) max_levels_from_env(bool toggle);
+    MONGOCXX_ABI_EXPORT_CDECL(structured_logging&) max_levels_from_env(bool v);
 
     ///
     /// Set the maximum length (in bytes) of an embedded document before truncation.
@@ -151,7 +151,7 @@ class structured_logging {
     /// Applied after any programmatic document-length setting, so the environment value takes
     /// precedence.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(structured_logging&) max_document_length_from_env(bool toggle);
+    MONGOCXX_ABI_EXPORT_CDECL(structured_logging&) max_document_length_from_env(bool v);
 
     class internal;
 };

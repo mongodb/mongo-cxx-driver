@@ -9,19 +9,6 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ## 4.6.0 [Unreleased]
 
-<!-- Will contain entries for the next minor release. -->
-
-## 4.5.0
-
-### Added
-
-- `mongocxx::log_handler` (v1): a `std::function` type alias for
-  unstructured log message handlers.
-- `mongocxx::set_global_logger()` (v1) to configure the unstructured log message
-  handler at runtime.
-- `mongocxx::logger_guard` (v1): a scope guard to temporarily replace the current
-  unstructured log message handler.
-
 ### Added
 
 - Structured logging support (v1) wrapping libmongoc's per-client/per-pool structured
@@ -37,6 +24,14 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
     and all-component maximum levels, maximum document length, and environment
     overrides, applied per-client and per-pool via
     `structured_logging_opts()`.
+- `mongocxx::log_handler` (v1): a `std::function` type alias for
+  unstructured log message handlers.
+- `mongocxx::set_global_logger()` (v1) to configure the unstructured log message
+  handler at runtime.
+- `mongocxx::logger_guard` (v1): a scope guard to temporarily replace the current
+  unstructured log message handler.
+
+## 4.5.0
 
 ### Removed
 

@@ -22,6 +22,7 @@
 
 #include <array>
 #include <cstddef>
+#include <exception>
 #include <iostream>
 #include <utility>
 
