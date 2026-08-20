@@ -5,9 +5,10 @@ from shrub.v3.evg_command import KeyValueParam, expansions_update
 from shrub.v3.evg_task import EvgTask, EvgTaskRef
 
 from config_generator.components.funcs.compile import Compile
+from config_generator.components.funcs.csfle_setup import CSFLESetup
+from config_generator.components.funcs.csfle_teardown import CSFLETeardown
 from config_generator.components.funcs.fetch_det import FetchDET
 from config_generator.components.funcs.install_c_driver import InstallCDriver
-from config_generator.components.funcs.run_kms_servers import RunKMSServers
 from config_generator.components.funcs.setup import Setup
 from config_generator.components.funcs.start_mongod import StartMongod
 from config_generator.components.funcs.test import Test
@@ -150,8 +151,9 @@ def tasks():
                 InstallCDriver.call(vars=icd_vars),
                 Compile.call(polyfill=polyfill, vars=compile_vars),
                 FetchDET.call(),
-                RunKMSServers.call(),
+                CSFLESetup.call(),
                 Test.call(vars=test_vars | ({'use_mongocryptd': True} if with_csfle == 'crypt' else {})),
+                CSFLETeardown.call(),
             ]
 
             # PowerPC and zSeries are limited resources.

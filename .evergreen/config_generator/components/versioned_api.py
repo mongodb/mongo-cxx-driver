@@ -4,9 +4,10 @@ from shrub.v3.evg_build_variant import BuildVariant
 from shrub.v3.evg_task import EvgTask, EvgTaskRef
 
 from config_generator.components.funcs.compile import Compile
+from config_generator.components.funcs.csfle_setup import CSFLESetup
+from config_generator.components.funcs.csfle_teardown import CSFLETeardown
 from config_generator.components.funcs.fetch_c_driver_source import FetchCDriverSource
 from config_generator.components.funcs.fetch_det import FetchDET
-from config_generator.components.funcs.run_kms_servers import RunKMSServers
 from config_generator.components.funcs.setup import Setup
 from config_generator.components.funcs.start_mongod import StartMongod
 from config_generator.components.funcs.test import Test
@@ -77,8 +78,9 @@ def tasks():
                         FetchCDriverSource.call(),
                         Compile.call(build_type=build_type, compiler=compiler, vars=compile_vars),
                         FetchDET.call(),
-                        RunKMSServers.call(),
+                        CSFLESetup.call(),
                         Test.call(build_type=build_type, compiler=compiler, vars=test_vars),
+                        CSFLETeardown.call(),
                     ],
                 )
             )

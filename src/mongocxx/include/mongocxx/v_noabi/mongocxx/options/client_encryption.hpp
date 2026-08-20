@@ -115,16 +115,41 @@ class client_encryption {
     ///
     /// Sets the KMS providers to use for client side encryption.
     ///
-    /// Multiple KMS providers may be specified. Supported KMS providers are
-    /// "aws", "azure", "gcp", "kmip", and "local". The kmsProviders map values differ
-    /// by provider:
+    /// Multiple KMS providers may be specified. KMS providers are specified as a string of the form
+    /// `<KMS-provider-type>` or `<KMS-provider-type>:<KMS-provider-name>`. The supported KMS provider types are `aws`,
+    /// `azure`, `gcp`, `local`, and `kmip`. The optional name enables configuring multiple KMS providers with the same
+    /// KMS provider type (e.g. `aws:name1` and `aws:name2` can refer to different AWS accounts). At least one KMS
+    /// provider must be specified.
+    ///
+    /// Supported forms of the KMS provider type `aws` include:
     ///
     /// ```
     /// aws: {
-    ///   accessKeyId: String,
-    ///   secretAccessKey: String
+    ///    accessKeyId: String,
+    ///    secretAccessKey: String
     /// }
     ///
+    /// // To pass temporary credentials:
+    /// aws: {
+    ///    accessKeyId: String,
+    ///    secretAccessKey: String,
+    ///    sessionToken: String
+    /// }
+    ///
+    /// // To request credentials from the environment:
+    /// aws: {}
+    /// ```
+    ///
+    /// Supported forms of the KMS provider type `local` include:
+    /// ```
+    /// local: {
+    ///    // key is used to encrypt/decrypt data keys:
+    ///    key: "<96 byte BSON binary of subtype 0>" or String // May be passed as a base64 encoded string.
+    /// }
+    /// ```
+    ///
+    /// Supported forms of the KMS provider type `azure` include:
+    /// ```
     /// azure: {
     ///    tenantId: String,
     ///    clientId: String,
@@ -132,18 +157,49 @@ class client_encryption {
     ///    identityPlatformEndpoint: Optional<String> // Defaults to login.microsoftonline.com
     /// }
     ///
+    /// // To pass an accessToken directly:
+    /// azure: {
+    ///    accessToken: String
+    /// }
+    ///
+    /// // To request credentials from the environment:
+    /// azure: {}
+    /// ```
+    ///
+    /// Supported forms of the KMS provider type `gcp` include:
+    /// ```
     /// gcp: {
     ///    email: String,
     ///    privateKey: byte[] or String, // May be passed as a base64 encoded string.
     ///    endpoint: Optional<String> // Defaults to oauth2.googleapis.com
     /// }
     ///
+    /// // To pass an accessToken directly:
+    /// gcp: {
+    ///    accessToken: String
+    /// }
+    ///
+    /// // To request credentials from the environment:
+    /// gcp: {}
+    /// ```
+    ///
+    /// Supported forms of the KMS provider type `kmip` include:
+    /// ```
     /// kmip: {
     ///    endpoint: String
     /// }
+    /// ```
     ///
-    /// local: {
-    ///   key: byte[96] // The master key used to encrypt/decrypt data keys.
+    /// KMS providers may include an optional name suffix separated with a colon. This enables configuring multiple KMS
+    /// providers with the same KMS provider type. Example:
+    /// ```
+    /// "aws:name1": {
+    ///    accessKeyId: String,
+    ///    secretAccessKey: String
+    /// },
+    /// "aws:name2": {
+    ///    accessKeyId: String,
+    ///    secretAccessKey: String
     /// }
     /// ```
     ///
