@@ -116,6 +116,10 @@ client::client(v_noabi::uri const& uri, options::client const& options) {
         v1::client::internal::set_oidc_callback(_client, *opts);
     }
 
+    if (auto const& opts = options.structured_logging_opts()) {
+        v1::client::internal::set_structured_logging(_client, *opts);
+    }
+
     if (auto const& opts = options.auto_encryption_opts()) {
         bson_error_t error = {};
 

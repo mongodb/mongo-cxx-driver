@@ -249,6 +249,12 @@ separated from `prelude.hpp` by a blank comment line:
 
 This applies to headers under both `bsoncxx/v1/` and `mongocxx/v1/`.
 
+Headers under `v_noabi/` use the `config/prelude.hpp` and `config/postlude.hpp`
+macro guards instead of the `v1/detail/` variants. A pure re-export normal
+header (see
+[Re-exporting a Stable (v1) API Through v_noabi](#re-exporting-a-stable-v1-api-through-v_noabi))
+declares nothing of its own and therefore needs no macro guards at all.
+
 #### Stable ABI Headers
 
 Headers under `vN/` directories provide stable ABI interfaces declared within
@@ -264,6 +270,72 @@ interfaces.
 > Headers under `v_noabi/` MUST be placed under the additional `bsoncxx/` (or
 > `mongocxx`) subdirectory for backward compatibility with unstable ABI header
 > direct include style: `#include <bsoncxx/document/element.hpp>`.
+
+#### Re-exporting a Stable (v1) API Through v_noabi
+
+New features are declared in the stable ABI namespace (`v1`) and typically have
+**no** distinct `v_noabi` implementation. For such a feature, the `v_noabi/`
+headers exist **only** to provide the root namespace redeclarations that alias
+the `v1` entity (e.g. `mongocxx::client_bulk_write` →
+`mongocxx::v1::client_bulk_write`). The `client_bulk_write` component is the
+canonical reference for this pattern.
+
+A v1-only entity is not a `v_noabi` entity, so it is a mistake to have the
+`v_noabi/` headers follow `v_noabi` conventions. For a v1-only entity `foo`:
+
+- The `v_noabi/` re-export headers should not declare anything in the `v_noabi`
+  namespace. Provide only the root namespace redeclaration (`using v1::foo;`). A
+  `mongocxx::v_noabi::foo` redeclaration is wrong.
+- The `v_noabi/` re-export headers should mirror the directory layout and name
+  of the `v1` component. Do not introduce `v_noabi`-only structure that the `v1`
+  component does not have (e.g. an `options/` grouping subdirectory): a
+  `mongocxx::v1::foo` entity is re-exported by
+  `v_noabi/<library>/foo{-fwd}.hpp`, not
+  `v_noabi/<library>/some_group/foo{-fwd}.hpp`.
+- The root namespace redeclarations follow the usual split (see [Component
+  Design](#component-design)): class-type and enumeration redeclarations belong
+  in the forward header, function and variable redeclarations belong in the
+  normal header.
+
+The forward header includes the `v1` forward header, wraps the redeclaration in
+the `config/prelude.hpp` / `config/postlude.hpp` macro guards, and redeclares
+the `v1` class/enum types in the root namespace:
+
+```cpp
+#pragma once
+
+#include <mongocxx/v1/foo-fwd.hpp> // IWYU pragma: export
+
+#include <mongocxx/config/prelude.hpp>
+
+namespace mongocxx {
+
+using v1::foo;
+
+} // namespace mongocxx
+
+#include <mongocxx/config/postlude.hpp>
+```
+
+The normal header includes the (root) forward header and the `v1` normal header,
+both annotated `// IWYU pragma: export`. When the forward header already
+redeclared every entity — i.e. the component provides only class/enum types —
+the normal header needs no macro guards and no further declarations; it exists
+solely to pull in the `v1` definitions:
+
+```cpp
+#pragma once
+
+#include <mongocxx/foo-fwd.hpp> // IWYU pragma: export
+
+//
+
+#include <mongocxx/v1/foo.hpp> // IWYU pragma: export
+```
+
+If the component also provides free functions or variables, redeclare those in
+the root namespace within the normal header (wrapped in the `config/` macro
+guards), but still do NOT add any `v_noabi` namespace block.
 
 #### Generated Headers
 
@@ -380,11 +452,10 @@ lib/
 
 > [!NOTE]
 >
-> - `inline` variables require C++17 and newer.
-> - `constexpr` implies `inline` for variables only in C++17 and newer.
-> - Before C++17, non-`inline` `constexpr` variables which are ODR-used
->   require an out-of-line definition.
-> - Use `BSONCXX_PRIVATE_INLINE_CXX17` for pre-C++17 compatibility.
+> - `inline` variables require C++17 and newer. - `constexpr` implies `inline`
+> for variables only in C++17 and newer. - Before C++17, non-`inline`
+> `constexpr` variables which are ODR-used require an out-of-line definition. -
+> Use `BSONCXX_PRIVATE_INLINE_CXX17` for pre-C++17 compatibility.
 
 ### Export Macros
 
@@ -399,8 +470,8 @@ lib/
     - Polymorphic classes are exported using a different method explained below.
 - Use `BSONCXX_ABI_EXPORT` to export variables.
 - All (and only) polymorphic classes (i.e. classes which declare `virtual`
-  member functions or inherit from a polymorphic class, e.g. exceptions)
-  should be exported by being declared with `BSONCXX_ABI_EXPORT`.
+  member functions or inherit from a polymorphic class, e.g. exceptions) should
+  be exported by being declared with `BSONCXX_ABI_EXPORT`.
     - `BSONCXX_ABI_EXPORT` must be applied to the _first_ declaration of the
       class (e.g. in the forward header when applicable).
     - Member functions within an exported class should not use
@@ -532,6 +603,9 @@ if /* constexpr */ (is_nothrow<T>::value) {
     - Use `T` instead of `T const&` for "cheap-to-copy" parameters (trivially
       copyable and `sizeof(T) <= 2u * sizeof(void*)`).
 - Avoid using default arguments for parameters of exported ABI functions.
+- For a setter that simply stores its single argument, name the parameter `v`
+  rather than repeating the setter's name (e.g. `foo(T v)`, not `foo(T foo)`),
+  for consistency with the v1 API's avoidance of redundant setter identifiers.
 
 ### Declaration Order
 
