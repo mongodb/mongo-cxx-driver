@@ -80,4 +80,4 @@ required-environments = [
     "platform_system == 'Windows' and platform_machine == 'AMD64'",
 ]
 
-exclude-newer = "1 day"
+exclude-newer = "1 week"
