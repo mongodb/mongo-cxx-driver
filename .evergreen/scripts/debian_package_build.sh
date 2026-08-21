@@ -13,6 +13,7 @@ on_exit() {
     echo "Dumping debootstrap.log"
     cat ./unstable-chroot/debootstrap/debootstrap.log
   fi
+  sudo umount ./unstable-chroot/proc ./unstable-chroot/sys ./unstable-chroot/dev/pts
 }
 trap on_exit EXIT
 
@@ -50,6 +51,9 @@ cd ..
 git clone https://salsa.debian.org/installer-team/debootstrap.git debootstrap.git
 export DEBOOTSTRAP_DIR=$(pwd)/debootstrap.git
 sudo -E ./debootstrap.git/debootstrap --variant=buildd unstable ./unstable-chroot/ http://cdn-aws.deb.debian.org/debian
+sudo mount proc ./unstable-chroot/proc -t proc
+sudo mount sysfs ./unstable-chroot/sys -t sysfs
+sudo mount devpts ./unstable-chroot/dev/pts -t devpts
 cp -a mongo-cxx-driver ./unstable-chroot/tmp/
 sudo DEB_BUILD_PROFILES="${DEB_BUILD_PROFILES}" chroot ./unstable-chroot /bin/bash -c "
   (apt-get install -y ca-certificates cmake debhelper doxygen git libsasl2-dev libsnappy-dev libssl-dev libutf8proc-dev pkgconf zlib1g-dev build-essential curl fakeroot furo git-buildpackage python3-sphinx python3-sphinx-design python3-packaging && \
