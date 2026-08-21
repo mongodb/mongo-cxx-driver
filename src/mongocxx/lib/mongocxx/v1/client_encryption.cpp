@@ -42,6 +42,7 @@
 #include <string>
 
 #include <bsoncxx/private/bson.hh>
+#include <bsoncxx/private/suppress_deprecation_warnings.hh>
 
 #include <mongocxx/private/mongoc.hh>
 #include <mongocxx/private/scoped_bson.hh>
@@ -183,6 +184,8 @@ encrypt_opts_ptr_type to_mongoc(v1::encrypt_options const& opts) {
         libmongoc::client_encryption_encrypt_opts_set_range_opts(ptr, range_opts);
     }
 
+    /* The text_* APIs are deprecated by C Driver 2.4.0 in favor of the string_* APIs. See CXX-3467. */
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
     if (auto const& opt = v1::encrypt_options::internal::text_opts(opts)) {
         struct text_opts_deleter {
             void operator()(mongoc_client_encryption_encrypt_text_opts_t* ptr) noexcept {
@@ -301,6 +304,7 @@ encrypt_opts_ptr_type to_mongoc(v1::encrypt_options const& opts) {
 
         libmongoc::client_encryption_encrypt_opts_set_text_opts(ptr, text_opts);
     }
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
 
     return ret;
 }
