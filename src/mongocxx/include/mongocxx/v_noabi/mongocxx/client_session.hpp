@@ -115,13 +115,8 @@ class client_session {
     ///
     /// @throws mongocxx::v_noabi::operation_exception if this session is not a snapshot session.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::b_timestamp> snapshot_time() const {
-        if (auto const st = _session.snapshot_time()) {
-            return bsoncxx::v_noabi::from_v1(*st);
-        }
-
-        return {};
-    }
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::b_timestamp>)
+    snapshot_time() const;
 
     ///
     /// Get the server_id the session is pinned to. The server_id is zero if the session is not

@@ -195,7 +195,7 @@ encrypt_opts_ptr_type to_mongoc(v_noabi::options::encrypt const& opts) {
         libmongoc::client_encryption_encrypt_opts_set_range_opts(ptr, range_opts);
     }
 
-    /* The text_* APIs are deprecated by C Driver 2.4.0 in favor of the string_* APIs. */
+    /* The text_* APIs are deprecated by C Driver 2.4.0 in favor of the string_* APIs. See CXX-3467. */
     BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
     if (auto const& opt = opts.text_opts()) {
         struct text_opts_deleter {

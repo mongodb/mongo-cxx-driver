@@ -244,7 +244,7 @@ MONGOCXX_PRIVATE_MOCKED_EXPORT_DEFN(client_encryption_encrypt_range_opts_set_min
 MONGOCXX_PRIVATE_MOCKED_EXPORT_DEFN(client_encryption_encrypt_range_opts_set_precision);
 MONGOCXX_PRIVATE_MOCKED_EXPORT_DEFN(client_encryption_encrypt_range_opts_set_sparsity);
 MONGOCXX_PRIVATE_MOCKED_EXPORT_DEFN(client_encryption_encrypt_range_opts_set_trim_factor);
-/* The text_* APIs are deprecated by C Driver 2.4.0 in favor of the string_* APIs. */
+/* The text_* APIs are deprecated by C Driver 2.4.0 in favor of the string_* APIs. See CXX-3467. */
 BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
 MONGOCXX_PRIVATE_MOCKED_EXPORT_DEFN(client_encryption_encrypt_text_opts_destroy);
 MONGOCXX_PRIVATE_MOCKED_EXPORT_DEFN(client_encryption_encrypt_text_opts_new);
