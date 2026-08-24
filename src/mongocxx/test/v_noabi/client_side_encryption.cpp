@@ -3450,6 +3450,10 @@ TEST_CASE("16. Rewrap. Case 2: RewrapManyDataKeyOpts.provider is not optional", 
 }
 
 TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
+    // TODO: unskip as part of CXX-3467. The textPreview ("Queryable Encryption" text search) API is
+    // deprecated and these tests are skipped until the API situation is resolved.
+    SKIP("textPreview API is deprecated (unskip as part of CXX-3467)");
+
     CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
 
     mongocxx::client conn{

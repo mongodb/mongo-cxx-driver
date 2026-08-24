@@ -82,14 +82,14 @@ if [[ "${SKIP_INSTALL_LIBMONGOCRYPT:-}" != "1" ]]; then
 
   if [[ "${AVOID_COMPILE_LIBMONGOCRYPT:?}" == "1" ]]; then
     (
-      git clone -q https://github.com/mongodb/libmongocrypt --branch 1.18.1 --depth 1
+      git clone -q https://github.com/mongodb/libmongocrypt --branch 1.20.2 --depth 1
 
       declare -a crypt_cmake_flags=(
         "-DMONGOCRYPT_MONGOC_DIR=${mongoc_idir:?}"
         "-DBUILD_TESTING=OFF"
         "-DENABLE_ONLINE_TESTS=OFF"
         "-DENABLE_MONGOC=OFF"
-        "-DBUILD_VERSION=1.18.1"
+        "-DBUILD_VERSION=1.20.2"
         # libmongocrypt does not use C++20 modules. Disable module scanning to avoid requiring clang-scan-deps
         # (not present on all CI images), which CMake 4.4+ invokes by default for C++20 targets.
         "-DCMAKE_CXX_SCAN_FOR_MODULES=OFF"
