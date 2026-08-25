@@ -1387,7 +1387,10 @@ std::map<std::pair<bsoncxx::stdx::string_view, bsoncxx::stdx::string_view>, bson
          "collection.listIndexNames optional helper is not supported"},
 };
 
-void run_tests(bsoncxx::stdx::string_view test_description, document::view test) {
+void run_tests(
+    bsoncxx::stdx::string_view test_description,
+    document::view test,
+    bsoncxx::stdx::optional<document::value> const& cluster_time) {
     REQUIRE(test["tests"]);
 
     for (auto const& ele : test["tests"].get_array().value) {
@@ -1427,7 +1430,9 @@ void run_tests(bsoncxx::stdx::string_view test_description, document::view test)
                 // test without clearing the existing entity map (unlike top-level "createEntities").
                 if (string::to_string(ops["name"].get_string().value) == "createEntities") {
                     auto const entities = ops["arguments"]["entities"].get_array().value;
-                    REQUIRE(std::all_of(std::begin(entities), std::end(entities), add_to_map));
+                    REQUIRE(std::all_of(std::begin(entities), std::end(entities), [&](array::element const& obj) {
+                        return add_to_map(obj, cluster_time);
+                    }));
                     continue;
                 }
 
@@ -1539,7 +1544,7 @@ void run_tests_in_file(std::string const& test_path) {
     CAPTURE(description);
     auto const cluster_time = load_initial_data(test_spec_view);
     create_entities(test_spec_view, cluster_time);
-    run_tests(description, test_spec_view);
+    run_tests(description, test_spec_view, cluster_time);
 }
 
 // Check the environment for the specified variable; if present, extract it
