@@ -16,8 +16,7 @@ include (MakeDistFiles)
 
 function (MAKE_DIST PACKAGE_PREFIX MONGOCXX_SOURCE_DIR BUILD_SOURCE_DIR)
 
-   set (CMAKE_COMMAND_TMP "")
-   set (CMAKE_COMMAND_TMP ${CMAKE_COMMAND} -E env)
+   set (CMAKE_ENV_COMMAND ${CMAKE_COMMAND} -E env)
 
    # -- Remove any existing packaging directory.
 
@@ -69,7 +68,7 @@ function (MAKE_DIST PACKAGE_PREFIX MONGOCXX_SOURCE_DIR BUILD_SOURCE_DIR)
 
    # Set `COPYFILE_DISABLE=1` to prevent macOS from adding AppleDouble `._<name>` files.
    execute_process_and_check_result (COMMAND
-      ${CMAKE_COMMAND_TMP} COPYFILE_DISABLE=1 tar cf ${PACKAGE_PREFIX}.tar ${PACKAGE_PREFIX}
+      ${CMAKE_ENV_COMMAND} COPYFILE_DISABLE=1 tar cf ${PACKAGE_PREFIX}.tar ${PACKAGE_PREFIX}
       WORKING_DIRECTORY .
       ERROR_MSG "tar command to create ${PACKAGE_PREFIX}.tar failed."
    )
@@ -77,7 +76,7 @@ function (MAKE_DIST PACKAGE_PREFIX MONGOCXX_SOURCE_DIR BUILD_SOURCE_DIR)
    # -- Compress the tarball with gzip
 
    execute_process_and_check_result (COMMAND
-      ${CMAKE_COMMAND_TMP} gzip -f ${PACKAGE_PREFIX}.tar
+      ${CMAKE_ENV_COMMAND} gzip -f ${PACKAGE_PREFIX}.tar
       WORKING_DIRECTORY .
       ERROR_MSG "gzip command to create ${PACKAGE_PREFIX}.tar.gz failed."
    )
