@@ -67,8 +67,9 @@ function (MAKE_DIST PACKAGE_PREFIX MONGOCXX_SOURCE_DIR BUILD_SOURCE_DIR)
 
    # -- Create the tarball.
 
+   # Set `COPYFILE_DISABLE=1` to prevent macOS from adding AppleDouble `._<name>` files.
    execute_process_and_check_result (COMMAND
-      ${CMAKE_COMMAND} -E tar cf ${PACKAGE_PREFIX}.tar ${PACKAGE_PREFIX}
+      ${CMAKE_COMMAND_TMP} COPYFILE_DISABLE=1 tar cf ${PACKAGE_PREFIX}.tar ${PACKAGE_PREFIX}
       WORKING_DIRECTORY .
       ERROR_MSG "tar command to create ${PACKAGE_PREFIX}.tar failed."
    )
