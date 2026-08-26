@@ -58,6 +58,10 @@ function(add_examples_executable source)
     # path/to/source.cpp -> source
     get_filename_component(name ${source} NAME_WE)
 
+    if ("${name}" STREQUAL "")
+        message(FATAL_ERROR "could not derive a target name from example source: ${source}")
+    endif ()
+
     # path/to/source.cpp -> path/to
     get_filename_component(subdir ${source} DIRECTORY)
 
@@ -163,6 +167,10 @@ function (add_abi_examples)
 
         # path/to/source.cpp -> source
         get_filename_component(name ${source} NAME_WE)
+
+        if ("${name}" STREQUAL "")
+            message(FATAL_ERROR "could not derive a component name from example source: ${source}")
+        endif ()
 
         # path/to/source.cpp -> path/to
         get_filename_component(subdir ${source} DIRECTORY)
