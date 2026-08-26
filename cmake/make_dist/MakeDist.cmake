@@ -66,18 +66,22 @@ function (MAKE_DIST PACKAGE_PREFIX MONGOCXX_SOURCE_DIR BUILD_SOURCE_DIR)
 
    # -- Create the tarball.
 
-   # Set `COPYFILE_DISABLE=1` to prevent macOS from adding AppleDouble `._<name>` files.
    # Use the system `tar` rather than CMake's built-in (`cmake -E tar`) since CMake's built-in does not respect `COPYFILE_DISABLE`.
+   find_program (TAR_EXECUTABLE NAMES tar REQUIRED)
+   
+   # Set `COPYFILE_DISABLE=1` to prevent macOS from adding AppleDouble `._<name>` files.
    execute_process_and_check_result (COMMAND
-      ${CMAKE_ENV_COMMAND} COPYFILE_DISABLE=1 tar cf ${PACKAGE_PREFIX}.tar ${PACKAGE_PREFIX}
+      ${CMAKE_ENV_COMMAND} COPYFILE_DISABLE=1 ${TAR_EXECUTABLE} cf ${PACKAGE_PREFIX}.tar ${PACKAGE_PREFIX}
       WORKING_DIRECTORY .
       ERROR_MSG "tar command to create ${PACKAGE_PREFIX}.tar failed."
    )
 
    # -- Compress the tarball with gzip
 
+   find_program (GZIP_EXECUTABLE NAMES gzip REQUIRED)
+
    execute_process_and_check_result (COMMAND
-      ${CMAKE_ENV_COMMAND} gzip -f ${PACKAGE_PREFIX}.tar
+      ${CMAKE_ENV_COMMAND} ${GZIP_EXECUTABLE} -f ${PACKAGE_PREFIX}.tar
       WORKING_DIRECTORY .
       ERROR_MSG "gzip command to create ${PACKAGE_PREFIX}.tar.gz failed."
    )
