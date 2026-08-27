@@ -1,0 +1,26 @@
+var classmongocxx_1_1client__bulk__write =
+[
+    [ "delete_many_options", "classmongocxx_1_1client__bulk__write_1_1delete__many__options.html", "classmongocxx_1_1client__bulk__write_1_1delete__many__options" ],
+    [ "delete_one_options", "classmongocxx_1_1client__bulk__write_1_1delete__one__options.html", "classmongocxx_1_1client__bulk__write_1_1delete__one__options" ],
+    [ "exception", "classmongocxx_1_1client__bulk__write_1_1exception.html", "classmongocxx_1_1client__bulk__write_1_1exception" ],
+    [ "insert_one_options", "classmongocxx_1_1client__bulk__write_1_1insert__one__options.html", "classmongocxx_1_1client__bulk__write_1_1insert__one__options" ],
+    [ "options", "classmongocxx_1_1client__bulk__write_1_1options.html", "classmongocxx_1_1client__bulk__write_1_1options" ],
+    [ "replace_one_options", "classmongocxx_1_1client__bulk__write_1_1replace__one__options.html", "classmongocxx_1_1client__bulk__write_1_1replace__one__options" ],
+    [ "result", "classmongocxx_1_1client__bulk__write_1_1result.html", "classmongocxx_1_1client__bulk__write_1_1result" ],
+    [ "update_many_options", "classmongocxx_1_1client__bulk__write_1_1update__many__options.html", "classmongocxx_1_1client__bulk__write_1_1update__many__options" ],
+    [ "update_one_options", "classmongocxx_1_1client__bulk__write_1_1update__one__options.html", "classmongocxx_1_1client__bulk__write_1_1update__one__options" ],
+    [ "~client_bulk_write", "classmongocxx_1_1client__bulk__write.html#ae7834ed39d69a67abab2af64ce560c93", null ],
+    [ "client_bulk_write", "classmongocxx_1_1client__bulk__write.html#a75e8e6b7c3411c16b7ea1a3b1c122058", null ],
+    [ "client_bulk_write", "classmongocxx_1_1client__bulk__write.html#a06b455a4af5f0bd6b4e0ce5e73173e80", null ],
+    [ "append", "classmongocxx_1_1client__bulk__write.html#a9b474ff6b4c016d7e6f2197769aa02f4", null ],
+    [ "append", "classmongocxx_1_1client__bulk__write.html#a1f2cc07515798e6ca3a537f10e66405d", null ],
+    [ "append", "classmongocxx_1_1client__bulk__write.html#a11c2e630b52aacf4ae0c44496839a81d", null ],
+    [ "append", "classmongocxx_1_1client__bulk__write.html#a9dc2074bbf9080b04aa4f0b4b49bea3b", null ],
+    [ "append", "classmongocxx_1_1client__bulk__write.html#ac58e1e1e06fee78de8d91e0c5ada3dac", null ],
+    [ "append", "classmongocxx_1_1client__bulk__write.html#a6a62d941c15d962bbe1b62fddeeb7a9e", null ],
+    [ "append", "classmongocxx_1_1client__bulk__write.html#ada2aba80a99aee8ba17f43128f1a83bd", null ],
+    [ "append", "classmongocxx_1_1client__bulk__write.html#a7ab931c6ad656f60d4971005ff209d41", null ],
+    [ "execute", "classmongocxx_1_1client__bulk__write.html#ac486d691a09b350c0697c5a14a11af2c", null ],
+    [ "operator=", "classmongocxx_1_1client__bulk__write.html#ad47b096e6b04c2e8a29a7e1d335bcfb8", null ],
+    [ "operator=", "classmongocxx_1_1client__bulk__write.html#a43c94dc3e674a1e73c17c6a833de5607", null ]
+];

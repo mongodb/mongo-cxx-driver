@@ -1,0 +1,25 @@
+var classmongocxx_1_1v__noabi_1_1options_1_1auto__encryption =
+[
+    [ "ns_pair", "classmongocxx_1_1v__noabi_1_1options_1_1auto__encryption.html#a1e319325f741ef68cf1a716e3def1f42", null ],
+    [ "auto_encryption", "classmongocxx_1_1v__noabi_1_1options_1_1auto__encryption.html#a636c62421974ae89cbfdd25eb72a0421", null ],
+    [ "bypass_auto_encryption", "classmongocxx_1_1v__noabi_1_1options_1_1auto__encryption.html#a7a02822a10feb1eb85d1973d04799527", null ],
+    [ "bypass_auto_encryption", "classmongocxx_1_1v__noabi_1_1options_1_1auto__encryption.html#a9e3bef341c1e457eb77f4a0f40d322f8", null ],
+    [ "bypass_query_analysis", "classmongocxx_1_1v__noabi_1_1options_1_1auto__encryption.html#a6007b3abda5eeb776a39bdad8734ff42", null ],
+    [ "bypass_query_analysis", "classmongocxx_1_1v__noabi_1_1options_1_1auto__encryption.html#a9365d49b8196eaf252d18178a0e6887d", null ],
+    [ "encrypted_fields_map", "classmongocxx_1_1v__noabi_1_1options_1_1auto__encryption.html#ae4e25d75ccb3bfe00ccc587dc418600d", null ],
+    [ "encrypted_fields_map", "classmongocxx_1_1v__noabi_1_1options_1_1auto__encryption.html#a071ffa9217cad68140fd9fcb74957e88", null ],
+    [ "extra_options", "classmongocxx_1_1v__noabi_1_1options_1_1auto__encryption.html#ae502a1f9c912ffa31b8dc86b19b8cff9", null ],
+    [ "extra_options", "classmongocxx_1_1v__noabi_1_1options_1_1auto__encryption.html#aecc47a0eefd7a4197ca8f7fe7ca3c1c6", null ],
+    [ "key_vault_client", "classmongocxx_1_1v__noabi_1_1options_1_1auto__encryption.html#ac43fc86bc5d49a5856fbf2137afd650c", null ],
+    [ "key_vault_client", "classmongocxx_1_1v__noabi_1_1options_1_1auto__encryption.html#a6ad0193875150c4cf7ce807ceb5e0bb7", null ],
+    [ "key_vault_namespace", "classmongocxx_1_1v__noabi_1_1options_1_1auto__encryption.html#a14f624974dcade38785c2d4c6417a704", null ],
+    [ "key_vault_namespace", "classmongocxx_1_1v__noabi_1_1options_1_1auto__encryption.html#aa84426fa7592c9d596b697599e36771f", null ],
+    [ "key_vault_pool", "classmongocxx_1_1v__noabi_1_1options_1_1auto__encryption.html#ae0d17b6b0807d9f04f13757422c9e246", null ],
+    [ "key_vault_pool", "classmongocxx_1_1v__noabi_1_1options_1_1auto__encryption.html#a7cd491ef874ba1d42ffe6912f999c78a", null ],
+    [ "kms_providers", "classmongocxx_1_1v__noabi_1_1options_1_1auto__encryption.html#a5bb36b468dce89031967b2112d345e11", null ],
+    [ "kms_providers", "classmongocxx_1_1v__noabi_1_1options_1_1auto__encryption.html#a85573143b79441a75b3717b55f3fb870", null ],
+    [ "schema_map", "classmongocxx_1_1v__noabi_1_1options_1_1auto__encryption.html#a1c8865d65833c05706f0d31f213de48a", null ],
+    [ "schema_map", "classmongocxx_1_1v__noabi_1_1options_1_1auto__encryption.html#a07ca02df61847f032637ee967de8c583", null ],
+    [ "tls_opts", "classmongocxx_1_1v__noabi_1_1options_1_1auto__encryption.html#aadbf8ba3027c4916b7fdc88cac974b2f", null ],
+    [ "tls_opts", "classmongocxx_1_1v__noabi_1_1options_1_1auto__encryption.html#ad729621e301e1d676cfdf35b220d5c85", null ]
+];
