@@ -15,6 +15,12 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 - Bump the minimum required C Driver version to [2.5.0](https://github.com/mongodb/mongo-c-driver/releases/tag/2.5.0).
 
+## 4.5.1
+
+### Fixed
+
+- Validate database and collection name arguments against "." and NUL bytes.
+
 ## 4.5.0
 
 ### Added
