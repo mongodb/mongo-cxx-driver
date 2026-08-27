@@ -15,6 +15,7 @@
 #include <mongocxx/test/v_noabi/catch_helpers.hh>
 
 #include <chrono>
+#include <string>
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/element.hpp>
@@ -77,6 +78,29 @@ TEST_CASE("read_concern", "[mongocxx][v_noabi][collection]") {
 
     mongo_coll.read_concern(rc);
     REQUIRE(collection_set_rc_called);
+}
+
+// CXX-3552: the new name is handed to mongoc as a NUL-terminated C string, so an embedded NUL
+// would silently truncate it and rename the collection to a name other than the one requested.
+TEST_CASE("rename with an invalid name", "[mongocxx][v_noabi][collection]") {
+    MOCK_DATABASE;
+    MOCK_COLLECTION; // "mocked_collection.dummy_collection"
+
+    client mongo_client{uri{}};
+    auto mongo_coll = mongo_client["mocked_collection"]["dummy_collection"];
+    REQUIRE(mongo_coll);
+
+    auto collection_rename_with_opts = libmongoc::collection_rename_with_opts.create_instance();
+    collection_rename_with_opts
+        ->interpose([](::mongoc_collection_t*, char const*, char const*, bool, bson_t const*, bson_error_t*) -> bool {
+            FAIL("an invalid collection name must be rejected before reaching mongoc");
+            return false;
+        })
+        .forever();
+
+    std::string const name{"coll\0.bad", 9};
+
+    CHECK_THROWS_AS(mongo_coll.rename(bsoncxx::string::view_or_value{name}, false), logic_error);
 }
 
 TEST_CASE("aggregate", "[mongocxx][v_noabi][collection]") {

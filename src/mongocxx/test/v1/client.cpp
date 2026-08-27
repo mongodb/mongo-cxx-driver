@@ -114,12 +114,14 @@ TEST_CASE("error code", "[mongocxx][v1][client][error]") {
         CHECK(make_error_code(code::tls_not_enabled) == source_errc::mongocxx);
         CHECK(make_error_code(code::tls_not_supported) == source_errc::mongocxx);
         CHECK(make_error_code(code::append_metadata_failure) == source_errc::mongocxx);
+        CHECK(make_error_code(code::invalid_database_name) == source_errc::mongocxx);
     }
 
     SECTION("type") {
         CHECK(make_error_code(code::tls_not_enabled) == type_errc::invalid_argument);
         CHECK(make_error_code(code::tls_not_supported) == type_errc::invalid_argument);
         CHECK(make_error_code(code::append_metadata_failure) == type_errc::runtime_error);
+        CHECK(make_error_code(code::invalid_database_name) == type_errc::invalid_argument);
     }
 }
 
@@ -1281,6 +1283,39 @@ TEST_CASE("database", "[mongocxx][v1][client]") {
     auto const db = client[input];
 
     CHECK(v1::database::internal::as_mongoc(db) == database_id);
+}
+
+// CXX-3552: a database name is handed to mongoc as a NUL-terminated C string. Without validation,
+// an embedded NUL silently truncates the name and a "." is re-interpreted by the server as a
+// namespace separator, so the namespace used is not the one the caller asked for.
+TEST_CASE("database with an invalid name", "[mongocxx][v1][client]") {
+    client_mocks_type mocks;
+
+    auto get_database = libmongoc::client_get_database.create_instance();
+
+    get_database
+        ->interpose([&](mongoc_client_t*, char const*) -> mongoc_database_t* {
+            FAIL("an invalid database name must be rejected before reaching mongoc");
+            return nullptr;
+        })
+        .forever();
+
+    auto client = mocks.make();
+
+    SECTION("embedded NUL") {
+        std::string const name{"db\0.bad", 7};
+        bsoncxx::v1::stdx::string_view const view{name.data(), name.size()};
+
+        CHECK_THROWS_WITH_CODE(client.database(view), code::invalid_database_name);
+        CHECK_THROWS_WITH_CODE(client[view], code::invalid_database_name);
+    }
+
+    SECTION("dot") {
+        auto const name = GENERATE("db.bad", ".", "a.b");
+
+        CHECK_THROWS_WITH_CODE(client.database(name), code::invalid_database_name);
+        CHECK_THROWS_WITH_CODE(client[name], code::invalid_database_name);
+    }
 }
 
 TEST_CASE("list_databases", "[mongocxx][v1][client]") {

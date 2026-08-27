@@ -17,10 +17,13 @@
 #include <bsoncxx/v1/array/value.hpp>
 #include <bsoncxx/v1/document/value.hpp>
 #include <bsoncxx/v1/document/view.hpp>
+#include <bsoncxx/v1/stdx/string_view.hpp>
 
 #include <mongocxx/v1/detail/macros.hpp>
 
+#include <cstddef>
 #include <cstdint>
+#include <cstdlib>
 #include <utility>
 
 #include <bsoncxx/private/bson.hh>

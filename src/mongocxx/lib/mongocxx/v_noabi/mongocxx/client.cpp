@@ -68,6 +68,7 @@
 #include <bsoncxx/private/bson.hh>
 
 #include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/namespace_validation.hh>
 #include <mongocxx/private/scoped_bson.hh>
 #include <mongocxx/private/ssl.hh>
 
@@ -192,6 +193,10 @@ v_noabi::write_concern client::write_concern() const {
 }
 
 v_noabi::database client::database(bsoncxx::v_noabi::string::view_or_value name) const& {
+    if (!is_valid_database_name(name.view())) {
+        throw v_noabi::logic_error{v_noabi::error_code::k_invalid_parameter, "invalid database name"};
+    }
+
     // Backward compatibility: `database()` is not logically const.
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
     auto& c = const_cast<v1::client&>(check_moved_from(_client));

@@ -77,6 +77,7 @@
 #include <bsoncxx/private/immortal.hh>
 
 #include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/namespace_validation.hh>
 #include <mongocxx/private/scoped_bson.hh>
 #include <mongocxx/private/utility.hh>
 
@@ -1328,6 +1329,10 @@ void collection::rename(
     bsoncxx::v1::stdx::string_view new_name,
     bool drop_target,
     bsoncxx::v1::stdx::optional<v1::write_concern> const& write_concern) {
+    if (!is_valid_collection_name(new_name)) {
+        throw v1::exception::internal::make(code::invalid_collection_name);
+    }
+
     scoped_bson doc;
 
     if (write_concern) {
@@ -1342,6 +1347,10 @@ void collection::rename(
     bsoncxx::v1::stdx::string_view new_name,
     bool drop_target,
     bsoncxx::v1::stdx::optional<v1::write_concern> const& write_concern) {
+    if (!is_valid_collection_name(new_name)) {
+        throw v1::exception::internal::make(code::invalid_collection_name);
+    }
+
     scoped_bson doc;
 
     if (write_concern) {
@@ -1593,6 +1602,8 @@ std::error_category const& collection::error_category() {
                     return "zero";
                 case code::max_time_u32:
                     return "the \"maxTimeMS\" field must be representable as a `std::uint32_t`";
+                case code::invalid_collection_name:
+                    return "invalid collection name";
                 default:
                     return std::string(this->name()) + ':' + std::to_string(v);
             }
@@ -1606,6 +1617,7 @@ std::error_category const& collection::error_category() {
 
                 switch (static_cast<code>(v)) {
                     case code::max_time_u32:
+                    case code::invalid_collection_name:
                         return source == condition::mongocxx;
 
                     case code::zero:
@@ -1621,6 +1633,7 @@ std::error_category const& collection::error_category() {
 
                 switch (static_cast<code>(v)) {
                     case code::max_time_u32:
+                    case code::invalid_collection_name:
                         return type == condition::invalid_argument;
 
                     case code::zero:
