@@ -135,10 +135,16 @@ class client {
     ///
     /// Access the database with the given name.
     ///
+    /// @throws mongocxx::v1::exception with @ref mongocxx::v1::client::errc::invalid_database_name when `name`
+    /// is not a valid database name.
+    ///
     MONGOCXX_ABI_EXPORT_CDECL(v1::database) database(bsoncxx::v1::stdx::string_view name);
 
     ///
     /// Equivalent to `this->database(name)`.
+    ///
+    /// @throws mongocxx::v1::exception with @ref mongocxx::v1::client::errc::invalid_database_name when `name`
+    /// is not a valid database name.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(v1::database) operator[](bsoncxx::v1::stdx::string_view name);
 
@@ -303,6 +309,7 @@ class client {
         tls_not_enabled,         ///< TLS is not enabled by URI options.
         tls_not_supported,       ///< TLS is not supported by the mongoc library.
         append_metadata_failure, ///< Failed to append client metadata.
+        invalid_database_name,   ///< The database name is not valid.
     };
 
     ///

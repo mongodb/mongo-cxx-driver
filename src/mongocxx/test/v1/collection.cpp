@@ -23,6 +23,8 @@
 
 #include <mongocxx/private/mongoc.hh>
 
+#include <bsoncxx/test/system_error.hh>
+
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 
@@ -83,10 +85,12 @@ TEST_CASE("error code", "[mongocxx][v1][collection][error]") {
 
     SECTION("source") {
         CHECK(make_error_code(code::max_time_u32) == source_errc::mongocxx);
+        CHECK(make_error_code(code::invalid_collection_name) == source_errc::mongocxx);
     }
 
     SECTION("type") {
         CHECK(make_error_code(code::max_time_u32) == type_errc::invalid_argument);
+        CHECK(make_error_code(code::invalid_collection_name) == type_errc::invalid_argument);
     }
 }
 
@@ -190,6 +194,34 @@ TEST_CASE("default", "[mongocxx][v1][collection]") {
     collection const coll;
 
     CHECK_FALSE(coll);
+}
+
+// CXX-3552: the new name is handed to mongoc as a NUL-terminated C string, so an embedded NUL
+// would silently truncate it and rename the collection to a name other than the one requested.
+TEST_CASE("rename with an invalid name", "[mongocxx][v1][collection]") {
+    identity_type client_identity;
+    identity_type coll_identity;
+
+    auto const client_id = reinterpret_cast<mongoc_client_t*>(&client_identity);
+    auto const coll_id = reinterpret_cast<mongoc_collection_t*>(&coll_identity);
+
+    auto destroy = libmongoc::collection_destroy.create_instance();
+    destroy->interpose([&](mongoc_collection_t*) -> void {}).forever();
+
+    auto rename = libmongoc::collection_rename_with_opts.create_instance();
+    rename
+        ->interpose([&](mongoc_collection_t*, char const*, char const*, bool, bson_t const*, bson_error_t*) -> bool {
+            FAIL("an invalid collection name must be rejected before reaching mongoc");
+            return false;
+        })
+        .forever();
+
+    auto coll = collection::internal::make(coll_id, client_id);
+
+    std::string const name{"coll\0.bad", 9};
+    bsoncxx::v1::stdx::string_view const view{name.data(), name.size()};
+
+    CHECK_THROWS_WITH_CODE(coll.rename(view, false), code::invalid_collection_name);
 }
 
 } // namespace v1
