@@ -398,6 +398,7 @@ set_property(TEST unified_format_specs APPEND PROPERTY ENVIRONMENT
     "CLIENT_SIDE_ENCRYPTION_UNIFIED_TESTS_PATH=${DATA_SOURCE_DIR}/client_side_encryption/unified"
     "COLLECTION_MANAGEMENT_TESTS_PATH=${DATA_SOURCE_DIR}/collection-management"
     "CRUD_UNIFIED_TESTS_PATH=${DATA_SOURCE_DIR}/crud/unified"
+    "GRIDFS_UNIFIED_TESTS_PATH=${DATA_SOURCE_DIR}/gridfs/unified"
     "INDEX_MANAGEMENT_TESTS_PATH=${DATA_SOURCE_DIR}/index-management"
     "RETRYABLE_READS_UNIFIED_TESTS_PATH=${DATA_SOURCE_DIR}/retryable-reads/unified/"
     "RETRYABLE_WRITES_UNIFIED_TESTS_PATH=${DATA_SOURCE_DIR}/retryable-writes/unified/"
