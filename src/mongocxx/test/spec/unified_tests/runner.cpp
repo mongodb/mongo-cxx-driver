@@ -1610,7 +1610,14 @@ TEST_CASE("change streams unified format spec automated tests", "[unified_format
 }
 
 TEST_CASE("retryable reads unified format spec automated tests", "[unified_format_specs]") {
-    run_unified_format_tests_in_env_dir("RETRYABLE_READS_UNIFIED_TESTS_PATH");
+    std::set<bsoncxx::stdx::string_view> const unsupported_tests = {
+        // mongocxx::gridfs::bucket does not provide a download-by-filename API.
+        "gridfs-downloadByName.json",
+        // mongocxx::gridfs::bucket does not provide a download-by-filename API.
+        "gridfs-downloadByName-serverErrors.json",
+    };
+
+    run_unified_format_tests_in_env_dir("RETRYABLE_READS_UNIFIED_TESTS_PATH", unsupported_tests);
 }
 
 TEST_CASE("retryable writes unified format spec automated tests", "[unified_format_specs]") {
