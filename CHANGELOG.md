@@ -22,6 +22,10 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 - Validate key lengths.
 - Validate before casting length in `from_json`.
 
+### Fixed
+
+- Use the `$eq` operator when comparing a user-provided file ID in GridFS queries.
+
 ## 4.5.1
 
 ### Fixed
