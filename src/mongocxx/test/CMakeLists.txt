@@ -363,7 +363,7 @@ set_property(TEST crud_specs APPEND PROPERTY ENVIRONMENT
 )
 
 set_property(TEST gridfs_specs APPEND PROPERTY ENVIRONMENT
-    "GRIDFS_TESTS_PATH=${DATA_SOURCE_DIR}/gridfs"
+    "GRIDFS_LEGACY_TESTS_PATH=${DATA_SOURCE_DIR}/gridfs/legacy"
 )
 
 set_property(TEST client_side_encryption_specs APPEND PROPERTY ENVIRONMENT
