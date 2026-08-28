@@ -35,6 +35,7 @@
 
 #include <mongocxx/client.hpp>
 #include <mongocxx/database.hpp>
+#include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/gridfs_exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/gridfs/bucket.hpp>
@@ -599,6 +600,66 @@ TEST_CASE("mongocxx::gridfs::uploader::abort works", "[gridfs::uploader]") {
 
     REQUIRE(!db["fs.files"].find_one({}));
     REQUIRE(!db["fs.chunks"].find_one({}));
+}
+
+// GridFS spec prose test 1: "Aborting an upload with an injected file ID does not delete other
+// files' chunks".
+TEST_CASE("mongocxx::gridfs::uploader::abort with an injected file id", "[gridfs::uploader]") {
+    // Server 5.0 or newer is required: older versions reject document values with "$"-prefixed
+    // keys, so the injected file ID cannot be stored.
+    if (!test_util::server_version_is_at_least("5.0")) {
+        SKIP("$-prefixed keys in document values require server 5.0 or newer");
+    }
+
+    client client{uri{}, test_util::add_test_server_api()};
+    database db = client["gridfs_upload_abort_injected_id_test"];
+    gridfs::bucket bucket = db.gridfs_bucket();
+
+    db["fs.files"].drop();
+    db["fs.chunks"].drop();
+
+    // Upload "file1". Its chunks must survive the aborted upload below.
+    std::vector<std::uint8_t> const file1_bytes = {0x11, 0x22};
+    bsoncxx::types::bson_value::view const file1_id{bsoncxx::types::b_oid{bsoncxx::oid{}}};
+
+    {
+        auto uploader = bucket.open_upload_stream_with_id(file1_id, "file1");
+        uploader.write(file1_bytes.data(), file1_bytes.size());
+        uploader.close();
+    }
+
+    // Open an upload stream for "file2" with a file ID of `{ "$gt": MinKey }`
+    auto const file2_id_doc = make_document(kvp("$gt", bsoncxx::types::b_minkey{}));
+    bsoncxx::types::bson_value::view const file2_id{bsoncxx::types::b_document{file2_id_doc.view()}};
+
+    auto uploader = bucket.open_upload_stream_with_id(file2_id, "file2", options::gridfs::upload{}.chunk_size_bytes(2));
+
+    std::vector<std::uint8_t> const file2_bytes = {0x33, 0x44, 0x55, 0x66};
+    uploader.write(file2_bytes.data(), file2_bytes.size());
+
+    // abort() deletes the uploaded chunks of "file2"
+    uploader.abort();
+
+    // "file1" must still download intact.
+    {
+        std::ostringstream os;
+        bucket.download_to_stream(file1_id, &os);
+        auto const contents = os.str();
+        REQUIRE(std::vector<std::uint8_t>{contents.begin(), contents.end()} == file1_bytes);
+    }
+
+    // "file2" was never committed to the files collection, so it must not be downloadable. The
+    // injected ID must not match "file1"'s files collection document either.
+    {
+        std::ostringstream os;
+
+        try {
+            bucket.download_to_stream(file2_id, &os);
+            FAIL("expected downloading \"file2\" to throw");
+        } catch (gridfs_exception const& ex) {
+            REQUIRE(ex.code() == error_code::k_gridfs_file_not_found);
+        }
+    }
 }
 
 TEST_CASE("mongocxx::gridfs::uploader::write with arbitrary sizes", "[gridfs::uploader]") {
