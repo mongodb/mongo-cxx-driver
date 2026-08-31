@@ -15,6 +15,7 @@
 #include <mongocxx/test/v_noabi/client_helpers.hh>
 
 #include <algorithm>
+#include <array>
 #include <chrono>
 #include <cstdint>
 #include <cstdlib>
@@ -619,7 +620,7 @@ TEST_CASE("mongocxx::gridfs::uploader::abort with an injected file id", "[gridfs
     db["fs.chunks"].drop();
 
     // Upload "file1". Its chunks must survive the aborted upload below.
-    std::vector<std::uint8_t> const file1_bytes = {0x11, 0x22};
+    static constexpr std::array<std::uint8_t, 2> file1_bytes = {0x11, 0x22};
     bsoncxx::types::bson_value::view const file1_id{bsoncxx::types::b_oid{bsoncxx::oid{}}};
 
     {
@@ -634,7 +635,7 @@ TEST_CASE("mongocxx::gridfs::uploader::abort with an injected file id", "[gridfs
 
     auto uploader = bucket.open_upload_stream_with_id(file2_id, "file2", options::gridfs::upload{}.chunk_size_bytes(2));
 
-    std::vector<std::uint8_t> const file2_bytes = {0x33, 0x44, 0x55, 0x66};
+    static constexpr std::array<std::uint8_t, 4> file2_bytes = {0x33, 0x44, 0x55, 0x66};
     uploader.write(file2_bytes.data(), file2_bytes.size());
 
     // abort() deletes the uploaded chunks of "file2"
@@ -645,7 +646,9 @@ TEST_CASE("mongocxx::gridfs::uploader::abort with an injected file id", "[gridfs
         std::ostringstream os;
         bucket.download_to_stream(file1_id, &os);
         auto const contents = os.str();
-        REQUIRE(std::vector<std::uint8_t>{contents.begin(), contents.end()} == file1_bytes);
+        std::vector<std::uint8_t> const downloaded{contents.begin(), contents.end()};
+        REQUIRE(downloaded.size() == file1_bytes.size());
+        REQUIRE(std::equal(file1_bytes.begin(), file1_bytes.end(), downloaded.begin()));
     }
 
     // "file2" was never committed to the files collection, so it must not be downloadable. The
