@@ -9,7 +9,10 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ## 4.5.2 [Unreleased]
 
-<!-- Will contain entries for the next patch release. -->
+### Fixed
+
+- Validate key lengths.
+- Validate before casting length in `from_json`.
 
 ## 4.5.1
 
