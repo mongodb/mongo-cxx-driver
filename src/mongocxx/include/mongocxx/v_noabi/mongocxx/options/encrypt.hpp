@@ -35,6 +35,7 @@
 
 #include <mongocxx/options/range.hpp>
 #include <mongocxx/options/text.hpp>
+#include <mongocxx/string_options.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -88,6 +89,10 @@ class encrypt {
 
         if (_range_opts) {
             ret.range_opts(to_v1(*_range_opts));
+        }
+
+        if (_string_opts) {
+            ret.string_opts(*_string_opts);
         }
 
         if (_text_opts) {
@@ -267,6 +272,21 @@ class encrypt {
     }
 
     ///
+    /// Sets the string options to use for encryption.
+    ///
+    encrypt& string_opts(v1::string_options opts) {
+        _string_opts = std::move(opts);
+        return *this;
+    }
+
+    ///
+    /// Gets the current string options.
+    ///
+    bsoncxx::v_noabi::stdx::optional<v1::string_options> const& string_opts() const {
+        return _string_opts;
+    }
+
+    ///
     /// Sets the text options to use for encryption.
     ///
     encrypt& text_opts(v1::text_options opts) {
@@ -275,7 +295,7 @@ class encrypt {
     }
 
     ///
-    /// Gets the current text options
+    /// Gets the current text options.
     ///
     bsoncxx::v_noabi::stdx::optional<v1::text_options> const& text_opts() const {
         return _text_opts;
@@ -290,6 +310,7 @@ class encrypt {
     bsoncxx::v_noabi::stdx::optional<std::int64_t> _contention_factor;
     bsoncxx::v_noabi::stdx::optional<encryption_query_type> _query_type;
     bsoncxx::v_noabi::stdx::optional<options::range> _range_opts;
+    bsoncxx::v_noabi::stdx::optional<v1::string_options> _string_opts;
     bsoncxx::v_noabi::stdx::optional<v1::text_options> _text_opts;
 };
 

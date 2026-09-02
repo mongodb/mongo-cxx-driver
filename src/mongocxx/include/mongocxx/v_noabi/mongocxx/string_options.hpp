@@ -14,20 +14,16 @@
 
 #pragma once
 
-#include <mongocxx/v1/text_options.hpp> // IWYU pragma: export
+#include <mongocxx/string_options-fwd.hpp> // IWYU pragma: export
 
 //
 
-#include <mongocxx/v1/string_options.hpp>
+#include <mongocxx/v1/string_options.hpp> // IWYU pragma: export
 
-namespace mongocxx {
-namespace v1 {
-
-// The deprecated "textOpts" field is emitted as a "stringOpts" field. Conversion is lossless.
-class text_options::internal {
-   public:
-    static v1::string_options to_string_options(text_options const& self);
-};
-
-} // namespace v1
-} // namespace mongocxx
+///
+/// @file
+/// Provides @ref mongocxx::string_options.
+///
+/// @par Includes
+/// - @ref mongocxx/v1/string_options.hpp
+///

@@ -17,6 +17,7 @@
 //
 
 #include <mongocxx/v1/range_options.hpp>
+#include <mongocxx/v1/string_options.hpp>
 #include <mongocxx/v1/text_options.hpp>
 
 #include <bsoncxx/test/v1/types/value.hh>
@@ -80,6 +81,8 @@ TEST_CASE("default", "[mongocxx][v1][encrypt_options]") {
     CHECK_FALSE(opts.contention_factor().has_value());
     CHECK_FALSE(opts.query_type().has_value());
     CHECK_FALSE(opts.range_opts().has_value());
+    CHECK_FALSE(opts.string_opts().has_value());
+
     CHECK_FALSE(opts.text_opts().has_value());
 }
 
@@ -118,6 +121,7 @@ TEST_CASE("algorithm", "[mongocxx][v1][encrypt_options]") {
         T::k_unindexed,
         T::k_range,
         T::k_textPreview,
+        T::k_string,
     }));
 
     CHECK(encrypt_options{}.algorithm(v).algorithm() == v);
@@ -144,6 +148,9 @@ TEST_CASE("query_type", "[mongocxx][v1][encrypt_options]") {
         T::k_prefixPreview,
         T::k_suffixPreview,
         T::k_substringPreview,
+        T::k_prefix,
+        T::k_suffix,
+        T::k_substring,
     }));
 
     CHECK(encrypt_options{}.query_type(v).query_type() == v);
@@ -161,6 +168,18 @@ TEST_CASE("range_opts", "[mongocxx][v1][encrypt_options]") {
     CHECK(encrypt_options{}.range_opts(v).range_opts().value().precision() == v.precision());
 }
 
+TEST_CASE("string_opts", "[mongocxx][v1][encrypt_options]") {
+    using T = v1::string_options;
+
+    auto const v = GENERATE(values({
+        T{},
+        T{}.case_sensitive(false),
+        T{}.case_sensitive(true),
+    }));
+
+    CHECK(encrypt_options{}.string_opts(v).string_opts().value().case_sensitive() == v.case_sensitive());
+}
+
 TEST_CASE("text_opts", "[mongocxx][v1][encrypt_options]") {
     using T = v1::text_options;
 
@@ -171,6 +190,26 @@ TEST_CASE("text_opts", "[mongocxx][v1][encrypt_options]") {
     }));
 
     CHECK(encrypt_options{}.text_opts(v).text_opts().value().case_sensitive() == v.case_sensitive());
+}
+
+// `text_opts` and `string_opts` are distinct fields. `string_opts` takes precedence.
+TEST_CASE("text_opts and string_opts are distinct fields", "[mongocxx][v1][encrypt_options]") {
+    SECTION("each field is independent") {
+        auto const opts = encrypt_options{}
+                              .text_opts(v1::text_options{}.case_sensitive(true))
+                              .string_opts(v1::string_options{}.case_sensitive(false));
+
+        REQUIRE(opts.text_opts());
+        CHECK(opts.text_opts()->case_sensitive() == true);
+
+        REQUIRE(opts.string_opts());
+        CHECK(opts.string_opts()->case_sensitive() == false);
+    }
+
+    SECTION("setting one leaves the other unset") {
+        CHECK_FALSE(encrypt_options{}.text_opts(v1::text_options{}).string_opts().has_value());
+        CHECK_FALSE(encrypt_options{}.string_opts(v1::string_options{}).text_opts().has_value());
+    }
 }
 
 } // namespace v1

@@ -36,13 +36,13 @@
 #include <mongocxx/v1/range_options.hh>
 #include <mongocxx/v1/rewrap_many_datakey_options.hh>
 #include <mongocxx/v1/rewrap_many_datakey_result.hh>
+#include <mongocxx/v1/string_options.hh>
 #include <mongocxx/v1/text_options.hh>
 
 #include <memory>
 #include <string>
 
 #include <bsoncxx/private/bson.hh>
-#include <bsoncxx/private/suppress_deprecation_warnings.hh>
 
 #include <mongocxx/private/mongoc.hh>
 #include <mongocxx/private/scoped_bson.hh>
@@ -109,6 +109,9 @@ encrypt_opts_ptr_type to_mongoc(v1::encrypt_options const& opts) {
             case encrypt_options::encryption_algorithm::k_textPreview:
                 libmongoc::client_encryption_encrypt_opts_set_algorithm(ptr, MONGOC_ENCRYPT_ALGORITHM_TEXTPREVIEW);
                 break;
+            case encrypt_options::encryption_algorithm::k_string:
+                libmongoc::client_encryption_encrypt_opts_set_algorithm(ptr, MONGOC_ENCRYPT_ALGORITHM_STRING);
+                break;
             default:
                 // When no valid encryption algorithm is given, mongoc will return an error.
                 break;
@@ -136,6 +139,15 @@ encrypt_opts_ptr_type to_mongoc(v1::encrypt_options const& opts) {
             case encrypt_options::encryption_query_type::k_substringPreview:
                 libmongoc::client_encryption_encrypt_opts_set_query_type(
                     ptr, MONGOC_ENCRYPT_QUERY_TYPE_SUBSTRINGPREVIEW);
+                break;
+            case encrypt_options::encryption_query_type::k_prefix:
+                libmongoc::client_encryption_encrypt_opts_set_query_type(ptr, MONGOC_ENCRYPT_QUERY_TYPE_PREFIX);
+                break;
+            case encrypt_options::encryption_query_type::k_suffix:
+                libmongoc::client_encryption_encrypt_opts_set_query_type(ptr, MONGOC_ENCRYPT_QUERY_TYPE_SUFFIX);
+                break;
+            case encrypt_options::encryption_query_type::k_substring:
+                libmongoc::client_encryption_encrypt_opts_set_query_type(ptr, MONGOC_ENCRYPT_QUERY_TYPE_SUBSTRING);
                 break;
             default:
                 // // When no valid query type is given, libmongocrypt will return an error.
@@ -184,100 +196,113 @@ encrypt_opts_ptr_type to_mongoc(v1::encrypt_options const& opts) {
         libmongoc::client_encryption_encrypt_opts_set_range_opts(ptr, range_opts);
     }
 
-    /* The text_* APIs are deprecated by C Driver 2.4.0 in favor of the string_* APIs. See CXX-3467. */
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
-    if (auto const& opt = v1::encrypt_options::internal::text_opts(opts)) {
-        struct text_opts_deleter {
-            void operator()(mongoc_client_encryption_encrypt_text_opts_t* ptr) noexcept {
-                libmongoc::client_encryption_encrypt_text_opts_destroy(ptr);
+    // `string_opts` and the deprecated `text_opts` are distinct fields describing the same
+    // "stringOpts" field. When both are set, `string_opts` takes precedence.
+    auto const effective_string_opts = [&]() -> bsoncxx::v1::stdx::optional<v1::string_options> {
+        if (auto const& opt = v1::encrypt_options::internal::string_opts(opts)) {
+            return opt;
+        }
+
+        if (auto const& opt = v1::encrypt_options::internal::text_opts(opts)) {
+            return v1::text_options::internal::to_string_options(*opt);
+        }
+
+        return {};
+    }();
+
+    if (auto const& opt = effective_string_opts) {
+        struct string_opts_deleter {
+            void operator()(mongoc_client_encryption_encrypt_string_opts_t* ptr) noexcept {
+                libmongoc::client_encryption_encrypt_string_opts_destroy(ptr);
             }
         };
 
-        auto const text_opts_owner = std::unique_ptr<mongoc_client_encryption_encrypt_text_opts_t, text_opts_deleter>(
-            libmongoc::client_encryption_encrypt_text_opts_new());
-        auto const text_opts = text_opts_owner.get();
+        auto const string_opts_owner =
+            std::unique_ptr<mongoc_client_encryption_encrypt_string_opts_t, string_opts_deleter>(
+                libmongoc::client_encryption_encrypt_string_opts_new());
+        auto const string_opts = string_opts_owner.get();
 
         auto const case_sensitive = opt->case_sensitive();
         auto const diacritic_sensitive = opt->diacritic_sensitive();
-        auto const& prefix = v1::text_options::internal::prefix_opts(*opt);
-        auto const& suffix = v1::text_options::internal::suffix_opts(*opt);
-        auto const& substring = v1::text_options::internal::substring_opts(*opt);
+        auto const& prefix = v1::string_options::internal::prefix_opts(*opt);
+        auto const& suffix = v1::string_options::internal::suffix_opts(*opt);
+        auto const& substring = v1::string_options::internal::substring_opts(*opt);
 
         if (case_sensitive) {
-            libmongoc::client_encryption_encrypt_text_opts_set_case_sensitive(text_opts, case_sensitive.value());
+            libmongoc::client_encryption_encrypt_string_opts_set_case_sensitive(string_opts, case_sensitive.value());
         }
 
         if (diacritic_sensitive) {
-            libmongoc::client_encryption_encrypt_text_opts_set_diacritic_sensitive(
-                text_opts, diacritic_sensitive.value());
+            libmongoc::client_encryption_encrypt_string_opts_set_diacritic_sensitive(
+                string_opts, diacritic_sensitive.value());
         }
 
         if (prefix) {
             struct prefix_opts_deleter {
-                void operator()(mongoc_client_encryption_encrypt_text_prefix_opts_t* ptr) noexcept {
-                    libmongoc::client_encryption_encrypt_text_prefix_opts_destroy(ptr);
+                void operator()(mongoc_client_encryption_encrypt_string_prefix_opts_t* ptr) noexcept {
+                    libmongoc::client_encryption_encrypt_string_prefix_opts_destroy(ptr);
                 }
             };
 
             auto const prefix_opts_owner =
-                std::unique_ptr<mongoc_client_encryption_encrypt_text_prefix_opts_t, prefix_opts_deleter>(
-                    libmongoc::client_encryption_encrypt_text_prefix_opts_new());
+                std::unique_ptr<mongoc_client_encryption_encrypt_string_prefix_opts_t, prefix_opts_deleter>(
+                    libmongoc::client_encryption_encrypt_string_prefix_opts_new());
             auto const prefix_opts = prefix_opts_owner.get();
 
             auto const str_max_query_length = prefix->str_max_query_length();
             auto const str_min_query_length = prefix->str_min_query_length();
 
             if (str_max_query_length) {
-                libmongoc::client_encryption_encrypt_text_prefix_opts_set_str_max_query_length(
+                libmongoc::client_encryption_encrypt_string_prefix_opts_set_str_max_query_length(
                     prefix_opts, str_max_query_length.value());
             }
 
             if (str_min_query_length) {
-                libmongoc::client_encryption_encrypt_text_prefix_opts_set_str_min_query_length(
+                libmongoc::client_encryption_encrypt_string_prefix_opts_set_str_min_query_length(
                     prefix_opts, str_min_query_length.value());
             }
 
-            libmongoc::client_encryption_encrypt_text_opts_set_prefix(text_opts, prefix_opts);
+            libmongoc::client_encryption_encrypt_string_opts_set_prefix(string_opts, prefix_opts);
         }
 
         if (suffix) {
             struct suffix_opts_deleter {
-                void operator()(mongoc_client_encryption_encrypt_text_suffix_opts_t* ptr) noexcept {
-                    libmongoc::client_encryption_encrypt_text_suffix_opts_destroy(ptr);
+                void operator()(mongoc_client_encryption_encrypt_string_suffix_opts_t* ptr) noexcept {
+                    libmongoc::client_encryption_encrypt_string_suffix_opts_destroy(ptr);
                 }
             };
 
             auto const suffix_opts_owner =
-                std::unique_ptr<mongoc_client_encryption_encrypt_text_suffix_opts_t, suffix_opts_deleter>(
-                    libmongoc::client_encryption_encrypt_text_suffix_opts_new());
+                std::unique_ptr<mongoc_client_encryption_encrypt_string_suffix_opts_t, suffix_opts_deleter>(
+                    libmongoc::client_encryption_encrypt_string_suffix_opts_new());
             auto const suffix_opts = suffix_opts_owner.get();
 
             auto const str_max_query_length = suffix->str_max_query_length();
             auto const str_min_query_length = suffix->str_min_query_length();
 
             if (str_max_query_length) {
-                libmongoc::client_encryption_encrypt_text_suffix_opts_set_str_max_query_length(
+                libmongoc::client_encryption_encrypt_string_suffix_opts_set_str_max_query_length(
                     suffix_opts, str_max_query_length.value());
             }
 
             if (str_min_query_length) {
-                libmongoc::client_encryption_encrypt_text_suffix_opts_set_str_min_query_length(
+                libmongoc::client_encryption_encrypt_string_suffix_opts_set_str_min_query_length(
                     suffix_opts, str_min_query_length.value());
             }
 
-            libmongoc::client_encryption_encrypt_text_opts_set_suffix(text_opts, suffix_opts);
+            libmongoc::client_encryption_encrypt_string_opts_set_suffix(string_opts, suffix_opts);
         }
 
         if (substring) {
             struct substring_opts_deleter {
-                void operator()(mongoc_client_encryption_encrypt_text_substring_opts_t* ptr) noexcept {
-                    libmongoc::client_encryption_encrypt_text_substring_opts_destroy(ptr);
+                void operator()(mongoc_client_encryption_encrypt_string_substring_opts_t* ptr) noexcept {
+                    libmongoc::client_encryption_encrypt_string_substring_opts_destroy(ptr);
                 }
             };
 
             auto const substring_opts_owner =
-                std::unique_ptr<mongoc_client_encryption_encrypt_text_substring_opts_t, substring_opts_deleter>(
-                    libmongoc::client_encryption_encrypt_text_substring_opts_new());
+                std::unique_ptr<mongoc_client_encryption_encrypt_string_substring_opts_t, substring_opts_deleter>(
+                    libmongoc::client_encryption_encrypt_string_substring_opts_new());
             auto const substring_opts = substring_opts_owner.get();
 
             auto const str_max_query_length = substring->str_max_query_length();
@@ -285,26 +310,25 @@ encrypt_opts_ptr_type to_mongoc(v1::encrypt_options const& opts) {
             auto const str_max_length = substring->str_max_length();
 
             if (str_max_query_length) {
-                libmongoc::client_encryption_encrypt_text_substring_opts_set_str_max_query_length(
+                libmongoc::client_encryption_encrypt_string_substring_opts_set_str_max_query_length(
                     substring_opts, str_max_query_length.value());
             }
 
             if (str_min_query_length) {
-                libmongoc::client_encryption_encrypt_text_substring_opts_set_str_min_query_length(
+                libmongoc::client_encryption_encrypt_string_substring_opts_set_str_min_query_length(
                     substring_opts, str_min_query_length.value());
             }
 
             if (str_max_length) {
-                libmongoc::client_encryption_encrypt_text_substring_opts_set_str_max_length(
+                libmongoc::client_encryption_encrypt_string_substring_opts_set_str_max_length(
                     substring_opts, str_max_length.value());
             }
 
-            libmongoc::client_encryption_encrypt_text_opts_set_substring(text_opts, substring_opts);
+            libmongoc::client_encryption_encrypt_string_opts_set_substring(string_opts, substring_opts);
         }
 
-        libmongoc::client_encryption_encrypt_opts_set_text_opts(ptr, text_opts);
+        libmongoc::client_encryption_encrypt_opts_set_string_opts(ptr, string_opts);
     }
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
 
     return ret;
 }

@@ -289,17 +289,67 @@ bsoncxx::v1::stdx::optional<std::int32_t> text_options::substring::str_max_lengt
     return common_fields::with(_impl)->_max_length;
 }
 
-bsoncxx::v1::stdx::optional<text_options::prefix> const& text_options::internal::prefix_opts(text_options const& self) {
-    return impl::with(self)._prefix_opts;
-}
+// `text_options` and `string_options` describe the same "stringOpts" field, so this conversion is
+// lossless. Reading `text_options` necessarily refers to its deprecated public accessors.
 
-bsoncxx::v1::stdx::optional<text_options::suffix> const& text_options::internal::suffix_opts(text_options const& self) {
-    return impl::with(self)._suffix_opts;
-}
+v1::string_options text_options::internal::to_string_options(text_options const& self) {
+    v1::string_options ret;
 
-bsoncxx::v1::stdx::optional<text_options::substring> const& text_options::internal::substring_opts(
-    text_options const& self) {
-    return impl::with(self)._substring_opts;
+    if (auto const v = self.case_sensitive()) {
+        ret.case_sensitive(*v);
+    }
+
+    if (auto const v = self.diacritic_sensitive()) {
+        ret.diacritic_sensitive(*v);
+    }
+
+    if (auto const opt = self.prefix_opts()) {
+        string_options::prefix prefix;
+
+        if (auto const v = opt->str_max_query_length()) {
+            prefix.str_max_query_length(*v);
+        }
+
+        if (auto const v = opt->str_min_query_length()) {
+            prefix.str_min_query_length(*v);
+        }
+
+        ret.prefix_opts(prefix);
+    }
+
+    if (auto const opt = self.suffix_opts()) {
+        string_options::suffix suffix;
+
+        if (auto const v = opt->str_max_query_length()) {
+            suffix.str_max_query_length(*v);
+        }
+
+        if (auto const v = opt->str_min_query_length()) {
+            suffix.str_min_query_length(*v);
+        }
+
+        ret.suffix_opts(suffix);
+    }
+
+    if (auto const opt = self.substring_opts()) {
+        string_options::substring substring;
+
+        if (auto const v = opt->str_max_length()) {
+            substring.str_max_length(*v);
+        }
+
+        if (auto const v = opt->str_max_query_length()) {
+            substring.str_max_query_length(*v);
+        }
+
+        if (auto const v = opt->str_min_query_length()) {
+            substring.str_min_query_length(*v);
+        }
+
+        ret.substring_opts(substring);
+    }
+
+    return ret;
 }
 
 } // namespace v1

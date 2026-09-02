@@ -31,6 +31,7 @@ encrypt::encrypt(v1::encrypt_options opts)
       _contention_factor{opts.contention_factor()},
       _query_type{opts.query_type()},
       _range_opts{std::move(v1::encrypt_options::internal::range_opts(opts))},
+      _string_opts{std::move(v1::encrypt_options::internal::string_opts(opts))},
       _text_opts{std::move(v1::encrypt_options::internal::text_opts(opts))} {}
 
 } // namespace options
