@@ -101,6 +101,10 @@ class error_category_impl final : public std::error_category {
                 return "BSON vector too large";
             case error_code::k_vector_out_of_range:
                 return "BSON vector access out of range";
+            case error_code::k_key_too_large:
+                return "key too large";
+            case error_code::k_array_index_too_large:
+                return "array index too large";
             default:
                 return "unknown bsoncxx error code";
         }
