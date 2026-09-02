@@ -20,13 +20,15 @@
 
 #include <mongocxx/v1/string_options.hpp>
 
+#include <mongocxx/private/export.hh>
+
 namespace mongocxx {
 namespace v1 {
 
 // The deprecated "textOpts" field is emitted as a "stringOpts" field. Conversion is lossless.
 class text_options::internal {
    public:
-    static v1::string_options to_string_options(text_options const& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(v1::string_options) to_string_options(text_options const& self);
 };
 
 } // namespace v1
