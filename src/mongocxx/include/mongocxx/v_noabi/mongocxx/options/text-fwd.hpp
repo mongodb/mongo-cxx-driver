@@ -38,6 +38,8 @@ using v1::text_options;
 /// @file
 /// Declares @ref mongocxx::text_options.
 ///
+/// @deprecated Use @ref mongocxx/string_options-fwd.hpp instead.
+///
 /// @par Includes
 /// - @ref mongocxx/v1/text_options-fwd.hpp
 ///

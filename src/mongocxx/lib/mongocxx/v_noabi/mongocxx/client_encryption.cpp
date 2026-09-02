@@ -58,6 +58,7 @@
 #include <mongocxx/scoped_bson.hh>
 
 #include <bsoncxx/private/bson.hh>
+#include <bsoncxx/private/suppress_deprecation_warnings.hh>
 
 #include <mongocxx/private/mongoc.hh>
 
@@ -209,13 +210,17 @@ encrypt_opts_ptr_type to_mongoc(v_noabi::options::encrypt const& opts) {
 
     // `string_opts` and the deprecated `text_opts` are distinct fields describing the same
     // "stringOpts" field. When both are set, `string_opts` takes precedence.
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
+    auto const& text_opts = opts.text_opts();
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
+
     auto const effective_string_opts = [&]() -> bsoncxx::v_noabi::stdx::optional<v1::string_options> {
         if (auto const& opt = opts.string_opts()) {
             return opt;
         }
 
-        if (auto const& opt = opts.text_opts()) {
-            return v1::text_options::internal::to_string_options(*opt);
+        if (text_opts) {
+            return v1::text_options::internal::to_string_options(*text_opts);
         }
 
         return {};

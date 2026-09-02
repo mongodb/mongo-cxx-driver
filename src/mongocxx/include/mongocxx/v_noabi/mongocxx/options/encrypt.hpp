@@ -61,46 +61,7 @@ class encrypt {
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.
     ///
-    explicit operator v1::encrypt_options() const {
-        using bsoncxx::v_noabi::to_v1;
-        using mongocxx::v_noabi::to_v1;
-
-        v1::encrypt_options ret;
-
-        if (_key_id) {
-            ret.key_id(bsoncxx::v1::types::value{to_v1(*_key_id)});
-        }
-
-        if (_key_alt_name) {
-            ret.key_alt_name(*_key_alt_name);
-        }
-
-        if (_algorithm) {
-            ret.algorithm(*_algorithm);
-        }
-
-        if (_contention_factor) {
-            ret.contention_factor(*_contention_factor);
-        }
-
-        if (_query_type) {
-            ret.query_type(*_query_type);
-        }
-
-        if (_range_opts) {
-            ret.range_opts(to_v1(*_range_opts));
-        }
-
-        if (_string_opts) {
-            ret.string_opts(*_string_opts);
-        }
-
-        if (_text_opts) {
-            ret.text_opts(*_text_opts);
-        }
-
-        return ret;
-    }
+    explicit MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE() operator v1::encrypt_options() const;
 
     ///
     /// Sets the key to use for this encryption operation. A key id can be used instead
@@ -289,7 +250,9 @@ class encrypt {
     ///
     /// Sets the text options to use for encryption.
     ///
-    encrypt& text_opts(v1::text_options opts) {
+    /// @deprecated Use @ref string_opts(v1::string_options) instead.
+    ///
+    MONGOCXX_DEPRECATED encrypt& text_opts(v1::text_options opts) {
         _text_opts = std::move(opts);
         return *this;
     }
@@ -297,7 +260,9 @@ class encrypt {
     ///
     /// Gets the current text options.
     ///
-    bsoncxx::v_noabi::stdx::optional<v1::text_options> const& text_opts() const {
+    /// @deprecated Use @ref string_opts() const instead.
+    ///
+    MONGOCXX_DEPRECATED bsoncxx::v_noabi::stdx::optional<v1::text_options> const& text_opts() const {
         return _text_opts;
     }
 

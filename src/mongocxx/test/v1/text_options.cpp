@@ -19,8 +19,12 @@
 #include <cstdint>
 #include <utility>
 
+#include <bsoncxx/private/suppress_deprecation_warnings.hh>
+
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>
+
+BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
 
 namespace mongocxx {
 namespace v1 {
@@ -343,3 +347,5 @@ TEST_CASE("str_min_query_length", "[mongocxx][v1][text_options][substring]") {
 
 } // namespace v1
 } // namespace mongocxx
+
+BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END

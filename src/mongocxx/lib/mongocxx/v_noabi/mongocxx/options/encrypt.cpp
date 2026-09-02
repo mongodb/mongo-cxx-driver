@@ -16,9 +16,13 @@
 
 //
 
+#include <bsoncxx/v1/types/value.hpp>
+
 #include <mongocxx/v1/encrypt_options.hh>
 
 #include <utility>
+
+#include <bsoncxx/private/suppress_deprecation_warnings.hh>
 
 namespace mongocxx {
 namespace v_noabi {
@@ -33,6 +37,50 @@ encrypt::encrypt(v1::encrypt_options opts)
       _range_opts{std::move(v1::encrypt_options::internal::range_opts(opts))},
       _string_opts{std::move(v1::encrypt_options::internal::string_opts(opts))},
       _text_opts{std::move(v1::encrypt_options::internal::text_opts(opts))} {}
+
+encrypt::operator v1::encrypt_options() const {
+    using bsoncxx::v_noabi::to_v1;
+    using mongocxx::v_noabi::to_v1;
+
+    v1::encrypt_options ret;
+
+    if (_key_id) {
+        ret.key_id(bsoncxx::v1::types::value{to_v1(*_key_id)});
+    }
+
+    if (_key_alt_name) {
+        ret.key_alt_name(*_key_alt_name);
+    }
+
+    if (_algorithm) {
+        ret.algorithm(*_algorithm);
+    }
+
+    if (_contention_factor) {
+        ret.contention_factor(*_contention_factor);
+    }
+
+    if (_query_type) {
+        ret.query_type(*_query_type);
+    }
+
+    if (_range_opts) {
+        ret.range_opts(to_v1(*_range_opts));
+    }
+
+    if (_string_opts) {
+        ret.string_opts(*_string_opts);
+    }
+
+    // Setting the deprecated "textOpts" field necessarily refers to deprecated API.
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
+    if (_text_opts) {
+        ret.text_opts(*_text_opts);
+    }
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
+
+    return ret;
+}
 
 } // namespace options
 } // namespace v_noabi

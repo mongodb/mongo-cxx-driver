@@ -29,6 +29,8 @@
 #include <mongocxx/options/text.hpp>
 #include <mongocxx/string_options.hpp>
 
+#include <bsoncxx/private/suppress_deprecation_warnings.hh>
+
 #include <bsoncxx/test/catch.hh>
 
 #include <catch2/catch_test_macros.hpp>
@@ -133,6 +135,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][encrypt]") {
 }
 
 // `text_opts` and `string_opts` are distinct fields which both convert to "stringOpts".
+BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
 
 TEST_CASE("encrypt: text_opts and string_opts are distinct fields", "[mongocxx][v_noabi][options][encrypt]") {
     auto const opts = v_noabi::options::encrypt{}.text_opts(v1::text_options{}.case_sensitive(true));
@@ -148,5 +151,7 @@ TEST_CASE("encrypt: text_opts and string_opts are distinct fields", "[mongocxx][
     REQUIRE(v1_opts.text_opts());
     CHECK(v1_opts.text_opts()->case_sensitive() == true);
 }
+
+BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
 
 } // namespace mongocxx

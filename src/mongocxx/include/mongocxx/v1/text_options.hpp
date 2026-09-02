@@ -45,6 +45,8 @@ namespace v1 {
 ///
 /// @attention This feature is experimental! It is not ready for use!
 ///
+/// @deprecated Use @ref mongocxx::v1::string_options instead.
+///
 class text_options {
    private:
     class impl;
@@ -99,52 +101,52 @@ class text_options {
     ///
     /// Set the "caseSensitive" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(text_options&) case_sensitive(bool v);
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(text_options&) case_sensitive(bool v);
 
     ///
     /// Return the current "caseSensitive" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bool>) case_sensitive() const;
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bool>) case_sensitive() const;
 
     ///
     /// Set the "diacriticSensitive" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(text_options&) diacritic_sensitive(bool v);
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(text_options&) diacritic_sensitive(bool v);
 
     ///
     /// Return the current "diacriticSensitive" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bool>) diacritic_sensitive() const;
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bool>) diacritic_sensitive() const;
 
     ///
     /// Set the "prefix" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(text_options&) prefix_opts(prefix v);
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(text_options&) prefix_opts(prefix v);
 
     ///
     /// Return the current "prefix" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<prefix>) prefix_opts() const;
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<prefix>) prefix_opts() const;
 
     ///
     /// Set the "suffix" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(text_options&) suffix_opts(suffix v);
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(text_options&) suffix_opts(suffix v);
 
     ///
     /// Return the current "suffix" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<suffix>) suffix_opts() const;
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<suffix>) suffix_opts() const;
 
     ///
     /// Set the "substring" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(text_options&) substring_opts(substring v);
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(text_options&) substring_opts(substring v);
 
     ///
     /// Return the current "substring" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<substring>) substring_opts() const;
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<substring>) substring_opts() const;
 
     class internal;
 };
@@ -153,6 +155,8 @@ class text_options {
 /// Options related to prefix queries in Queryable Encryption.
 ///
 /// @attention This feature is experimental! It is not ready for use!
+///
+/// @deprecated Use @ref mongocxx::v1::string_options::prefix instead.
 ///
 class text_options::prefix {
    private:
@@ -204,28 +208,32 @@ class text_options::prefix {
     ///
     /// Set the "strMaxQueryLength" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(prefix&) str_max_query_length(std::int32_t v);
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(prefix&) str_max_query_length(std::int32_t v);
 
     ///
     /// Return the current "strMaxQueryLength" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<std::int32_t>) str_max_query_length() const;
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<std::int32_t>) str_max_query_length()
+        const;
 
     ///
     /// Set the "strMinQueryLength" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(prefix&) str_min_query_length(std::int32_t v);
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(prefix&) str_min_query_length(std::int32_t v);
 
     ///
     /// Return the current "strMinQueryLength" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<std::int32_t>) str_min_query_length() const;
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<std::int32_t>) str_min_query_length()
+        const;
 };
 
 ///
 /// Options related to suffix queries in Queryable Encryption.
 ///
 /// @attention This feature is experimental! It is not ready for use!
+///
+/// @deprecated Use @ref mongocxx::v1::string_options::suffix instead.
 ///
 class text_options::suffix {
    private:
@@ -277,28 +285,32 @@ class text_options::suffix {
     ///
     /// Set the "strMaxQueryLength" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(suffix&) str_max_query_length(std::int32_t v);
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(suffix&) str_max_query_length(std::int32_t v);
 
     ///
     /// Return the current "strMaxQueryLength" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<std::int32_t>) str_max_query_length() const;
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<std::int32_t>) str_max_query_length()
+        const;
 
     ///
     /// Set the "strminQueryLength" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(suffix&) str_min_query_length(std::int32_t v);
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(suffix&) str_min_query_length(std::int32_t v);
 
     ///
     /// Return the current "strminQueryLength" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<std::int32_t>) str_min_query_length() const;
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<std::int32_t>) str_min_query_length()
+        const;
 };
 
 ///
 /// Options related to substring queries in Queryable Encryption.
 ///
 /// @attention This feature is experimental! It is not ready for use!
+///
+/// @deprecated Use @ref mongocxx::v1::string_options::substring instead.
 ///
 class text_options::substring {
    private:
@@ -350,31 +362,33 @@ class text_options::substring {
     ///
     /// Set the "strMaxLength" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(substring&) str_max_length(std::int32_t v);
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(substring&) str_max_length(std::int32_t v);
 
     ///
     /// Return the current "strMaxLength" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<std::int32_t>) str_max_length() const;
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<std::int32_t>) str_max_length() const;
     ///
     /// Set the "strMaxQueryLength" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(substring&) str_max_query_length(std::int32_t v);
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(substring&) str_max_query_length(std::int32_t v);
 
     ///
     /// Return the current "strMaxQueryLength" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<std::int32_t>) str_max_query_length() const;
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<std::int32_t>) str_max_query_length()
+        const;
 
     ///
     /// Set the "strminQueryLength" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(substring&) str_min_query_length(std::int32_t v);
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(substring&) str_min_query_length(std::int32_t v);
 
     ///
     /// Return the current "strminQueryLength" field.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<std::int32_t>) str_min_query_length() const;
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<std::int32_t>) str_min_query_length()
+        const;
 };
 
 } // namespace v1
@@ -385,4 +399,6 @@ class text_options::substring {
 ///
 /// @file
 /// Provides @ref mongocxx::v1::text_options.
+///
+/// @deprecated Use @ref mongocxx/v1/string_options.hpp instead.
 ///

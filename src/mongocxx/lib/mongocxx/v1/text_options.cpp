@@ -20,6 +20,8 @@
 
 #include <cstdint>
 
+#include <bsoncxx/private/suppress_deprecation_warnings.hh>
+
 #include <mongocxx/private/utility.hh>
 
 namespace mongocxx {
@@ -291,6 +293,7 @@ bsoncxx::v1::stdx::optional<std::int32_t> text_options::substring::str_max_lengt
 
 // `text_options` and `string_options` describe the same "stringOpts" field, so this conversion is
 // lossless. Reading `text_options` necessarily refers to its deprecated public accessors.
+BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
 
 v1::string_options text_options::internal::to_string_options(text_options const& self) {
     v1::string_options ret;
@@ -351,6 +354,8 @@ v1::string_options text_options::internal::to_string_options(text_options const&
 
     return ret;
 }
+
+BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
 
 } // namespace v1
 } // namespace mongocxx

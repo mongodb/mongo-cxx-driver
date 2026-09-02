@@ -49,7 +49,7 @@ namespace v1 {
 /// - `query_type` ("queryType")
 /// - `range_opts` ("rangeOpts")
 /// - `string_opts` ("stringOpts")
-/// - `text_opts` ("textOpts"): superseded by `string_opts`
+/// - `text_opts` ("textOpts"): deprecated, superseded by `string_opts`
 ///
 /// @note `text_opts` and `string_opts` are distinct fields. When both are set, `string_opts` takes
 /// precedence and `text_opts` is ignored.
@@ -86,6 +86,8 @@ class encrypt_options {
         ///
         /// @attention This feature is experimental! It is not ready for use!
         ///
+        /// @deprecated Use @ref k_string instead.
+        ///
         k_textPreview,
 
         k_string, ///< "String"
@@ -106,6 +108,8 @@ class encrypt_options {
         ///
         /// @attention This feature is experimental! It is not ready for use!
         ///
+        /// @deprecated Use @ref k_prefix instead.
+        ///
         k_prefixPreview,
 
         ///
@@ -113,12 +117,16 @@ class encrypt_options {
         ///
         /// @attention This feature is experimental! It is not ready for use!
         ///
+        /// @deprecated Use @ref k_suffix instead.
+        ///
         k_suffixPreview,
 
         ///
         /// "substringPreview"
         ///
         /// @attention This feature is experimental! It is not ready for use!
+        ///
+        /// @deprecated Use @ref k_substring instead.
         ///
         k_substringPreview,
 
@@ -245,14 +253,18 @@ class encrypt_options {
     ///
     /// @attention This feature is experimental! It is not ready for use!
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(encrypt_options&) text_opts(v1::text_options v);
+    /// @deprecated Use @ref string_opts(v1::string_options) instead.
+    ///
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(encrypt_options&) text_opts(v1::text_options v);
 
     ///
     /// Return the current "textOpts" field.
     ///
     /// @attention This feature is experimental! It is not ready for use!
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::text_options>) text_opts() const;
+    /// @deprecated Use @ref string_opts() const instead.
+    ///
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::text_options>) text_opts() const;
 
     class internal;
 

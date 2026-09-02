@@ -26,6 +26,8 @@
 #include <string>
 #include <utility>
 
+#include <bsoncxx/private/suppress_deprecation_warnings.hh>
+
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>
 
@@ -83,7 +85,9 @@ TEST_CASE("default", "[mongocxx][v1][encrypt_options]") {
     CHECK_FALSE(opts.range_opts().has_value());
     CHECK_FALSE(opts.string_opts().has_value());
 
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
     CHECK_FALSE(opts.text_opts().has_value());
+    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
 }
 
 TEST_CASE("key_id", "[mongocxx][v1][encrypt_options]") {
@@ -180,6 +184,8 @@ TEST_CASE("string_opts", "[mongocxx][v1][encrypt_options]") {
     CHECK(encrypt_options{}.string_opts(v).string_opts().value().case_sensitive() == v.case_sensitive());
 }
 
+BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
+
 TEST_CASE("text_opts", "[mongocxx][v1][encrypt_options]") {
     using T = v1::text_options;
 
@@ -211,6 +217,8 @@ TEST_CASE("text_opts and string_opts are distinct fields", "[mongocxx][v1][encry
         CHECK_FALSE(encrypt_options{}.string_opts(v1::string_options{}).text_opts().has_value());
     }
 }
+
+BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
 
 } // namespace v1
 } // namespace mongocxx
