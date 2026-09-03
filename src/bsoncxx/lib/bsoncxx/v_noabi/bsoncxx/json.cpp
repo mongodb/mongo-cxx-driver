@@ -18,6 +18,7 @@
 
 #include <bsoncxx/v1/detail/macros.hpp>
 
+#include <limits>
 #include <memory>
 #include <vector>
 
@@ -99,10 +100,14 @@ std::string to_json(array::view view, ExtendedJsonMode mode) {
 document::value from_json(stdx::string_view json) {
     bson_error_t error;
 
+    if (json.size() > static_cast<std::size_t>(std::numeric_limits<ssize_t>::max())) {
+        throw v_noabi::exception(v_noabi::error_code::k_json_parse_failure, "JSON string is too long");
+    }
+
     bson_t* result = bson_new_from_json(
         // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast): bson vs. bsoncxx compatibility.
         reinterpret_cast<uint8_t const*>(json.data()),
-        static_cast<std::int32_t>(json.size()),
+        static_cast<ssize_t>(json.size()),
         &error);
 
     if (!result)
