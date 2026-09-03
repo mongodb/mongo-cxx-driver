@@ -1,0 +1,4 @@
+var searchData=
+[
+  ['journal_0',['journal',['../classmongocxx_1_1v1_1_1write__concern.html#a88e60ca880c26e4d83ad1352798d0e7e',1,'mongocxx::v1::write_concern::journal(bool j)'],['../classmongocxx_1_1v1_1_1write__concern.html#a5a4493ff0afd507b92c4969689a8d1d5',1,'mongocxx::v1::write_concern::journal() const'],['../classmongocxx_1_1v__noabi_1_1write__concern.html#a793f3a53f3fb33fb679c48dff8e73beb',1,'mongocxx::v_noabi::write_concern::journal(bool journal)'],['../classmongocxx_1_1v__noabi_1_1write__concern.html#a692111ce9612c2c9f5aa4f1ed654f140',1,'mongocxx::v_noabi::write_concern::journal() const'],['../classmongocxx_1_1write__concern.html#a793f3a53f3fb33fb679c48dff8e73beb',1,'mongocxx::write_concern::journal(bool journal)'],['../classmongocxx_1_1write__concern.html#a692111ce9612c2c9f5aa4f1ed654f140',1,'mongocxx::write_concern::journal() const']]]
+];
