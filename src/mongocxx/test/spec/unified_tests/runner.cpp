@@ -1286,6 +1286,14 @@ void run_tests(bsoncxx::stdx::string_view test_description, document::view test)
             operations::state state;
 
             for (auto const& ops : ele["operations"].get_array().value) {
+                // The "createEntities" test runner operation creates additional entities during a
+                // test without clearing the existing entity map (unlike top-level "createEntities").
+                if (string::to_string(ops["name"].get_string().value) == "createEntities") {
+                    auto const entities = ops["arguments"]["entities"].get_array().value;
+                    REQUIRE(std::all_of(std::begin(entities), std::end(entities), add_to_map));
+                    continue;
+                }
+
                 auto const ignore_result_and_error = [&]() -> bool {
                     auto const elem = ops["ignoreResultAndError"];
                     return elem && elem.get_bool().value;
