@@ -78,25 +78,17 @@ sudo DEB_BUILD_PROFILES="${DEB_BUILD_PROFILES}" chroot ./unstable-chroot /bin/ba
   LANG=C /bin/bash -x ./debian/build_snapshot.sh && \
   debc ../*.changes && \
   dpkg -i ../*.deb && \
-  /usr/bin/g++ -I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -I. -o runcommand_examples examples/mongocxx/mongodb.com/runcommand_examples.cpp -lmongocxx -lbsoncxx && \
-  /usr/bin/g++ -I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -I. -o aggregation_examples examples/mongocxx/mongodb.com/aggregation_examples.cpp -lmongocxx -lbsoncxx && \
-  /usr/bin/g++ -I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -I. -o index_examples examples/mongocxx/mongodb.com/index_examples.cpp -lmongocxx -lbsoncxx && \
-  /usr/bin/g++ -I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -I. -o documentation_examples examples/mongocxx/mongodb.com/documentation_examples.cpp -lmongocxx -lbsoncxx )"
+  /usr/bin/g++ -DBSONCXX_ENABLE_UNSTABLE_ABI=0 \$(pkgconf --cflags libbsoncxx1) -o hello_bsoncxx ./examples/projects/bsoncxx/hello_bsoncxx.cpp \$(pkgconf --libs libbsoncxx1) && \
+  ./hello_bsoncxx && \
+  /usr/bin/g++ -DBSONCXX_ENABLE_UNSTABLE_ABI=0 -DMONGOCXX_ENABLE_UNSTABLE_ABI=0 \$(pkgconf --cflags libbsoncxx1 libmongocxx1) -o hello_mongocxx ./examples/projects/mongocxx/hello_mongocxx.cpp \$(pkgconf --libs libmongocxx1) && \
+  MONGOCXX_EXAMPLE_ALLOW_NO_SERVER=1 ./hello_mongocxx )"
 
-[ -e ./unstable-chroot/tmp/mongo-cxx-driver/runcommand_examples ] || (
-  echo "Example 'runcommand_examples' was not built!"
+[ -e ./unstable-chroot/tmp/mongo-cxx-driver/hello_bsoncxx ] || (
+  echo "Example 'hello_bsoncxx' was not built!"
   exit 1
 )
-[ -e ./unstable-chroot/tmp/mongo-cxx-driver/aggregation_examples ] || (
-  echo "Example 'aggregation_examples' was not built!"
-  exit 1
-)
-[ -e ./unstable-chroot/tmp/mongo-cxx-driver/index_examples ] || (
-  echo "Example 'index_examples' was not built!"
-  exit 1
-)
-[ -e ./unstable-chroot/tmp/mongo-cxx-driver/documentation_examples ] || (
-  echo "Example 'documentation_examples' was not built!"
+[ -e ./unstable-chroot/tmp/mongo-cxx-driver/hello_mongocxx ] || (
+  echo "Example 'hello_mongocxx' was not built!"
   exit 1
 )
 (
