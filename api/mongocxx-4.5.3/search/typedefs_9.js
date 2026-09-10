@@ -1,0 +1,4 @@
+var searchData=
+[
+  ['pointer_0',['pointer',['../classbsoncxx_1_1v1_1_1document_1_1view_1_1const__iterator.html#abb4678441e266d1e0f4785cdf7ec62b9',1,'bsoncxx::v1::document::view::const_iterator::pointer'],['../classbsoncxx_1_1v__noabi_1_1vector_1_1iterators_1_1packed__bit__element.html#a5183af1e770b1a99e4faa271dc506466',1,'bsoncxx::v_noabi::vector::iterators::packed_bit_element::pointer'],['../classbsoncxx_1_1v__noabi_1_1vector_1_1iterators_1_1packed__bit__byte.html#a641ce7516b4598e7589a6daa100ac9ff',1,'bsoncxx::v_noabi::vector::iterators::packed_bit_byte::pointer'],['../classmongocxx_1_1v1_1_1change__stream_1_1iterator.html#a6d964519967b0dcc6482e2d3a77877a3',1,'mongocxx::v1::change_stream::iterator::pointer'],['../classmongocxx_1_1v1_1_1cursor_1_1iterator.html#a2619d6af9345fcbdf2dbf8990a54dfbc',1,'mongocxx::v1::cursor::iterator::pointer']]]
+];
