@@ -9,9 +9,9 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ## 4.5.3
 
-## Fixed
+### Fixed
 
-* Use exact match for file ID in GridFS methods
+- Use exact match for file ID in GridFS methods
 
 ## 4.5.2
 
