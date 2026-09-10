@@ -14,32 +14,21 @@
 
 #pragma once
 
-#include <mongocxx/v1/text_options-fwd.hpp> // IWYU pragma: export
+#include <mongocxx/v1/string_options.hpp> // IWYU pragma: export
 
-#include <mongocxx/config/prelude.hpp>
+//
 
-namespace mongocxx {
-namespace v_noabi {
-
-using v1::text_options;
-
-} // namespace v_noabi
-} // namespace mongocxx
+#include <bsoncxx/v1/stdx/optional.hpp>
 
 namespace mongocxx {
+namespace v1 {
 
-using v1::text_options;
+class string_options::internal {
+   public:
+    static bsoncxx::v1::stdx::optional<prefix> const& prefix_opts(string_options const& self);
+    static bsoncxx::v1::stdx::optional<suffix> const& suffix_opts(string_options const& self);
+    static bsoncxx::v1::stdx::optional<substring> const& substring_opts(string_options const& self);
+};
 
+} // namespace v1
 } // namespace mongocxx
-
-#include <mongocxx/config/postlude.hpp>
-
-///
-/// @file
-/// Declares @ref mongocxx::text_options.
-///
-/// @deprecated Use @ref mongocxx/string_options-fwd.hpp instead.
-///
-/// @par Includes
-/// - @ref mongocxx/v1/text_options-fwd.hpp
-///

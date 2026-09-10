@@ -194,6 +194,7 @@ set(mongocxx_sources_v1
     mongocxx/v1/search_indexes.cpp
     mongocxx/v1/server_api.cpp
     mongocxx/v1/server_error.cpp
+    mongocxx/v1/string_options.cpp
     mongocxx/v1/text_options.cpp
     mongocxx/v1/tls.cpp
     mongocxx/v1/transaction_options.cpp

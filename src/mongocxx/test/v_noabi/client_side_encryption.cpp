@@ -43,6 +43,7 @@
 #include <mongocxx/options/data_key.hpp>
 #include <mongocxx/options/encrypt.hpp>
 #include <mongocxx/options/text.hpp>
+#include <mongocxx/string_options.hpp>
 #include <mongocxx/uri.hpp>
 #include <mongocxx/write_concern.hpp>
 
@@ -3449,11 +3450,7 @@ TEST_CASE("16. Rewrap. Case 2: RewrapManyDataKeyOpts.provider is not optional", 
         Catch::Matchers::ContainsSubstring("expected 'provider' to be set to identify type of 'master_key'"));
 }
 
-TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
-    // TODO: unskip as part of CXX-3467. The textPreview ("Queryable Encryption" text search) API is
-    // deprecated and these tests are skipped until the API situation is resolved.
-    SKIP("textPreview API is deprecated (unskip as part of CXX-3467)");
-
+TEST_CASE("27. String Explicit Encryption", "[client_side_encryption]") {
     CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
 
     mongocxx::client conn{
@@ -3467,6 +3464,19 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
 
     if (test_util::get_topology() == "single") {
         SKIP("must not run against a standalone server");
+    }
+
+    // Run every case twice: once with the GA query types ("prefix", "suffix", "substring"), and once
+    // with the deprecated "*Preview" query types. Server 8.2 supports only the latter; server 9.0
+    // removed them and supports only the former.
+    auto const use_preview = GENERATE(false, true);
+
+    if (use_preview && test_util::server_version_is_at_least("9.0")) {
+        SKIP("MongoDB server 9.0 and newer does not support the *Preview query types");
+    }
+
+    if (!use_preview && !test_util::server_version_is_at_least("9.0")) {
+        SKIP("MongoDB server 9.0 or newer required for the prefix, suffix, and substring query types");
     }
 
     // Load the file key1-document.json as key1Document.
@@ -3484,51 +3494,59 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
     auto explicit_encrypted_client = std::move(std::get<1>(tpl));
     auto const insert_opts_majority = std::move(v1::insert_one_options{}.write_concern(v1::write_concern{}.majority()));
 
+    using query_type = options::encrypt::encryption_query_type;
+
+    auto const prefix_query_type = use_preview ? query_type::k_prefixPreview : query_type::k_prefix;
+    auto const suffix_query_type = use_preview ? query_type::k_suffixPreview : query_type::k_suffix;
+    auto const substring_query_type = use_preview ? query_type::k_substringPreview : query_type::k_substring;
+
+    std::string const prefix_suffix_name = use_preview ? "prefix-suffix-preview" : "prefix-suffix";
+    std::string const substring_name = use_preview ? "substring-preview" : "substring";
+    std::string const prefix_suffix_path = "/explicit-encryption/encryptedFields-" + prefix_suffix_name + ".json";
+    std::string const substring_path = "/explicit-encryption/encryptedFields-" + substring_name + ".json";
+
     auto const default_encrypt_opts = [&]() {
         return std::move(
             options::encrypt()
                 .key_id(key1_id)
-                .algorithm(options::encrypt::encryption_algorithm::k_textPreview)
+                .algorithm(options::encrypt::encryption_algorithm::k_string)
                 .contention_factor(0));
     };
-    auto const default_text_opts = [&]() {
-        return std::move(text_options().case_sensitive(true).diacritic_sensitive(true));
+    auto const default_string_opts = [&]() {
+        return std::move(string_options().case_sensitive(true).diacritic_sensitive(true));
     };
 
-    auto const prefix_opts = text_options::prefix().str_max_query_length(10).str_min_query_length(2);
-    auto const suffix_opts = text_options::suffix().str_max_query_length(10).str_min_query_length(2);
+    auto const prefix_opts = string_options::prefix().str_max_query_length(10).str_min_query_length(2);
+    auto const suffix_opts = string_options::suffix().str_max_query_length(10).str_min_query_length(2);
     auto const substring_opts =
-        text_options::substring().str_max_length(10).str_max_query_length(10).str_min_query_length(2);
-    auto coll_prefix_suffix = explicit_encrypted_client["db"]["prefix-suffix"];
-    // Only test prefixPreview and suffixPreview on server < 9.0. Server 9.0 removes support.
-    if (!test_util::server_version_is_at_least("9.0")) {
-        _drop_and_create_collection("db", "prefix-suffix", "/explicit-encryption/encryptedFields-prefix-suffix.json");
+        string_options::substring().str_max_length(10).str_max_query_length(6).str_min_query_length(2);
+
+    auto coll_prefix_suffix = explicit_encrypted_client["db"][prefix_suffix_name];
+    {
+        _drop_and_create_collection("db", prefix_suffix_name, prefix_suffix_path);
         auto const encrypt_opts =
-            default_encrypt_opts().text_opts(default_text_opts().prefix_opts(prefix_opts).suffix_opts(suffix_opts));
+            default_encrypt_opts().string_opts(default_string_opts().prefix_opts(prefix_opts).suffix_opts(suffix_opts));
         auto const encrypted_foobarbaz = client_encryption.encrypt(make_value("foobarbaz"), encrypt_opts);
 
         coll_prefix_suffix.insert_one(
             make_document(kvp("_id", 0), kvp("encryptedText", encrypted_foobarbaz)), insert_opts_majority);
     }
 
-    auto coll_substring = explicit_encrypted_client["db"]["substring"];
-    // Only test substringPreview on server < 9.0. Server 9.0 removes support.
-    if (!test_util::server_version_is_at_least("9.0")) {
-        _drop_and_create_collection("db", "substring", "/explicit-encryption/encryptedFields-substring.json");
-        {
-            auto const encrypt_opts =
-                default_encrypt_opts().text_opts(default_text_opts().substring_opts(substring_opts));
-            auto const encrypted_foobarbaz = client_encryption.encrypt(make_value("foobarbaz"), encrypt_opts);
+    auto coll_substring = explicit_encrypted_client["db"][substring_name];
+    {
+        _drop_and_create_collection("db", substring_name, substring_path);
+        auto const encrypt_opts =
+            default_encrypt_opts().string_opts(default_string_opts().substring_opts(substring_opts));
+        auto const encrypted_foobarbaz = client_encryption.encrypt(make_value("foobarbaz"), encrypt_opts);
 
-            coll_substring.insert_one(
-                make_document(kvp("_id", 0), kvp("encryptedText", encrypted_foobarbaz)), insert_opts_majority);
-        }
+        coll_substring.insert_one(
+            make_document(kvp("_id", 0), kvp("encryptedText", encrypted_foobarbaz)), insert_opts_majority);
     }
 
     auto const foobarbaz_doc = make_document(kvp("_id", 0), kvp("encryptedText", "foobarbaz"));
 
-    auto const ci_di_text_opts = [&]() {
-        return std::move(text_options().case_sensitive(false).diacritic_sensitive(false));
+    auto const ci_di_string_opts = [&]() {
+        return std::move(string_options().case_sensitive(false).diacritic_sensitive(false));
     };
 
     // Create autoEncryptedClient (without bypassQueryAnalysis) for cases 8-11.
@@ -3539,22 +3557,19 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
         test_util::add_test_server_api(auto_encrypted_client_opts),
     };
 
-    if (!test_util::server_version_is_at_least("9.0")) {
-        // Skip prefixPreview / suffixPreview. prefix / suffix will be added in CXX-3467.
+    // The case-insensitive and diacritic-insensitive collections are only defined with the GA query
+    // types, so cases 8-11 do not have a "*Preview" equivalent.
+    if (!use_preview) {
         _drop_and_create_collection(
             "db", "prefix-suffix-ci-di", "/explicit-encryption/encryptedFields-prefix-suffix-ci-di.json");
-        // Skip substringPreview. substring will be added in CXX-3523.
         _drop_and_create_collection(
             "db", "substring-ci-di", "/explicit-encryption/encryptedFields-substring-ci-di.json");
     }
 
     SECTION("Case 1: can find a document by prefix") {
-        if (test_util::server_version_is_at_least("9.0")) {
-            SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
-        }
         auto const encrypt_opts = default_encrypt_opts()
-                                      .query_type(options::encrypt::encryption_query_type::k_prefixPreview)
-                                      .text_opts(default_text_opts().prefix_opts(prefix_opts));
+                                      .query_type(prefix_query_type)
+                                      .string_opts(default_string_opts().prefix_opts(prefix_opts));
         auto const encrypted_foo = client_encryption.encrypt(make_value("foo"), encrypt_opts);
         auto const query = make_document(kvp(
             "$expr",
@@ -3569,12 +3584,9 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
     }
 
     SECTION("Case 2: can find a document by suffix") {
-        if (test_util::server_version_is_at_least("9.0")) {
-            SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
-        }
         auto const encrypt_opts = default_encrypt_opts()
-                                      .query_type(options::encrypt::encryption_query_type::k_suffixPreview)
-                                      .text_opts(default_text_opts().suffix_opts(suffix_opts));
+                                      .query_type(suffix_query_type)
+                                      .string_opts(default_string_opts().suffix_opts(suffix_opts));
         auto const encrypted_baz = client_encryption.encrypt(make_value("baz"), encrypt_opts);
         auto const query = make_document(
             kvp("$expr",
@@ -3589,12 +3601,9 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
     }
 
     SECTION("Case 3: assert no document found by prefix") {
-        if (test_util::server_version_is_at_least("9.0")) {
-            SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
-        }
         auto const encrypt_opts = default_encrypt_opts()
-                                      .query_type(options::encrypt::encryption_query_type::k_prefixPreview)
-                                      .text_opts(default_text_opts().prefix_opts(prefix_opts));
+                                      .query_type(prefix_query_type)
+                                      .string_opts(default_string_opts().prefix_opts(prefix_opts));
         auto const encrypted_baz = client_encryption.encrypt(make_value("baz"), encrypt_opts);
         auto const query = make_document(kvp(
             "$expr",
@@ -3607,12 +3616,9 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
     }
 
     SECTION("Case 4: assert no document found by suffix") {
-        if (test_util::server_version_is_at_least("9.0")) {
-            SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
-        }
         auto const encrypt_opts = default_encrypt_opts()
-                                      .query_type(options::encrypt::encryption_query_type::k_suffixPreview)
-                                      .text_opts(default_text_opts().suffix_opts(suffix_opts));
+                                      .query_type(suffix_query_type)
+                                      .string_opts(default_string_opts().suffix_opts(suffix_opts));
         auto const encrypted_foo = client_encryption.encrypt(make_value("foo"), encrypt_opts);
         auto const query = make_document(
             kvp("$expr",
@@ -3625,12 +3631,9 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
     }
 
     SECTION("Case 5: can find a document by substring") {
-        if (test_util::server_version_is_at_least("9.0")) {
-            SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
-        }
         auto const encrypt_opts = default_encrypt_opts()
-                                      .query_type(options::encrypt::encryption_query_type::k_substringPreview)
-                                      .text_opts(default_text_opts().substring_opts(substring_opts));
+                                      .query_type(substring_query_type)
+                                      .string_opts(default_string_opts().substring_opts(substring_opts));
         auto const encrypted_bar = client_encryption.encrypt(make_value("bar"), encrypt_opts);
         auto const query = make_document(kvp(
             "$expr",
@@ -3645,12 +3648,9 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
     }
 
     SECTION("Case 6: assert no document found by substring") {
-        if (test_util::server_version_is_at_least("9.0")) {
-            SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
-        }
         auto const encrypt_opts = default_encrypt_opts()
-                                      .query_type(options::encrypt::encryption_query_type::k_substringPreview)
-                                      .text_opts(default_text_opts().substring_opts(substring_opts));
+                                      .query_type(substring_query_type)
+                                      .string_opts(default_string_opts().substring_opts(substring_opts));
         auto const encrypted_qux = client_encryption.encrypt(make_value("qux"), encrypt_opts);
         auto const query = make_document(kvp(
             "$expr",
@@ -3663,33 +3663,30 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
     }
 
     SECTION("Case 7: assert contentionFactor is required") {
-        if (test_util::server_version_is_at_least("9.0")) {
-            SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
-        }
         // Test that encrypting without contentionFactor throws an error
-        auto const encrypt_opts_without_contention =
-            options::encrypt()
-                .key_id(key1_id)
-                .algorithm(options::encrypt::encryption_algorithm::k_textPreview)
-                .query_type(options::encrypt::encryption_query_type::k_prefixPreview)
-                .text_opts(default_text_opts().prefix_opts(prefix_opts));
+        auto const encrypt_opts_without_contention = options::encrypt()
+                                                         .key_id(key1_id)
+                                                         .algorithm(options::encrypt::encryption_algorithm::k_string)
+                                                         .query_type(prefix_query_type)
+                                                         .string_opts(default_string_opts().prefix_opts(prefix_opts));
 
         REQUIRE_THROWS_WITH(
             client_encryption.encrypt(make_value("foo"), encrypt_opts_without_contention),
-            Catch::Matchers::ContainsSubstring("contention factor is required for textPreview algorithm"));
+            Catch::Matchers::ContainsSubstring("contention factor is required"));
     }
 
     SECTION("Case 8: can find an auto-encrypted case-insensitively indexed document by prefix and suffix") {
-        if (test_util::server_version_is_at_least("9.0")) {
-            SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
+        if (use_preview) {
+            SKIP("the case-insensitive and diacritic-insensitive collections use the GA query types");
         }
+
         auto_encrypted_client["db"]["prefix-suffix-ci-di"].insert_one(
             make_document(kvp("encryptedText", "BingQiLin")), insert_opts_majority);
 
         {
             auto const encrypt_opts = default_encrypt_opts()
-                                          .query_type(options::encrypt::encryption_query_type::k_prefixPreview)
-                                          .text_opts(ci_di_text_opts().prefix_opts(prefix_opts));
+                                          .query_type(prefix_query_type)
+                                          .string_opts(ci_di_string_opts().prefix_opts(prefix_opts));
             auto const encrypted_bing = client_encryption.encrypt(make_value("bing"), encrypt_opts);
             auto const query = make_document(
                 kvp("$expr",
@@ -3705,8 +3702,8 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
 
         {
             auto const encrypt_opts = default_encrypt_opts()
-                                          .query_type(options::encrypt::encryption_query_type::k_suffixPreview)
-                                          .text_opts(ci_di_text_opts().suffix_opts(suffix_opts));
+                                          .query_type(suffix_query_type)
+                                          .string_opts(ci_di_string_opts().suffix_opts(suffix_opts));
             auto const encrypted_lin = client_encryption.encrypt(make_value("lin"), encrypt_opts);
             auto const query = make_document(kvp(
                 "$expr",
@@ -3724,8 +3721,8 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
 #define A_UMLAUT "\xC3\xA4"
 
     SECTION("Case 9: can find an auto-encrypted diacritic-insensitively indexed document by prefix and suffix") {
-        if (test_util::server_version_is_at_least("9.0")) {
-            SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
+        if (use_preview) {
+            SKIP("the case-insensitive and diacritic-insensitive collections use the GA query types");
         }
 
         auto_encrypted_client["db"]["prefix-suffix-ci-di"].insert_one(
@@ -3733,8 +3730,8 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
 
         {
             auto const encrypt_opts = default_encrypt_opts()
-                                          .query_type(options::encrypt::encryption_query_type::k_prefixPreview)
-                                          .text_opts(ci_di_text_opts().prefix_opts(prefix_opts));
+                                          .query_type(prefix_query_type)
+                                          .string_opts(ci_di_string_opts().prefix_opts(prefix_opts));
             auto const encrypted_cafe = client_encryption.encrypt(make_value("cafe"), encrypt_opts);
             auto const query = make_document(
                 kvp("$expr",
@@ -3750,8 +3747,8 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
 
         {
             auto const encrypt_opts = default_encrypt_opts()
-                                          .query_type(options::encrypt::encryption_query_type::k_suffixPreview)
-                                          .text_opts(ci_di_text_opts().suffix_opts(suffix_opts));
+                                          .query_type(suffix_query_type)
+                                          .string_opts(ci_di_string_opts().suffix_opts(suffix_opts));
             auto const encrypted_baz = client_encryption.encrypt(make_value("baz"), encrypt_opts);
             auto const query = make_document(kvp(
                 "$expr",
@@ -3766,15 +3763,16 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
     }
 
     SECTION("Case 10: can find an auto-encrypted case-insensitively indexed document by substring") {
-        if (test_util::server_version_is_at_least("9.0")) {
-            SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
+        if (use_preview) {
+            SKIP("the case-insensitive and diacritic-insensitive collections use the GA query types");
         }
+
         auto_encrypted_client["db"]["substring-ci-di"].insert_one(
             make_document(kvp("encryptedText", "FooBarBaz")), insert_opts_majority);
 
         auto const encrypt_opts = default_encrypt_opts()
-                                      .query_type(options::encrypt::encryption_query_type::k_substringPreview)
-                                      .text_opts(ci_di_text_opts().substring_opts(substring_opts));
+                                      .query_type(substring_query_type)
+                                      .string_opts(ci_di_string_opts().substring_opts(substring_opts));
         auto const encrypted_bar = client_encryption.encrypt(make_value("bar"), encrypt_opts);
         auto const query = make_document(kvp(
             "$expr",
@@ -3788,15 +3786,16 @@ TEST_CASE("27. Text Explicit Encryption", "[client_side_encryption]") {
     }
 
     SECTION("Case 11: can find an auto-encrypted diacritic-insensitively indexed document by substring") {
-        if (test_util::server_version_is_at_least("9.0")) {
-            SKIP("MongoDB server 9.0 and newer does not support prefixPreview or suffixPreview");
+        if (use_preview) {
+            SKIP("the case-insensitive and diacritic-insensitive collections use the GA query types");
         }
+
         auto_encrypted_client["db"]["substring-ci-di"].insert_one(
             make_document(kvp("encryptedText", "foocaf" E_ACCENT "baz")), insert_opts_majority);
 
         auto const encrypt_opts = default_encrypt_opts()
-                                      .query_type(options::encrypt::encryption_query_type::k_substringPreview)
-                                      .text_opts(ci_di_text_opts().substring_opts(substring_opts));
+                                      .query_type(substring_query_type)
+                                      .string_opts(ci_di_string_opts().substring_opts(substring_opts));
         auto const encrypted_cafe = client_encryption.encrypt(make_value("cafe"), encrypt_opts);
         auto const query = make_document(kvp(
             "$expr",

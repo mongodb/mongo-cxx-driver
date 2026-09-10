@@ -18,16 +18,17 @@
 
 //
 
-#include <bsoncxx/v1/stdx/optional.hpp>
+#include <mongocxx/v1/string_options.hpp>
+
+#include <mongocxx/private/export.hh>
 
 namespace mongocxx {
 namespace v1 {
 
+// The deprecated "textOpts" field is emitted as a "stringOpts" field. Conversion is lossless.
 class text_options::internal {
    public:
-    static bsoncxx::v1::stdx::optional<prefix> const& prefix_opts(text_options const& self);
-    static bsoncxx::v1::stdx::optional<suffix> const& suffix_opts(text_options const& self);
-    static bsoncxx::v1::stdx::optional<substring> const& substring_opts(text_options const& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(v1::string_options) to_string_options(text_options const& self);
 };
 
 } // namespace v1

@@ -24,6 +24,7 @@
 #include <bsoncxx/v1/types/view-fwd.hpp>
 
 #include <mongocxx/v1/range_options-fwd.hpp>
+#include <mongocxx/v1/string_options-fwd.hpp>
 #include <mongocxx/v1/text_options-fwd.hpp>
 
 #include <bsoncxx/v1/stdx/optional.hpp>
@@ -47,7 +48,11 @@ namespace v1 {
 /// - `key_id` ("keyId")
 /// - `query_type` ("queryType")
 /// - `range_opts` ("rangeOpts")
-/// - `text_opts` ("textOpts")
+/// - `string_opts` ("stringOpts")
+/// - `text_opts` ("textOpts"): deprecated, superseded by `string_opts`
+///
+/// @note `text_opts` and `string_opts` are distinct fields. When both are set, `string_opts` takes
+/// precedence and `text_opts` is ignored.
 ///
 /// @see
 /// - [Fields and Encryption Types (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/csfle/fundamentals/encryption-algorithms/)
@@ -81,7 +86,11 @@ class encrypt_options {
         ///
         /// @attention This feature is experimental! It is not ready for use!
         ///
+        /// @deprecated Use @ref k_string instead.
+        ///
         k_textPreview,
+
+        k_string, ///< "String"
     };
 
     ///
@@ -99,12 +108,16 @@ class encrypt_options {
         ///
         /// @attention This feature is experimental! It is not ready for use!
         ///
+        /// @deprecated Use @ref k_prefix instead.
+        ///
         k_prefixPreview,
 
         ///
         /// "suffixPreview"
         ///
         /// @attention This feature is experimental! It is not ready for use!
+        ///
+        /// @deprecated Use @ref k_suffix instead.
         ///
         k_suffixPreview,
 
@@ -113,7 +126,13 @@ class encrypt_options {
         ///
         /// @attention This feature is experimental! It is not ready for use!
         ///
+        /// @deprecated Use @ref k_substring instead.
+        ///
         k_substringPreview,
+
+        k_prefix,    ///< "prefix"
+        k_suffix,    ///< "suffix"
+        k_substring, ///< "substring"
     };
 
     ///
@@ -220,18 +239,32 @@ class encrypt_options {
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::range_options>) range_opts() const;
 
     ///
+    /// Set the "stringOpts" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(encrypt_options&) string_opts(v1::string_options v);
+
+    ///
+    /// Return the current "stringOpts" field.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::string_options>) string_opts() const;
+
+    ///
     /// Set the "textOpts" field.
     ///
     /// @attention This feature is experimental! It is not ready for use!
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(encrypt_options&) text_opts(v1::text_options v);
+    /// @deprecated Use @ref string_opts(v1::string_options) instead.
+    ///
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(encrypt_options&) text_opts(v1::text_options v);
 
     ///
     /// Return the current "textOpts" field.
     ///
     /// @attention This feature is experimental! It is not ready for use!
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::text_options>) text_opts() const;
+    /// @deprecated Use @ref string_opts() const instead.
+    ///
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::text_options>) text_opts() const;
 
     class internal;
 
