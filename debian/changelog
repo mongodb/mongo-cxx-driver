@@ -1,3 +1,9 @@
+mongo-cxx-driver (4.5.3-1) UNRELEASED; urgency=medium
+
+  * New upstream release
+
+ -- Roberto C. Sanchez <roberto@connexer.com>  Thu, 10 Sep 2026 10:23:35 -0400
+
 mongo-cxx-driver (4.5.2-1) unstable; urgency=medium
 
   * New upstream release
