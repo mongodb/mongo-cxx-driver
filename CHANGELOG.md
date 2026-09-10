@@ -7,9 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Changes prior to 3.9.0 are documented as [release notes on GitHub](https://github.com/mongodb/mongo-cxx-driver/releases).
 
-## 4.5.3 [Unreleased]
+## 4.5.3
 
-<!-- Will contain entries for the next patch release. -->
+## Fixed
+
+* Use exact match for file ID in GridFS methods
 
 ## 4.5.2
 
