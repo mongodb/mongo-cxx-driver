@@ -32,6 +32,11 @@ if(1)
     endfunction()
     configure_mongocxx_config_cmake()
 
+    set(mongocxx_target_includes "")
+    if(MONGOCXX_ENABLE_UNSTABLE_ABI)
+       list(APPEND mongocxx_target_includes ${CMAKE_INSTALL_INCLUDEDIR}/mongocxx/v_noabi)
+    endif()
+    list(APPEND mongocxx_target_includes ${CMAKE_INSTALL_INCLUDEDIR})
     install(TARGETS
         ${mongocxx_target_list}
         EXPORT mongocxx_targets
@@ -39,8 +44,7 @@ if(1)
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT runtime
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT dev
         INCLUDES DESTINATION
-        ${CMAKE_INSTALL_INCLUDEDIR}/mongocxx/v_noabi
-        ${CMAKE_INSTALL_INCLUDEDIR}
+        ${mongocxx_target_includes}
     )
 
     install(EXPORT mongocxx_targets
@@ -106,6 +110,7 @@ if(1)
                 -D "is_static=${is_static}"
                 -D "bsoncxx_name=${bsoncxx_name}"
                 -D "mongoc_req_ver=${MONGOC_REQUIRED_VERSION}"
+                -D "enable_unstable_abi=$CACHE{MONGOCXX_ENABLE_UNSTABLE_ABI}"
                 -P ${CMAKE_CURRENT_SOURCE_DIR}/generate-pc.cmake
             MAIN_DEPENDENCY
                 ${CMAKE_CURRENT_SOURCE_DIR}/libmongocxx.pc.in
