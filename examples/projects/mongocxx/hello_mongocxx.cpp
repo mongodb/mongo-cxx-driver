@@ -55,7 +55,7 @@ static constexpr std::array<std::uint8_t, 15> bytes = {{
 
 } // namespace
 
-int main(int argc, char** argv) try {
+int main(int argc, char** argv) {
 #if MONGOCXX_ENABLE_UNSTABLE_ABI == 0
     using view_type = bsoncxx::v1::document::view;
     using instance_type = mongocxx::v1::instance;
@@ -68,20 +68,38 @@ int main(int argc, char** argv) try {
     using client_type = mongocxx::client;
 #endif
 
-    instance_type instance;
+    try {
+        instance_type instance;
 
-    client_type client{uri_type{(argc >= 2) ? argv[1] : uri_type::k_default_uri}};
-    auto admin = client["admin"];
+        client_type client{uri_type{(argc >= 2) ? argv[1] : uri_type::k_default_uri}};
+        auto admin = client["admin"];
 
-    // {"ping": 1}
-    auto const reply = admin.run_command(view_type{bytes.data(), bytes.size()});
-    auto const ok = static_cast<int>(reply["ok"].get_double().value);
+        // {"ping": 1}
+        auto const reply = admin.run_command(view_type{bytes.data(), bytes.size()});
+        auto const ok = static_cast<int>(reply["ok"].get_double().value);
 
-    // {"ok": 1}
-    std::cout << "{ok: " << static_cast<int>(ok) << '}' << std::endl;
+        if (ok) {
+            std::cout << "Successfully connected to a live MongoDB server!" << std::endl;
+            return EXIT_SUCCESS;
+        } else {
+            std::cout << "Failed to ping the MongoDB server." << std::endl;
+            return EXIT_FAILURE;
+        }
+    } catch (std::system_error const& ex) {
+        static constexpr auto server_selection_failure = 13053; // MONGOC_ERROR_SERVER_SELECTION_FAILURE
 
-    return EXIT_SUCCESS;
-} catch (std::system_error const& ex) {
-    std::cerr << "unexpected failure: " << ex.what() << std::endl;
-    return EXIT_FAILURE;
+        // Allow opt-out of live server requirement.
+        if (std::getenv("MONGOCXX_EXAMPLE_ALLOW_NO_SERVER") != nullptr &&
+            ex.code().value() == server_selection_failure) {
+            std::cout << "Failed to connect to a MongoDB server, but MONGOCXX_EXAMPLE_ALLOW_NO_SERVER was set!"
+                      << std::endl;
+            return EXIT_SUCCESS;
+        }
+
+        std::cerr << "unexpected failure: " << ex.what() << std::endl;
+        return EXIT_FAILURE;
+    } catch (...) {
+        std::cerr << "unexpected failure: unknown exception" << std::endl;
+        return EXIT_FAILURE;
+    }
 }
