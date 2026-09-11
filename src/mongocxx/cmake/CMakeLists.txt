@@ -32,11 +32,6 @@ if(1)
     endfunction()
     configure_mongocxx_config_cmake()
 
-    set(mongocxx_target_includes "")
-    if(MONGOCXX_ENABLE_UNSTABLE_ABI)
-       list(APPEND mongocxx_target_includes ${CMAKE_INSTALL_INCLUDEDIR}/mongocxx/v_noabi)
-    endif()
-    list(APPEND mongocxx_target_includes ${CMAKE_INSTALL_INCLUDEDIR})
     install(TARGETS
         ${mongocxx_target_list}
         EXPORT mongocxx_targets
@@ -44,7 +39,8 @@ if(1)
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT runtime
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT dev
         INCLUDES DESTINATION
-        ${mongocxx_target_includes}
+            "$<$<BOOL:$CACHE{MONGOCXX_ENABLE_UNSTABLE_ABI}>:${CMAKE_INSTALL_INCLUDEDIR}/mongocxx/v_noabi>"
+            "${CMAKE_INSTALL_INCLUDEDIR}"
     )
 
     install(EXPORT mongocxx_targets
