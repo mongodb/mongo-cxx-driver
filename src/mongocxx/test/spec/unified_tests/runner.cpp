@@ -1385,6 +1385,10 @@ std::map<std::pair<bsoncxx::stdx::string_view, bsoncxx::stdx::string_view>, bson
           "collection.listIndexNames succeeds after retryable handshake server error "
           "(ShutdownInProgress)"},
          "collection.listIndexNames optional helper is not supported"},
+        {{"gridfs-queriesUseEq", "rename uses $eq to update the files collection document"},
+         "mongocxx::gridfs::bucket does not provide a rename API"},
+        {{"gridfs-queriesUseEq", "rename with a file id containing a query operator does not rename any files"},
+         "mongocxx::gridfs::bucket does not provide a rename API"},
 };
 
 void run_tests(
@@ -1610,7 +1614,14 @@ TEST_CASE("change streams unified format spec automated tests", "[unified_format
 }
 
 TEST_CASE("retryable reads unified format spec automated tests", "[unified_format_specs]") {
-    run_unified_format_tests_in_env_dir("RETRYABLE_READS_UNIFIED_TESTS_PATH");
+    std::set<bsoncxx::stdx::string_view> const unsupported_tests = {
+        // mongocxx::gridfs::bucket does not provide a download-by-filename API.
+        "gridfs-downloadByName.json",
+        // mongocxx::gridfs::bucket does not provide a download-by-filename API.
+        "gridfs-downloadByName-serverErrors.json",
+    };
+
+    run_unified_format_tests_in_env_dir("RETRYABLE_READS_UNIFIED_TESTS_PATH", unsupported_tests);
 }
 
 TEST_CASE("retryable writes unified format spec automated tests", "[unified_format_specs]") {
@@ -1631,6 +1642,10 @@ TEST_CASE("collection management spec automated tests", "[unified_format_specs]"
 
 TEST_CASE("index management spec automated tests", "[unified_format_specs]") {
     run_unified_format_tests_in_env_dir("INDEX_MANAGEMENT_TESTS_PATH");
+}
+
+TEST_CASE("GridFS unified format spec automated tests", "[unified_format_specs]") {
+    run_unified_format_tests_in_env_dir("GRIDFS_UNIFIED_TESTS_PATH");
 }
 
 // See:
