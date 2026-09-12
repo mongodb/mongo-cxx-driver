@@ -13,6 +13,7 @@ on_exit() {
     echo "Dumping debootstrap.log"
     cat ./unstable-chroot/debootstrap/debootstrap.log
   fi
+  sudo umount ./unstable-chroot/proc ./unstable-chroot/sys ./unstable-chroot/dev/pts
 }
 trap on_exit EXIT
 
@@ -50,12 +51,15 @@ cd ..
 git clone https://salsa.debian.org/installer-team/debootstrap.git debootstrap.git
 export DEBOOTSTRAP_DIR=$(pwd)/debootstrap.git
 sudo -E ./debootstrap.git/debootstrap --variant=buildd unstable ./unstable-chroot/ http://cdn-aws.deb.debian.org/debian
+sudo mount proc ./unstable-chroot/proc -t proc
+sudo mount sysfs ./unstable-chroot/sys -t sysfs
+sudo mount devpts ./unstable-chroot/dev/pts -t devpts
 cp -a mongo-cxx-driver ./unstable-chroot/tmp/
 sudo DEB_BUILD_PROFILES="${DEB_BUILD_PROFILES}" chroot ./unstable-chroot /bin/bash -c "
   (apt-get install -y ca-certificates cmake debhelper doxygen git libsasl2-dev libsnappy-dev libssl-dev libutf8proc-dev pkgconf zlib1g-dev build-essential curl fakeroot furo git-buildpackage python3-sphinx python3-sphinx-design python3-packaging && \
   mkdir /tmp/mongo-c-driver && \
   cd /tmp/mongo-c-driver && \
-  curl -o deb.tar.gz -L https://s3.amazonaws.com/mciuploads/mongo-c-driver/master/mongo-c-driver-debian-packages-latest.tar.gz && \
+  curl -o deb.tar.gz -L https://mciuploads.s3.amazonaws.com/mongo-c-driver/master/mongo-c-driver-debian-packages-amd64-latest.tar.gz && \
   tar zxvf deb.tar.gz && \
   apt-get install -y ./*.deb && \
   chown -R root:root /tmp/mongo-cxx-driver && \
@@ -74,25 +78,17 @@ sudo DEB_BUILD_PROFILES="${DEB_BUILD_PROFILES}" chroot ./unstable-chroot /bin/ba
   LANG=C /bin/bash -x ./debian/build_snapshot.sh && \
   debc ../*.changes && \
   dpkg -i ../*.deb && \
-  /usr/bin/g++ -I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -I. -o runcommand_examples examples/mongocxx/mongodb.com/runcommand_examples.cpp -lmongocxx -lbsoncxx && \
-  /usr/bin/g++ -I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -I. -o aggregation_examples examples/mongocxx/mongodb.com/aggregation_examples.cpp -lmongocxx -lbsoncxx && \
-  /usr/bin/g++ -I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -I. -o index_examples examples/mongocxx/mongodb.com/index_examples.cpp -lmongocxx -lbsoncxx && \
-  /usr/bin/g++ -I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -I. -o documentation_examples examples/mongocxx/mongodb.com/documentation_examples.cpp -lmongocxx -lbsoncxx )"
+  /usr/bin/g++ -DBSONCXX_ENABLE_UNSTABLE_ABI=0 \$(pkgconf --cflags libbsoncxx1) -o hello_bsoncxx ./examples/projects/bsoncxx/hello_bsoncxx.cpp \$(pkgconf --libs libbsoncxx1) && \
+  ./hello_bsoncxx && \
+  /usr/bin/g++ -DBSONCXX_ENABLE_UNSTABLE_ABI=0 -DMONGOCXX_ENABLE_UNSTABLE_ABI=0 \$(pkgconf --cflags libbsoncxx1 libmongocxx1) -o hello_mongocxx ./examples/projects/mongocxx/hello_mongocxx.cpp \$(pkgconf --libs libmongocxx1) && \
+  MONGOCXX_EXAMPLE_ALLOW_NO_SERVER=1 ./hello_mongocxx )"
 
-[ -e ./unstable-chroot/tmp/mongo-cxx-driver/runcommand_examples ] || (
-  echo "Example 'runcommand_examples' was not built!"
+[ -e ./unstable-chroot/tmp/mongo-cxx-driver/hello_bsoncxx ] || (
+  echo "Example 'hello_bsoncxx' was not built!"
   exit 1
 )
-[ -e ./unstable-chroot/tmp/mongo-cxx-driver/aggregation_examples ] || (
-  echo "Example 'aggregation_examples' was not built!"
-  exit 1
-)
-[ -e ./unstable-chroot/tmp/mongo-cxx-driver/index_examples ] || (
-  echo "Example 'index_examples' was not built!"
-  exit 1
-)
-[ -e ./unstable-chroot/tmp/mongo-cxx-driver/documentation_examples ] || (
-  echo "Example 'documentation_examples' was not built!"
+[ -e ./unstable-chroot/tmp/mongo-cxx-driver/hello_mongocxx ] || (
+  echo "Example 'hello_mongocxx' was not built!"
   exit 1
 )
 (
