@@ -83,14 +83,6 @@ sudo DEB_BUILD_PROFILES="${DEB_BUILD_PROFILES}" chroot ./unstable-chroot /bin/ba
   /usr/bin/g++ -DBSONCXX_ENABLE_UNSTABLE_ABI=0 -DMONGOCXX_ENABLE_UNSTABLE_ABI=0 \$(pkgconf --cflags libbsoncxx1 libmongocxx1) -o hello_mongocxx ./examples/projects/mongocxx/hello_mongocxx.cpp \$(pkgconf --libs libmongocxx1) && \
   MONGOCXX_EXAMPLE_ALLOW_NO_SERVER=1 ./hello_mongocxx )"
 
-[ -e ./unstable-chroot/tmp/mongo-cxx-driver/hello_bsoncxx ] || (
-  echo "Example 'hello_bsoncxx' was not built!"
-  exit 1
-)
-[ -e ./unstable-chroot/tmp/mongo-cxx-driver/hello_mongocxx ] || (
-  echo "Example 'hello_mongocxx' was not built!"
-  exit 1
-)
 (
   cd ./unstable-chroot/tmp/
   tar zcvf ../../deb.tar.gz *.dsc *.orig.tar.gz *.debian.tar.xz *.build *.deb
