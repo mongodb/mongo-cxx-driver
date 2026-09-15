@@ -28,11 +28,6 @@ if(1)
         @ONLY
     )
 
-    set(bsoncxx_target_includes "")
-    if(BSONCXX_ENABLE_UNSTABLE_ABI)
-       list(APPEND bsoncxx_target_includes ${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v_noabi)
-    endif()
-    list(APPEND bsoncxx_target_includes ${CMAKE_INSTALL_INCLUDEDIR})
     install(TARGETS
         ${bsoncxx_target_list}
         EXPORT bsoncxx_targets
@@ -40,7 +35,8 @@ if(1)
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT runtime
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT dev
         INCLUDES DESTINATION
-        ${bsoncxx_target_includes}
+            "$<$<BOOL:$CACHE{BSONCXX_ENABLE_UNSTABLE_ABI}>:${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v_noabi>"
+            "${CMAKE_INSTALL_INCLUDEDIR}"
     )
 
     install(EXPORT bsoncxx_targets
