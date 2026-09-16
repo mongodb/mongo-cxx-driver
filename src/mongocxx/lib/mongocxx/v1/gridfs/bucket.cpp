@@ -218,6 +218,18 @@ void append_bson_value(char const* name, bsoncxx::v1::types::view const& value, 
     doc += v;
 }
 
+// Appends `{name: {"$eq": value}}` to `doc`.
+void append_bson_value_eq(char const* name, bsoncxx::v1::types::view const& value, scoped_bson& doc) {
+    scoped_bson eq;
+    append_bson_value("$eq", value, eq);
+
+    scoped_bson v;
+    if (!BSON_APPEND_DOCUMENT(v.out_ptr(), name, eq.bson())) {
+        throw std::logic_error{"mongocxx::v1::gridfs::append_bson_value_eq: BSON_APPEND_DOCUMENT failed"};
+    }
+    doc += v;
+}
+
 std::int64_t read_integral_field(char const* name, bsoncxx::v1::document::view doc) {
     auto const e = doc[name];
 
@@ -584,7 +596,7 @@ namespace {
 bsoncxx::v1::document::value
 find_files_doc(v1::collection& files, v1::client_session const* session_ptr, bsoncxx::v1::types::view id) {
     scoped_bson filter;
-    append_bson_value("_id", id, filter);
+    append_bson_value_eq("_id", id, filter);
 
     auto files_doc = session_ptr ? files.find_one(*session_ptr, filter.view()) : files.find_one(filter.view());
 
@@ -745,7 +757,7 @@ v1::gridfs::downloader bucket::internal::open_download_stream_impl(
     }
 
     scoped_bson chunks_filter;
-    append_bson_value("files_id", id, chunks_filter);
+    append_bson_value_eq("files_id", id, chunks_filter);
 
     v1::find_options chunks_opts;
     chunks_opts.sort(scoped_bson{BCON_NEW("n", BCON_INT32(1))}.value());
@@ -798,7 +810,7 @@ void bucket::internal::delete_file_impl(
 
     {
         scoped_bson filter;
-        append_bson_value("_id", id, filter);
+        append_bson_value_eq("_id", id, filter);
 
         auto const ret = session_ptr ? files.delete_one(*session_ptr, filter.view()) : files.delete_one(filter.view());
 
@@ -809,7 +821,7 @@ void bucket::internal::delete_file_impl(
 
     {
         scoped_bson filter;
-        append_bson_value("files_id", id, filter);
+        append_bson_value_eq("files_id", id, filter);
         session_ptr ? chunks.delete_many(*session_ptr, filter.view()) : chunks.delete_many(filter.view());
     }
 }

@@ -156,6 +156,12 @@ enum class error_code : std::int32_t {
     /// Attempted out-of-range access to a BSON Binary Vector element.
     k_vector_out_of_range,
 
+    /// A key would be too large to represent.
+    k_key_too_large,
+
+    /// An array index would be too large to represent.
+    k_array_index_too_large,
+
     // Add new constant string message to error_code.cpp as well!
 };
 

@@ -150,6 +150,18 @@ void append_bson_value(char const* name, bsoncxx::v1::types::value const& value,
     doc += v;
 }
 
+// Appends `{name: {"$eq": value}}` to `doc`.
+void append_bson_value_eq(char const* name, bsoncxx::v1::types::value const& value, scoped_bson& doc) {
+    scoped_bson eq;
+    append_bson_value("$eq", value, eq);
+
+    scoped_bson v;
+    if (!BSON_APPEND_DOCUMENT(v.out_ptr(), name, eq.bson())) {
+        throw std::logic_error{"mongocxx::v1::gridfs::append_bson_value_eq: BSON_APPEND_DOCUMENT failed"};
+    }
+    doc += v;
+}
+
 } // namespace
 
 v1::gridfs::upload_result uploader::close() {
@@ -206,7 +218,7 @@ void uploader::abort() {
     impl._closed = true;
 
     scoped_bson filter;
-    append_bson_value("files_id", impl._id, filter);
+    append_bson_value_eq("files_id", impl._id, filter);
 
     auto& chunks = impl._chunks;
 

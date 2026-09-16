@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <cstring>
+#include <limits>
 
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/exception/error_code.hpp>
@@ -134,10 +135,16 @@ class core::impl {
 
     // Throws bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting
     // for a key to be appended to start a new key/value pair.
+    // The returned key has a length that can be safely cast to std::int32_t.
     stdx::string_view next_key() {
         if (is_array()) {
-            _itoa_key =
-                _stack.empty() ? static_cast<std::uint32_t>(_n++) : static_cast<std::uint32_t>(_stack.back().n++);
+            std::size_t& n = _stack.empty() ? _n : _stack.back().n;
+
+            if (n > std::numeric_limits<std::uint32_t>::max()) {
+                throw v_noabi::exception{v_noabi::error_code::k_array_index_too_large};
+            }
+
+            _itoa_key = static_cast<std::uint32_t>(n++);
             _user_key_view = stdx::string_view{_itoa_key.c_str(), _itoa_key.length()};
         } else if (!_has_user_key) {
             throw v_noabi::exception{v_noabi::error_code::k_need_key};
@@ -153,6 +160,10 @@ class core::impl {
             throw v_noabi::exception{v_noabi::error_code::k_unmatched_key_in_builder};
         }
 
+        if (str.length() > std::numeric_limits<std::int32_t>::max()) {
+            throw v_noabi::exception{v_noabi::error_code::k_key_too_large};
+        }
+
         _user_key_view = std::move(str);
         _has_user_key = true;
     }
@@ -160,6 +171,10 @@ class core::impl {
     void push_key(std::string str) {
         if (_has_user_key) {
             throw v_noabi::exception{v_noabi::error_code::k_unmatched_key_in_builder};
+        }
+
+        if (str.length() > std::numeric_limits<std::int32_t>::max()) {
+            throw v_noabi::exception{v_noabi::error_code::k_key_too_large};
         }
 
         _user_key_owned = std::move(str);
@@ -461,13 +476,14 @@ core& core::append(types::b_code const& value) {
 
 core& core::append(types::b_symbol const& value) {
     stdx::string_view key = _impl->next_key();
+    std::size_t value_length = value.symbol.length();
 
-    if (!bson_append_symbol(
-            _impl->back(),
-            key.data(),
-            static_cast<std::int32_t>(key.length()),
-            value.symbol.data(),
-            static_cast<std::int32_t>(value.symbol.length()))) {
+    if (value_length > std::numeric_limits<std::int32_t>::max() || !bson_append_symbol(
+                                                                       _impl->back(),
+                                                                       key.data(),
+                                                                       static_cast<std::int32_t>(key.length()),
+                                                                       value.symbol.data(),
+                                                                       static_cast<std::int32_t>(value_length))) {
         throw v_noabi::exception{v_noabi::error_code::k_cannot_append_symbol};
     }
 

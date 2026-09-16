@@ -12,7 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <cstdint>
+#include <cstdlib>
 #include <cstring>
+#include <limits>
+#include <memory>
 
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
@@ -1791,5 +1795,36 @@ TEST_CASE("empty list builder", "[bsoncxx::builder::list]") {
 
     builder::array arr = {};
     bson_eq_object(&expected, arr.view().get_array().value);
+}
+
+TEST_CASE("appending big strings", "[bsoncxx::builder::basic]") {
+    // Regression test for CXX-3548.
+    if (!std::getenv("MONGOCXX_TEST_LARGE_ALLOCATIONS")) {
+        // Only run when requested to avoid slow tests in CI.
+        SKIP("MONGOCXX_TEST_LARGE_ALLOCATIONS is not set");
+    }
+
+    constexpr std::size_t big_size = static_cast<std::size_t>(std::numeric_limits<std::int32_t>::max()) + 1;
+    // If big_size is unsafely cast to int32_t, the resulting negative length is interpreted by libbson as a request to
+    // use strlen. But strlen must not be called. The input string is not null terminated.
+    if (static_cast<std::int32_t>(big_size) >= 0) {
+        SKIP("cast of INT32_MAX+1 to int32_t does not result in a negative value");
+    }
+
+    // Heap allocate a large buffer. Do not use std::array as it may fail to stack allocate.
+    auto buf = std::unique_ptr<char[]>{new char[big_size]};
+    std::memset(buf.get(), 'a', big_size);
+    stdx::string_view const big_string{buf.get(), big_size};
+
+    // Try appending a big key:
+    bsoncxx::builder::basic::document doc;
+    CHECK_THROWS_AS(doc.append(bsoncxx::builder::basic::kvp(big_string, 1.0)), bsoncxx::exception);
+
+    // Try appending a big string:
+    CHECK_THROWS_AS(doc.append(bsoncxx::builder::basic::kvp("key", big_string)), bsoncxx::exception);
+
+    // Try appending a big symbol:
+    CHECK_THROWS_AS(
+        doc.append(bsoncxx::builder::basic::kvp("key", bsoncxx::types::b_symbol{big_string})), bsoncxx::exception);
 }
 } // namespace
