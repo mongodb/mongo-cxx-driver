@@ -7,9 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Changes prior to 3.9.0 are documented as [release notes on GitHub](https://github.com/mongodb/mongo-cxx-driver/releases).
 
-## 4.6.0 [Unreleased]
-
-<!-- Will contain entries for the next minor release. -->
+## 4.6.0
 
 ### Added
 
@@ -19,6 +17,7 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
     - This is a distinct field from the deprecated `text_opts()`. When both are set, `string_opts` takes precedence and `text_opts` is ignored.
   - `mongocxx::v1::encrypt_options::encryption_algorithm::k_string` ("String").
   - `mongocxx::v1::encrypt_options::encryption_query_type::k_prefix` ("prefix"), `k_suffix` ("suffix"), and `k_substring` ("substring").
+- Expose `atClusterTime` parameter in snapshot sessions
 
 ### Deprecated
 
