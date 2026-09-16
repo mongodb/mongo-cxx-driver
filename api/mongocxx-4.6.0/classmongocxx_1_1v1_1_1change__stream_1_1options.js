@@ -1,0 +1,27 @@
+var classmongocxx_1_1v1_1_1change__stream_1_1options =
+[
+    [ "~options", "classmongocxx_1_1v1_1_1change__stream_1_1options.html#af4e83ee6359b2578978dc4dd0a2b41a3", null ],
+    [ "options", "classmongocxx_1_1v1_1_1change__stream_1_1options.html#a9dc89744c852b7bc4f16ace25183b3d7", null ],
+    [ "options", "classmongocxx_1_1v1_1_1change__stream_1_1options.html#a7bf97f01f02dcd18bbc09569359dbb36", null ],
+    [ "options", "classmongocxx_1_1v1_1_1change__stream_1_1options.html#a30cd45115784821f5dfc7c839b4f38b1", null ],
+    [ "batch_size", "classmongocxx_1_1v1_1_1change__stream_1_1options.html#aa9ab869669fa0fdd06868c081104c099", null ],
+    [ "batch_size", "classmongocxx_1_1v1_1_1change__stream_1_1options.html#a33b7e7408a73fb1fd7a747a21c67f7ec", null ],
+    [ "collation", "classmongocxx_1_1v1_1_1change__stream_1_1options.html#a5250326418d71f4232d11d26a4699858", null ],
+    [ "collation", "classmongocxx_1_1v1_1_1change__stream_1_1options.html#a084a67fd1ff010f492c22180667f38a3", null ],
+    [ "comment", "classmongocxx_1_1v1_1_1change__stream_1_1options.html#af67312a073fba4bb5b96ded5a9ee089f", null ],
+    [ "comment", "classmongocxx_1_1v1_1_1change__stream_1_1options.html#aef02081916a46bb323d10f99fc848b6e", null ],
+    [ "full_document", "classmongocxx_1_1v1_1_1change__stream_1_1options.html#a3b2a78b1d2d4429ee50ed89c0c031485", null ],
+    [ "full_document", "classmongocxx_1_1v1_1_1change__stream_1_1options.html#af8541e03c512fe3a89b5f38ea40a0705", null ],
+    [ "full_document_before_change", "classmongocxx_1_1v1_1_1change__stream_1_1options.html#ad0b8c3126ae0d2d21890dbe920c3ae34", null ],
+    [ "full_document_before_change", "classmongocxx_1_1v1_1_1change__stream_1_1options.html#af40a4accbfd998029f03cd2118b105eb", null ],
+    [ "max_await_time", "classmongocxx_1_1v1_1_1change__stream_1_1options.html#a48616f79062375f5dee1d111fac973a9", null ],
+    [ "max_await_time", "classmongocxx_1_1v1_1_1change__stream_1_1options.html#aee1824d7295609258ee45f079a1c142f", null ],
+    [ "operator=", "classmongocxx_1_1v1_1_1change__stream_1_1options.html#aa98368febbf3374e25e4e7bb2b4d45f2", null ],
+    [ "operator=", "classmongocxx_1_1v1_1_1change__stream_1_1options.html#acccccb14d6cf5a5d676016ef6a12de55", null ],
+    [ "resume_after", "classmongocxx_1_1v1_1_1change__stream_1_1options.html#accf429563b33da95175171f1bea61f81", null ],
+    [ "resume_after", "classmongocxx_1_1v1_1_1change__stream_1_1options.html#adbdf4f4fb78160389dfc908c6c81fd2b", null ],
+    [ "start_after", "classmongocxx_1_1v1_1_1change__stream_1_1options.html#a043a4847c5ad4d37dcc968b409eabc44", null ],
+    [ "start_after", "classmongocxx_1_1v1_1_1change__stream_1_1options.html#ae75cb1c4f4cea1397d4b57bc695868fd", null ],
+    [ "start_at_operation_time", "classmongocxx_1_1v1_1_1change__stream_1_1options.html#a2c77d4a4c491a50e8302ae2430c0a657", null ],
+    [ "start_at_operation_time", "classmongocxx_1_1v1_1_1change__stream_1_1options.html#a61f56a361402aaaa0b1693be94d78fcb", null ]
+];

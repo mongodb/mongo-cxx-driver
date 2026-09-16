@@ -1,0 +1,538 @@
+<!-- HTML header for doxygen 1.15.0-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.15.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>MongoDB C++ Driver: mongocxx::string_options Class Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript">var page_layout=1;</script>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(function() { init_search(); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-extra.css" rel="stylesheet" type="text/css"/>
+<!-- Mixpanel Tracker -->
+<script type="text/javascript">
+  (function(e,c){if(!c.__SV){var l,h;window.mixpanel=c;c._i=[];c.init=function(q,r,f){function t(d,a){var g=a.split(".");2==g.length&&(d=d[g[0]],a=g[1]);d[a]=function(){d.push([a].concat(Array.prototype.slice.call(arguments,0)))}}var b=c;"undefined"!==typeof f?b=c[f]=[]:f="mixpanel";b.people=b.people||[];b.toString=function(d){var a="mixpanel";"mixpanel"!==f&&(a+="."+f);d||(a+=" (stub)");return a};b.people.toString=function(){return b.toString(1)+".people (stub)"};l="disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking start_batch_senders start_session_recording stop_session_recording people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove".split(" ");
+  for(h=0;h<l.length;h++)t(b,l[h]);var n="set set_once union unset remove delete".split(" ");b.get_group=function(){function d(p){a[p]=function(){b.push([g,[p].concat(Array.prototype.slice.call(arguments,0))])}}for(var a={},g=["get_group"].concat(Array.prototype.slice.call(arguments,0)),m=0;m<n.length;m++)d(n[m]);return a};c._i.push([q,r,f])};c.__SV=1.2;var k=e.createElement("script");k.type="text/javascript";k.async=!0;k.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"file:"===
+  e.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";e=e.getElementsByTagName("script")[0];e.parentNode.insertBefore(k,e)}})(document,window.mixpanel||[]); mixpanel.init('f2a38f26e5cc0eee429a9276f296c118', {
+    autocapture: true,
+    record_sessions_percent: 0,
+  })
+</script>
+<!-- patch-apidocs-current-redirects: mongocxx-4.6.0 -->
+<link rel="canonical" href="https://mongocxx.org/api/mongocxx-4.6.0/classmongocxx_1_1string__options.html"/>
+<script type="text/javascript">
+if (window.location.pathname.startsWith("/api/current/")) {
+  window.location.replace(
+    window.location.href.replace("/api/current/", "/api/mongocxx-4.6.0/")
+  )
+}
+</script>
+</head>
+<body>
+<div id="side-nav" class="ui-resizable side-nav-resizable"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">MongoDB C++ Driver<span id="projectnumber">&#160;4.6.0</span>
+   </div>
+  </td>
+ </tr>
+   <tr><td colspan="2">        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <span id="MSearchSelect" class="search-icon" onmouseover="return searchBox.OnSearchSelectShow()" onmouseout="return searchBox.OnSearchSelectHide()"><span class="search-icon-dropdown"></span></span>
+          <input type="text" id="MSearchField" value="" placeholder="Search" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><div id="MSearchCloseImg" class="close-icon"></div></a>
+          </span>
+        </div>
+</td></tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.15.0 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+</div><!-- top -->
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('classmongocxx_1_1string__options.html','','classmongocxx_1_1string__options-members'); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">mongocxx::string_options Class Reference</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p><code>#include &lt;<a class="el" href="v1_2string__options_8hpp_source.html">mongocxx/v1/string_options.hpp</a>&gt;</code></p>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Description</h2>
+<div class="textblock"><p>Options related to string queries for Queryable Encryption. </p>
+<p>Supported fields include:</p><ul>
+<li><span class="tt"><a class="el" href="classmongocxx_1_1v1_1_1string__options.html#a72fdab67c9ceada554759ae8ce1ffa90" title="Set the &quot;caseSensitive&quot; field.">case_sensitive</a></span> ("caseSensitive")</li>
+<li><span class="tt"><a class="el" href="classmongocxx_1_1v1_1_1string__options.html#a636b1a14f6e5af5dac6b20af05e11ae2" title="Set the &quot;diacriticSensitive&quot; field.">diacritic_sensitive</a></span> ("diacriticSensitive")</li>
+<li><span class="tt"><a class="el" href="classmongocxx_1_1v1_1_1string__options.html#a02f4b5cc1e811273ee4815517827310f" title="Set the &quot;prefix&quot; field.">prefix_opts</a></span> ("prefix")</li>
+<li><span class="tt"><a class="el" href="classmongocxx_1_1v1_1_1string__options.html#ae73e4faa49bae04c4c63171065442bd2" title="Set the &quot;suffix&quot; field.">suffix_opts</a></span> ("suffix")</li>
+<li><span class="tt"><a class="el" href="classmongocxx_1_1v1_1_1string__options.html#a76b26f6765800fd54b8e11497454f96d" title="Set the &quot;substring&quot; field.">substring_opts</a></span> ("substring")</li>
+</ul>
+<dl class="section see"><dt>See also</dt><dd><ul>
+<li><a href="https://specifications.readthedocs.io/en/latest/client-side-encryption/client-side-encryption/">Client Side Encryption (MongoDB Specifications)</a></li>
+<li><a href="https://www.mongodb.com/docs/manual/core/queryable-encryption/fundamentals/encrypt-and-query/">Encrypted Fields and Enabled Queries (MongoDB Manual)</a> </li>
+</ul>
+</dd></dl>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:prefix" id="r_prefix"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmongocxx_1_1string__options_1_1prefix.html">prefix</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Options related to prefix queries in Queryable Encryption.  <a href="classmongocxx_1_1string__options_1_1prefix.html#details">More...</a><br /></td></tr>
+<tr class="memitem:substring" id="r_substring"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmongocxx_1_1string__options_1_1substring.html">substring</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Options related to substring queries in Queryable Encryption.  <a href="classmongocxx_1_1string__options_1_1substring.html#details">More...</a><br /></td></tr>
+<tr class="memitem:suffix" id="r_suffix"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmongocxx_1_1string__options_1_1suffix.html">suffix</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Options related to suffix queries in Queryable Encryption.  <a href="classmongocxx_1_1string__options_1_1suffix.html#details">More...</a><br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a90537124a4cc9eb5d0e4755c052dfc86" id="r_a90537124a4cc9eb5d0e4755c052dfc86"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a90537124a4cc9eb5d0e4755c052dfc86">string_options</a> ()</td></tr>
+<tr class="memdesc:a90537124a4cc9eb5d0e4755c052dfc86"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default initialization.  <br /></td></tr>
+<tr class="memitem:af969d56b9326d3763c426fbbb177c096" id="r_af969d56b9326d3763c426fbbb177c096"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af969d56b9326d3763c426fbbb177c096">string_options</a> (string_options &amp;&amp;other) noexcept</td></tr>
+<tr class="memdesc:af969d56b9326d3763c426fbbb177c096"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move constructor.  <br /></td></tr>
+<tr class="memitem:a430d878a9ef52572f6f6562dcd8134e3" id="r_a430d878a9ef52572f6f6562dcd8134e3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a430d878a9ef52572f6f6562dcd8134e3">string_options</a> (string_options const &amp;other)</td></tr>
+<tr class="memdesc:a430d878a9ef52572f6f6562dcd8134e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy construction.  <br /></td></tr>
+<tr class="memitem:a2013632015ecc61d1d40c1ca2e08df89" id="r_a2013632015ecc61d1d40c1ca2e08df89"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2013632015ecc61d1d40c1ca2e08df89">~string_options</a> ()</td></tr>
+<tr class="memdesc:a2013632015ecc61d1d40c1ca2e08df89"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy this object.  <br /></td></tr>
+<tr class="memitem:a838c49d7255d70c51ac118927f9d7141" id="r_a838c49d7255d70c51ac118927f9d7141"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a838c49d7255d70c51ac118927f9d7141">case_sensitive</a> () const</td></tr>
+<tr class="memdesc:a838c49d7255d70c51ac118927f9d7141"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "caseSensitive" field.  <br /></td></tr>
+<tr class="memitem:a72fdab67c9ceada554759ae8ce1ffa90" id="r_a72fdab67c9ceada554759ae8ce1ffa90"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#af969d56b9326d3763c426fbbb177c096">string_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a72fdab67c9ceada554759ae8ce1ffa90">case_sensitive</a> (bool v)</td></tr>
+<tr class="memdesc:a72fdab67c9ceada554759ae8ce1ffa90"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "caseSensitive" field.  <br /></td></tr>
+<tr class="memitem:ac3fb076da01025f45e8e352255e13bc7" id="r_ac3fb076da01025f45e8e352255e13bc7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; bool &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac3fb076da01025f45e8e352255e13bc7">diacritic_sensitive</a> () const</td></tr>
+<tr class="memdesc:ac3fb076da01025f45e8e352255e13bc7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "diacriticSensitive" field.  <br /></td></tr>
+<tr class="memitem:a636b1a14f6e5af5dac6b20af05e11ae2" id="r_a636b1a14f6e5af5dac6b20af05e11ae2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#af969d56b9326d3763c426fbbb177c096">string_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a636b1a14f6e5af5dac6b20af05e11ae2">diacritic_sensitive</a> (bool v)</td></tr>
+<tr class="memdesc:a636b1a14f6e5af5dac6b20af05e11ae2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "diacriticSensitive" field.  <br /></td></tr>
+<tr class="memitem:a30e4fc756928f9a7d0e949cfc153817f" id="r_a30e4fc756928f9a7d0e949cfc153817f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#af969d56b9326d3763c426fbbb177c096">string_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a30e4fc756928f9a7d0e949cfc153817f">operator=</a> (<a class="el" href="#af969d56b9326d3763c426fbbb177c096">string_options</a> &amp;&amp;other) noexcept</td></tr>
+<tr class="memdesc:a30e4fc756928f9a7d0e949cfc153817f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move assignment.  <br /></td></tr>
+<tr class="memitem:a15a01e6f3641d4985c14776e6a081f2c" id="r_a15a01e6f3641d4985c14776e6a081f2c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#af969d56b9326d3763c426fbbb177c096">string_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a15a01e6f3641d4985c14776e6a081f2c">operator=</a> (<a class="el" href="#af969d56b9326d3763c426fbbb177c096">string_options</a> const &amp;other)</td></tr>
+<tr class="memdesc:a15a01e6f3641d4985c14776e6a081f2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy assignment.  <br /></td></tr>
+<tr class="memitem:a2be293a52bca99b131808cb729b594a0" id="r_a2be293a52bca99b131808cb729b594a0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classmongocxx_1_1string__options_1_1prefix.html">prefix</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2be293a52bca99b131808cb729b594a0">prefix_opts</a> () const</td></tr>
+<tr class="memdesc:a2be293a52bca99b131808cb729b594a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "prefix" field.  <br /></td></tr>
+<tr class="memitem:a02f4b5cc1e811273ee4815517827310f" id="r_a02f4b5cc1e811273ee4815517827310f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#af969d56b9326d3763c426fbbb177c096">string_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a02f4b5cc1e811273ee4815517827310f">prefix_opts</a> (<a class="el" href="classmongocxx_1_1string__options_1_1prefix.html">prefix</a> v)</td></tr>
+<tr class="memdesc:a02f4b5cc1e811273ee4815517827310f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "prefix" field.  <br /></td></tr>
+<tr class="memitem:abc730767fc1012e9fd234892ec0e0cf1" id="r_abc730767fc1012e9fd234892ec0e0cf1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classmongocxx_1_1string__options_1_1substring.html">substring</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abc730767fc1012e9fd234892ec0e0cf1">substring_opts</a> () const</td></tr>
+<tr class="memdesc:abc730767fc1012e9fd234892ec0e0cf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "substring" field.  <br /></td></tr>
+<tr class="memitem:a76b26f6765800fd54b8e11497454f96d" id="r_a76b26f6765800fd54b8e11497454f96d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#af969d56b9326d3763c426fbbb177c096">string_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a76b26f6765800fd54b8e11497454f96d">substring_opts</a> (<a class="el" href="classmongocxx_1_1string__options_1_1substring.html">substring</a> v)</td></tr>
+<tr class="memdesc:a76b26f6765800fd54b8e11497454f96d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "substring" field.  <br /></td></tr>
+<tr class="memitem:ae1ff684ed49297d92039b22b054fdd5d" id="r_ae1ff684ed49297d92039b22b054fdd5d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classmongocxx_1_1string__options_1_1suffix.html">suffix</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae1ff684ed49297d92039b22b054fdd5d">suffix_opts</a> () const</td></tr>
+<tr class="memdesc:ae1ff684ed49297d92039b22b054fdd5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current "suffix" field.  <br /></td></tr>
+<tr class="memitem:ae73e4faa49bae04c4c63171065442bd2" id="r_ae73e4faa49bae04c4c63171065442bd2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#af969d56b9326d3763c426fbbb177c096">string_options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae73e4faa49bae04c4c63171065442bd2">suffix_opts</a> (<a class="el" href="classmongocxx_1_1string__options_1_1suffix.html">suffix</a> v)</td></tr>
+<tr class="memdesc:ae73e4faa49bae04c4c63171065442bd2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "suffix" field.  <br /></td></tr>
+</table>
+<a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a2013632015ecc61d1d40c1ca2e08df89" name="a2013632015ecc61d1d40c1ca2e08df89"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2013632015ecc61d1d40c1ca2e08df89">&#9670;&#160;</a></span>~string_options()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classmongocxx_1_1v1_1_1string__options.html#a2013632015ecc61d1d40c1ca2e08df89">mongocxx::v1::string_options::~string_options</a> </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Destroy this object. </p>
+<dl class="section warning"><dt>Warning</dt><dd>Invalidates all associated views. </dd></dl>
+
+</div>
+</div>
+<a id="af969d56b9326d3763c426fbbb177c096" name="af969d56b9326d3763c426fbbb177c096"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af969d56b9326d3763c426fbbb177c096">&#9670;&#160;</a></span>string_options() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classmongocxx_1_1v1_1_1string__options.html#af969d56b9326d3763c426fbbb177c096">mongocxx::v1::string_options::string_options</a> </td>
+          <td>(</td>
+          <td class="paramtype">string_options &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Move constructor. </p>
+<dl class="section user"><dt>Postconditions:</dt><dd><ul>
+<li><span class="tt">other</span> is in an assign-or-destroy-only state. </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a id="a430d878a9ef52572f6f6562dcd8134e3" name="a430d878a9ef52572f6f6562dcd8134e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a430d878a9ef52572f6f6562dcd8134e3">&#9670;&#160;</a></span>string_options() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classmongocxx_1_1v1_1_1string__options.html#af969d56b9326d3763c426fbbb177c096">mongocxx::v1::string_options::string_options</a> </td>
+          <td>(</td>
+          <td class="paramtype">string_options const &amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Copy construction. </p>
+
+</div>
+</div>
+<a id="a90537124a4cc9eb5d0e4755c052dfc86" name="a90537124a4cc9eb5d0e4755c052dfc86"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a90537124a4cc9eb5d0e4755c052dfc86">&#9670;&#160;</a></span>string_options() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classmongocxx_1_1v1_1_1string__options.html#af969d56b9326d3763c426fbbb177c096">mongocxx::v1::string_options::string_options</a> </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Default initialization. </p>
+<dl class="section user"><dt>Postconditions:</dt><dd><ul>
+<li>All supported fields are "unset" or zero-initialized. </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="a838c49d7255d70c51ac118927f9d7141" name="a838c49d7255d70c51ac118927f9d7141"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a838c49d7255d70c51ac118927f9d7141">&#9670;&#160;</a></span>case_sensitive() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; bool &gt; <a class="el" href="classmongocxx_1_1v1_1_1string__options.html#a72fdab67c9ceada554759ae8ce1ffa90">mongocxx::v1::string_options::case_sensitive</a> </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "caseSensitive" field. </p>
+
+</div>
+</div>
+<a id="a72fdab67c9ceada554759ae8ce1ffa90" name="a72fdab67c9ceada554759ae8ce1ffa90"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a72fdab67c9ceada554759ae8ce1ffa90">&#9670;&#160;</a></span>case_sensitive() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#af969d56b9326d3763c426fbbb177c096">string_options</a> &amp; <a class="el" href="classmongocxx_1_1v1_1_1string__options.html#a72fdab67c9ceada554759ae8ce1ffa90">mongocxx::v1::string_options::case_sensitive</a> </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "caseSensitive" field. </p>
+
+</div>
+</div>
+<a id="ac3fb076da01025f45e8e352255e13bc7" name="ac3fb076da01025f45e8e352255e13bc7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3fb076da01025f45e8e352255e13bc7">&#9670;&#160;</a></span>diacritic_sensitive() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; bool &gt; <a class="el" href="classmongocxx_1_1v1_1_1string__options.html#a636b1a14f6e5af5dac6b20af05e11ae2">mongocxx::v1::string_options::diacritic_sensitive</a> </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "diacriticSensitive" field. </p>
+
+</div>
+</div>
+<a id="a636b1a14f6e5af5dac6b20af05e11ae2" name="a636b1a14f6e5af5dac6b20af05e11ae2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a636b1a14f6e5af5dac6b20af05e11ae2">&#9670;&#160;</a></span>diacritic_sensitive() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#af969d56b9326d3763c426fbbb177c096">string_options</a> &amp; <a class="el" href="classmongocxx_1_1v1_1_1string__options.html#a636b1a14f6e5af5dac6b20af05e11ae2">mongocxx::v1::string_options::diacritic_sensitive</a> </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "diacriticSensitive" field. </p>
+
+</div>
+</div>
+<a id="a30e4fc756928f9a7d0e949cfc153817f" name="a30e4fc756928f9a7d0e949cfc153817f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a30e4fc756928f9a7d0e949cfc153817f">&#9670;&#160;</a></span>operator=() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#af969d56b9326d3763c426fbbb177c096">string_options</a> &amp; mongocxx::v1::string_options::operator= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#af969d56b9326d3763c426fbbb177c096">string_options</a> &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Move assignment. </p>
+<dl class="section user"><dt>Postconditions:</dt><dd><ul>
+<li><span class="tt">other</span> is in an assign-or-destroy-only state. </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a id="a15a01e6f3641d4985c14776e6a081f2c" name="a15a01e6f3641d4985c14776e6a081f2c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a15a01e6f3641d4985c14776e6a081f2c">&#9670;&#160;</a></span>operator=() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#af969d56b9326d3763c426fbbb177c096">string_options</a> &amp; mongocxx::v1::string_options::operator= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#af969d56b9326d3763c426fbbb177c096">string_options</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Copy assignment. </p>
+
+</div>
+</div>
+<a id="a2be293a52bca99b131808cb729b594a0" name="a2be293a52bca99b131808cb729b594a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2be293a52bca99b131808cb729b594a0">&#9670;&#160;</a></span>prefix_opts() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classmongocxx_1_1string__options_1_1prefix.html">prefix</a> &gt; <a class="el" href="classmongocxx_1_1v1_1_1string__options.html#a02f4b5cc1e811273ee4815517827310f">mongocxx::v1::string_options::prefix_opts</a> </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "prefix" field. </p>
+
+</div>
+</div>
+<a id="a02f4b5cc1e811273ee4815517827310f" name="a02f4b5cc1e811273ee4815517827310f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a02f4b5cc1e811273ee4815517827310f">&#9670;&#160;</a></span>prefix_opts() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#af969d56b9326d3763c426fbbb177c096">string_options</a> &amp; <a class="el" href="classmongocxx_1_1v1_1_1string__options.html#a02f4b5cc1e811273ee4815517827310f">mongocxx::v1::string_options::prefix_opts</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classmongocxx_1_1string__options_1_1prefix.html">prefix</a></td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "prefix" field. </p>
+
+</div>
+</div>
+<a id="abc730767fc1012e9fd234892ec0e0cf1" name="abc730767fc1012e9fd234892ec0e0cf1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abc730767fc1012e9fd234892ec0e0cf1">&#9670;&#160;</a></span>substring_opts() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classmongocxx_1_1string__options_1_1substring.html">substring</a> &gt; <a class="el" href="classmongocxx_1_1v1_1_1string__options.html#a76b26f6765800fd54b8e11497454f96d">mongocxx::v1::string_options::substring_opts</a> </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "substring" field. </p>
+
+</div>
+</div>
+<a id="a76b26f6765800fd54b8e11497454f96d" name="a76b26f6765800fd54b8e11497454f96d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a76b26f6765800fd54b8e11497454f96d">&#9670;&#160;</a></span>substring_opts() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#af969d56b9326d3763c426fbbb177c096">string_options</a> &amp; <a class="el" href="classmongocxx_1_1v1_1_1string__options.html#a76b26f6765800fd54b8e11497454f96d">mongocxx::v1::string_options::substring_opts</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classmongocxx_1_1string__options_1_1substring.html">substring</a></td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "substring" field. </p>
+
+</div>
+</div>
+<a id="ae1ff684ed49297d92039b22b054fdd5d" name="ae1ff684ed49297d92039b22b054fdd5d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1ff684ed49297d92039b22b054fdd5d">&#9670;&#160;</a></span>suffix_opts() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classbsoncxx_1_1v1_1_1stdx_1_1optional.html">bsoncxx::v1::stdx::optional</a>&lt; <a class="el" href="classmongocxx_1_1string__options_1_1suffix.html">suffix</a> &gt; <a class="el" href="classmongocxx_1_1v1_1_1string__options.html#ae73e4faa49bae04c4c63171065442bd2">mongocxx::v1::string_options::suffix_opts</a> </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the current "suffix" field. </p>
+
+</div>
+</div>
+<a id="ae73e4faa49bae04c4c63171065442bd2" name="ae73e4faa49bae04c4c63171065442bd2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae73e4faa49bae04c4c63171065442bd2">&#9670;&#160;</a></span>suffix_opts() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#af969d56b9326d3763c426fbbb177c096">string_options</a> &amp; <a class="el" href="classmongocxx_1_1v1_1_1string__options.html#ae73e4faa49bae04c4c63171065442bd2">mongocxx::v1::string_options::suffix_opts</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classmongocxx_1_1string__options_1_1suffix.html">suffix</a></td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "suffix" field. </p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>mongocxx/v1/<a class="el" href="v1_2string__options_8hpp_source.html">string_options.hpp</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<div id="page-nav" class="page-nav-panel">
+<div id="page-nav-resize-handle"></div>
+<div id="page-nav-tree">
+<div id="page-nav-contents">
+</div><!-- page-nav-contents -->
+</div><!-- page-nav-tree -->
+</div><!-- page-nav -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="namespacemongocxx.html">mongocxx</a></li><li class="navelem"><a href="classmongocxx_1_1string__options.html">string_options</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
+  </ul>
+</div>
+</body>
+</html>

@@ -1,0 +1,343 @@
+<!-- HTML header for doxygen 1.15.0-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.15.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>MongoDB C++ Driver: mongocxx/v1/string_options.hpp Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript">var page_layout=1;</script>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(function() { init_search(); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="doxygen-extra.css" rel="stylesheet" type="text/css"/>
+<!-- Mixpanel Tracker -->
+<script type="text/javascript">
+  (function(e,c){if(!c.__SV){var l,h;window.mixpanel=c;c._i=[];c.init=function(q,r,f){function t(d,a){var g=a.split(".");2==g.length&&(d=d[g[0]],a=g[1]);d[a]=function(){d.push([a].concat(Array.prototype.slice.call(arguments,0)))}}var b=c;"undefined"!==typeof f?b=c[f]=[]:f="mixpanel";b.people=b.people||[];b.toString=function(d){var a="mixpanel";"mixpanel"!==f&&(a+="."+f);d||(a+=" (stub)");return a};b.people.toString=function(){return b.toString(1)+".people (stub)"};l="disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking start_batch_senders start_session_recording stop_session_recording people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove".split(" ");
+  for(h=0;h<l.length;h++)t(b,l[h]);var n="set set_once union unset remove delete".split(" ");b.get_group=function(){function d(p){a[p]=function(){b.push([g,[p].concat(Array.prototype.slice.call(arguments,0))])}}for(var a={},g=["get_group"].concat(Array.prototype.slice.call(arguments,0)),m=0;m<n.length;m++)d(n[m]);return a};c._i.push([q,r,f])};c.__SV=1.2;var k=e.createElement("script");k.type="text/javascript";k.async=!0;k.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"file:"===
+  e.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";e=e.getElementsByTagName("script")[0];e.parentNode.insertBefore(k,e)}})(document,window.mixpanel||[]); mixpanel.init('f2a38f26e5cc0eee429a9276f296c118', {
+    autocapture: true,
+    record_sessions_percent: 0,
+  })
+</script>
+<!-- patch-apidocs-current-redirects: mongocxx-4.6.0 -->
+<link rel="canonical" href="https://mongocxx.org/api/mongocxx-4.6.0/v1_2string__options_8hpp_source.html"/>
+<script type="text/javascript">
+if (window.location.pathname.startsWith("/api/current/")) {
+  window.location.replace(
+    window.location.href.replace("/api/current/", "/api/mongocxx-4.6.0/")
+  )
+}
+</script>
+</head>
+<body>
+<div id="side-nav" class="ui-resizable side-nav-resizable"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">MongoDB C++ Driver<span id="projectnumber">&#160;4.6.0</span>
+   </div>
+  </td>
+ </tr>
+   <tr><td colspan="2">        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <span id="MSearchSelect" class="search-icon" onmouseover="return searchBox.OnSearchSelectShow()" onmouseout="return searchBox.OnSearchSelectHide()"><span class="search-icon-dropdown"></span></span>
+          <input type="text" id="MSearchField" value="" placeholder="Search" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><div id="MSearchCloseImg" class="close-icon"></div></a>
+          </span>
+        </div>
+</td></tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Generated by Doxygen 1.15.0 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+</script>
+<script type="text/javascript">
+$(function() { codefold.init(); });
+</script>
+</div><!-- top -->
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){initNavTree('v1_2string__options_8hpp_source.html','',''); });
+</script>
+<div id="container">
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Loading...</div>
+<div class="SRStatus" id="Searching">Searching...</div>
+<div class="SRStatus" id="NoMatches">No Matches</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">string_options.hpp</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="v1_2string__options_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// Copyright 2009-present MongoDB, Inc.</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">//</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">// Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">// you may not use this file except in compliance with the License.</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment">// You may obtain a copy of the License at</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment">//</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment">// http://www.apache.org/licenses/LICENSE-2.0</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="comment">//</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="comment">// Unless required by applicable law or agreed to in writing, software</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="comment">// distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="comment">// See the License for the specific language governing permissions and</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="comment">// limitations under the License.</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;<a class="code" href="v1_2string__options-fwd_8hpp.html">mongocxx/v1/string_options-fwd.hpp</a>&gt;</span> <span class="comment">// IWYU pragma: export</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="comment">//</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &lt;<a class="code" href="mongocxx_2v1_2detail_2prelude_8hpp.html">mongocxx/v1/detail/prelude.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &lt;<a class="code" href="v1_2stdx_2optional_8hpp.html">bsoncxx/v1/stdx/optional.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &lt;<a class="code" href="mongocxx_2v1_2config_2export_8hpp.html">mongocxx/v1/config/export.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &lt;cstdint&gt;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacemongocxx.html">mongocxx</a> {</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacemongocxx_1_1v1.html">v1</a> {</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span></div>
+<div class="foldopen" id="foldopen00046" data-start="{" data-end="};">
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classmongocxx_1_1string__options.html">   46</a></span><span class="keyword">class </span><a class="code hl_function" href="classmongocxx_1_1string__options.html#af969d56b9326d3763c426fbbb177c096">string_options</a> {</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>   <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keyword">class </span>impl;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keywordtype">void</span>* _impl;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>   <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keyword">class </span><a class="code hl_class" href="classmongocxx_1_1string__options_1_1prefix.html">prefix</a>;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keyword">class </span><a class="code hl_class" href="classmongocxx_1_1string__options_1_1suffix.html">suffix</a>;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keyword">class </span><a class="code hl_class" href="classmongocxx_1_1string__options_1_1substring.html">substring</a>;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options.html#a2013632015ecc61d1d40c1ca2e08df89">   61</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>() <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options.html#a2013632015ecc61d1d40c1ca2e08df89">~string_options</a>();</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options.html#af969d56b9326d3763c426fbbb177c096">   69</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>() <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options.html#af969d56b9326d3763c426fbbb177c096">string_options</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options.html#af969d56b9326d3763c426fbbb177c096">string_options</a>&amp;&amp; other) noexcept;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options.html#a30e4fc756928f9a7d0e949cfc153817f">   77</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options.html#af969d56b9326d3763c426fbbb177c096">string_options</a>&amp;) operator=(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options.html#af969d56b9326d3763c426fbbb177c096">string_options</a>&amp;&amp; other) noexcept;</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span></div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options.html#a430d878a9ef52572f6f6562dcd8134e3">   82</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>() <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options.html#af969d56b9326d3763c426fbbb177c096">string_options</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options.html#af969d56b9326d3763c426fbbb177c096">string_options</a> const&amp; other);</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span></div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options.html#a15a01e6f3641d4985c14776e6a081f2c">   87</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options.html#af969d56b9326d3763c426fbbb177c096">string_options</a>&amp;) operator=(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options.html#af969d56b9326d3763c426fbbb177c096">string_options</a> const&amp; other);</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span></div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options.html#a90537124a4cc9eb5d0e4755c052dfc86">   95</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>() <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options.html#af969d56b9326d3763c426fbbb177c096">string_options</a>();</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span></div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options.html#a72fdab67c9ceada554759ae8ce1ffa90">  100</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options.html#af969d56b9326d3763c426fbbb177c096">string_options</a>&amp;) <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options.html#a72fdab67c9ceada554759ae8ce1ffa90">case_sensitive</a>(<span class="keywordtype">bool</span> v);</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span></div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options.html#a838c49d7255d70c51ac118927f9d7141">  105</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_namespace" href="namespacebsoncxx.html">bsoncxx</a>::<a class="code hl_namespace" href="namespacemongocxx_1_1v1.html">v1</a>::stdx::optional&lt;<span class="keywordtype">bool</span>&gt;) <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options.html#a72fdab67c9ceada554759ae8ce1ffa90">case_sensitive</a>() const;</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span></div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options.html#a636b1a14f6e5af5dac6b20af05e11ae2">  110</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options.html#af969d56b9326d3763c426fbbb177c096">string_options</a>&amp;) <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options.html#a636b1a14f6e5af5dac6b20af05e11ae2">diacritic_sensitive</a>(<span class="keywordtype">bool</span> v);</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span></div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options.html#ac3fb076da01025f45e8e352255e13bc7">  115</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_namespace" href="namespacebsoncxx.html">bsoncxx</a>::<a class="code hl_namespace" href="namespacemongocxx_1_1v1.html">v1</a>::stdx::optional&lt;<span class="keywordtype">bool</span>&gt;) <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options.html#a636b1a14f6e5af5dac6b20af05e11ae2">diacritic_sensitive</a>() const;</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span></div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options.html#a02f4b5cc1e811273ee4815517827310f">  120</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options.html#af969d56b9326d3763c426fbbb177c096">string_options</a>&amp;) <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options.html#a02f4b5cc1e811273ee4815517827310f">prefix_opts</a>(<a class="code hl_class" href="classmongocxx_1_1v1_1_1string__options_1_1prefix.html">prefix</a> v);</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span></div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options.html#a2be293a52bca99b131808cb729b594a0">  125</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_namespace" href="namespacebsoncxx.html">bsoncxx</a>::<a class="code hl_namespace" href="namespacemongocxx_1_1v1.html">v1</a>::stdx::optional&lt;<a class="code hl_class" href="classmongocxx_1_1v1_1_1string__options_1_1prefix.html">prefix</a>&gt;) <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options.html#a02f4b5cc1e811273ee4815517827310f">prefix_opts</a>() const;</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span></div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options.html#ae73e4faa49bae04c4c63171065442bd2">  130</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options.html#af969d56b9326d3763c426fbbb177c096">string_options</a>&amp;) <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options.html#ae73e4faa49bae04c4c63171065442bd2">suffix_opts</a>(<a class="code hl_class" href="classmongocxx_1_1v1_1_1string__options_1_1suffix.html">suffix</a> v);</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span></div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options.html#ae1ff684ed49297d92039b22b054fdd5d">  135</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_namespace" href="namespacebsoncxx.html">bsoncxx</a>::<a class="code hl_namespace" href="namespacemongocxx_1_1v1.html">v1</a>::stdx::optional&lt;<a class="code hl_class" href="classmongocxx_1_1v1_1_1string__options_1_1suffix.html">suffix</a>&gt;) <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options.html#ae73e4faa49bae04c4c63171065442bd2">suffix_opts</a>() const;</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span></div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options.html#a76b26f6765800fd54b8e11497454f96d">  140</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options.html#af969d56b9326d3763c426fbbb177c096">string_options</a>&amp;) <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options.html#a76b26f6765800fd54b8e11497454f96d">substring_opts</a>(<a class="code hl_class" href="classmongocxx_1_1v1_1_1string__options_1_1substring.html">substring</a> v);</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span></div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options.html#abc730767fc1012e9fd234892ec0e0cf1">  145</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_namespace" href="namespacebsoncxx.html">bsoncxx</a>::<a class="code hl_namespace" href="namespacemongocxx_1_1v1.html">v1</a>::stdx::optional&lt;<a class="code hl_class" href="classmongocxx_1_1v1_1_1string__options_1_1substring.html">substring</a>&gt;) <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options.html#a76b26f6765800fd54b8e11497454f96d">substring_opts</a>() const;</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span> </div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    class internal;</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>};</div>
+</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span></div>
+<div class="foldopen" id="foldopen00153" data-start="{" data-end="};">
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno"><a class="line" href="classmongocxx_1_1string__options_1_1prefix.html">  153</a></span>class <a class="code hl_function" href="classmongocxx_1_1string__options.html#af969d56b9326d3763c426fbbb177c096">string_options</a>::<a class="code hl_function" href="classmongocxx_1_1string__options_1_1prefix.html#aef1b45135a2c0a88bac2b0b1036a8d8c">prefix</a> {</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>   <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    <span class="keyword">class </span>impl;</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    <span class="keywordtype">void</span>* _impl;</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span> </div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>   <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options_1_1prefix.html#a39baebc5e9f5a733009606052f15df81">  164</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>() <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1prefix.html#a39baebc5e9f5a733009606052f15df81">~prefix</a>();</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span></div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options_1_1prefix.html#aef1b45135a2c0a88bac2b0b1036a8d8c">  172</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>() <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1prefix.html#aef1b45135a2c0a88bac2b0b1036a8d8c">prefix</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1prefix.html#aef1b45135a2c0a88bac2b0b1036a8d8c">prefix</a>&amp;&amp; other) noexcept;</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span></div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options_1_1prefix.html#abab07b6d66f3d2e8f88f6fef770d0a08">  180</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1prefix.html#aef1b45135a2c0a88bac2b0b1036a8d8c">prefix</a>&amp;) operator=(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1prefix.html#aef1b45135a2c0a88bac2b0b1036a8d8c">prefix</a>&amp;&amp; other) noexcept;</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span></div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options_1_1prefix.html#ad667e279d901b86981be0990e8f3f9d1">  185</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>() <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1prefix.html#aef1b45135a2c0a88bac2b0b1036a8d8c">prefix</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1prefix.html#aef1b45135a2c0a88bac2b0b1036a8d8c">prefix</a> const&amp; other);</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span></div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options_1_1prefix.html#aab17e5f4b7a3968a9ca00dcbf09ae6ea">  190</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1prefix.html#aef1b45135a2c0a88bac2b0b1036a8d8c">prefix</a>&amp;) operator=(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1prefix.html#aef1b45135a2c0a88bac2b0b1036a8d8c">prefix</a> const&amp; other);</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span></div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options_1_1prefix.html#ac3a8a549063617375d4e22ddd9eda459">  198</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>() <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1prefix.html#aef1b45135a2c0a88bac2b0b1036a8d8c">prefix</a>();</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span></div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options_1_1prefix.html#a7ecb2e5f98f60c187c35a1ca5b1a0d1b">  203</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1prefix.html#aef1b45135a2c0a88bac2b0b1036a8d8c">prefix</a>&amp;) <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1prefix.html#a7ecb2e5f98f60c187c35a1ca5b1a0d1b">str_max_query_length</a>(std::int32_t v);</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span></div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options_1_1prefix.html#ae9d001dc4397e2a578a608fe056a9a57">  208</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_namespace" href="namespacebsoncxx.html">bsoncxx</a>::<a class="code hl_namespace" href="namespacemongocxx_1_1v1.html">v1</a>::stdx::optional&lt;std::int32_t&gt;) <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1prefix.html#a7ecb2e5f98f60c187c35a1ca5b1a0d1b">str_max_query_length</a>() const;</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span></div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options_1_1prefix.html#a4785c9cd91574273ffb15c6e090014e1">  213</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1prefix.html#aef1b45135a2c0a88bac2b0b1036a8d8c">prefix</a>&amp;) <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1prefix.html#a4785c9cd91574273ffb15c6e090014e1">str_min_query_length</a>(std::int32_t v);</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span></div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options_1_1prefix.html#a1ae8dadc1fc7ce3d0392d4ecc090c5ec">  218</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_namespace" href="namespacebsoncxx.html">bsoncxx</a>::<a class="code hl_namespace" href="namespacemongocxx_1_1v1.html">v1</a>::stdx::optional&lt;std::int32_t&gt;) <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1prefix.html#a4785c9cd91574273ffb15c6e090014e1">str_min_query_length</a>() const;</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>};</div>
+</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span></div>
+<div class="foldopen" id="foldopen00224" data-start="{" data-end="};">
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno"><a class="line" href="classmongocxx_1_1string__options_1_1suffix.html">  224</a></span>class <a class="code hl_function" href="classmongocxx_1_1string__options.html#af969d56b9326d3763c426fbbb177c096">string_options</a>::<a class="code hl_function" href="classmongocxx_1_1string__options_1_1suffix.html#aca4e5b6fc0d5eb3fa68b7f9a5d2e0926">suffix</a> {</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>   <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>    <span class="keyword">class </span>impl;</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    <span class="keywordtype">void</span>* _impl;</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span> </div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>   <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options_1_1suffix.html#a73e92d7ee6003ecd597fd0e0096abc31">  235</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>() <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1suffix.html#a73e92d7ee6003ecd597fd0e0096abc31">~suffix</a>();</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span></div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options_1_1suffix.html#aca4e5b6fc0d5eb3fa68b7f9a5d2e0926">  243</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>() <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1suffix.html#aca4e5b6fc0d5eb3fa68b7f9a5d2e0926">suffix</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1suffix.html#aca4e5b6fc0d5eb3fa68b7f9a5d2e0926">suffix</a>&amp;&amp; other) noexcept;</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span></div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options_1_1suffix.html#a5fe02607ceb1deafea59cc044ff0780d">  251</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1suffix.html#aca4e5b6fc0d5eb3fa68b7f9a5d2e0926">suffix</a>&amp;) operator=(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1suffix.html#aca4e5b6fc0d5eb3fa68b7f9a5d2e0926">suffix</a>&amp;&amp; other) noexcept;</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span></div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options_1_1suffix.html#ad1e04c81ed7da6ca7fac5dca4d6e02e9">  256</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>() <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1suffix.html#aca4e5b6fc0d5eb3fa68b7f9a5d2e0926">suffix</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1suffix.html#aca4e5b6fc0d5eb3fa68b7f9a5d2e0926">suffix</a> const&amp; other);</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span></div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options_1_1suffix.html#a53edf4cb6b1e17a47a9eb92d761cdefb">  261</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1suffix.html#aca4e5b6fc0d5eb3fa68b7f9a5d2e0926">suffix</a>&amp;) operator=(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1suffix.html#aca4e5b6fc0d5eb3fa68b7f9a5d2e0926">suffix</a> const&amp; other);</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span></div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options_1_1suffix.html#a09de7206ff45d9c617112ec6629e1a1f">  269</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>() <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1suffix.html#aca4e5b6fc0d5eb3fa68b7f9a5d2e0926">suffix</a>();</div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span></div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options_1_1suffix.html#a388a74a2f4d4f6570eb1b0f816f4295d">  274</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1suffix.html#aca4e5b6fc0d5eb3fa68b7f9a5d2e0926">suffix</a>&amp;) <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1suffix.html#a388a74a2f4d4f6570eb1b0f816f4295d">str_max_query_length</a>(std::int32_t v);</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span></div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options_1_1suffix.html#a122906c842191f9ff487dd30c57825e8">  279</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_namespace" href="namespacebsoncxx.html">bsoncxx</a>::<a class="code hl_namespace" href="namespacemongocxx_1_1v1.html">v1</a>::stdx::optional&lt;std::int32_t&gt;) <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1suffix.html#a388a74a2f4d4f6570eb1b0f816f4295d">str_max_query_length</a>() const;</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span></div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options_1_1suffix.html#a75121130597088f03bd8ff1c7ca19eb2">  284</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1suffix.html#aca4e5b6fc0d5eb3fa68b7f9a5d2e0926">suffix</a>&amp;) <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1suffix.html#a75121130597088f03bd8ff1c7ca19eb2">str_min_query_length</a>(std::int32_t v);</div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span></div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options_1_1suffix.html#ae9847aef3765ec14d0ca4e051b93dafa">  289</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_namespace" href="namespacebsoncxx.html">bsoncxx</a>::<a class="code hl_namespace" href="namespacemongocxx_1_1v1.html">v1</a>::stdx::optional&lt;std::int32_t&gt;) <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1suffix.html#a75121130597088f03bd8ff1c7ca19eb2">str_min_query_length</a>() const;</div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>};</div>
+</div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span></div>
+<div class="foldopen" id="foldopen00295" data-start="{" data-end="};">
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno"><a class="line" href="classmongocxx_1_1string__options_1_1substring.html">  295</a></span>class <a class="code hl_function" href="classmongocxx_1_1string__options.html#af969d56b9326d3763c426fbbb177c096">string_options</a>::<a class="code hl_function" href="classmongocxx_1_1string__options_1_1substring.html#ad959d4e8d05cd728e64f7a43d1d51f69">substring</a> {</div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>   <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>    <span class="keyword">class </span>impl;</div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>    <span class="keywordtype">void</span>* _impl;</div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span> </div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>   <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#ae069d912e931db7765b0507d4dfc1ef6">  306</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>() <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#ae069d912e931db7765b0507d4dfc1ef6">~substring</a>();</div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span></div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#ad959d4e8d05cd728e64f7a43d1d51f69">  314</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>() <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#ad959d4e8d05cd728e64f7a43d1d51f69">substring</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#ad959d4e8d05cd728e64f7a43d1d51f69">substring</a>&amp;&amp; other) noexcept;</div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span></div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#a93c768546d9a96053c713e4d2d632763">  322</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#ad959d4e8d05cd728e64f7a43d1d51f69">substring</a>&amp;) operator=(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#ad959d4e8d05cd728e64f7a43d1d51f69">substring</a>&amp;&amp; other) noexcept;</div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span></div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#a3234fecdca952181e9295cdf28914345">  327</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>() <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#ad959d4e8d05cd728e64f7a43d1d51f69">substring</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#ad959d4e8d05cd728e64f7a43d1d51f69">substring</a> const&amp; other);</div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span></div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#a73344f92a00e5748944c4e84e32b5cb0">  332</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#ad959d4e8d05cd728e64f7a43d1d51f69">substring</a>&amp;) operator=(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#ad959d4e8d05cd728e64f7a43d1d51f69">substring</a> const&amp; other);</div>
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span></div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#a33be3f521f5a3121187fced7510aa1fc">  340</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>() <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#ad959d4e8d05cd728e64f7a43d1d51f69">substring</a>();</div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span></div>
+<div class="line"><a id="l00345" name="l00345"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#a0623a830acd6b1d8bbd6217cf114e570">  345</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#ad959d4e8d05cd728e64f7a43d1d51f69">substring</a>&amp;) <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#a0623a830acd6b1d8bbd6217cf114e570">str_max_length</a>(std::int32_t v);</div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span></div>
+<div class="line"><a id="l00350" name="l00350"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#af601aacd18c18a1ca41b0e42bc8f8f8c">  350</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_namespace" href="namespacebsoncxx.html">bsoncxx</a>::<a class="code hl_namespace" href="namespacemongocxx_1_1v1.html">v1</a>::stdx::optional&lt;std::int32_t&gt;) <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#a0623a830acd6b1d8bbd6217cf114e570">str_max_length</a>() const;</div>
+<div class="line"><a id="l00354" name="l00354"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#a78a11cd7687267b4561ef54704e3c40a">  354</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#ad959d4e8d05cd728e64f7a43d1d51f69">substring</a>&amp;) <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#a78a11cd7687267b4561ef54704e3c40a">str_max_query_length</a>(std::int32_t v);</div>
+<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span></div>
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#a95d8048f58709963bc4c7a9c95f8b48a">  359</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_namespace" href="namespacebsoncxx.html">bsoncxx</a>::<a class="code hl_namespace" href="namespacemongocxx_1_1v1.html">v1</a>::stdx::optional&lt;std::int32_t&gt;) <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#a78a11cd7687267b4561ef54704e3c40a">str_max_query_length</a>() const;</div>
+<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span></div>
+<div class="line"><a id="l00364" name="l00364"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#ac948044e280061ef7385e76700b48dbc">  364</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#ad959d4e8d05cd728e64f7a43d1d51f69">substring</a>&amp;) <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#ac948044e280061ef7385e76700b48dbc">str_min_query_length</a>(std::int32_t v);</div>
+<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span></div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno"><a class="line" href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#af89f1e9544ba65c007fe1518bfb2d459">  369</a></span>    <a class="code hl_define" href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a>(<a class="code hl_namespace" href="namespacebsoncxx.html">bsoncxx</a>::<a class="code hl_namespace" href="namespacemongocxx_1_1v1.html">v1</a>::stdx::optional&lt;std::int32_t&gt;) <a class="code hl_function" href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#ac948044e280061ef7385e76700b48dbc">str_min_query_length</a>() const;</div>
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>};</div>
+</div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span> </div>
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>} <span class="comment">// namespace v1</span></div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>} <span class="comment">// namespace mongocxx</span></div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span> </div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span><span class="preprocessor">#include &lt;mongocxx/v1/detail/postlude.hpp&gt;</span></div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span></div>
+<div class="ttc" id="aclassmongocxx_1_1string__options_1_1prefix_html"><div class="ttname"><a href="classmongocxx_1_1string__options_1_1prefix.html">mongocxx::string_options::prefix</a></div><div class="ttdoc">Options related to prefix queries in Queryable Encryption.</div><div class="ttdef"><b>Definition</b> string_options.hpp:153</div></div>
+<div class="ttc" id="aclassmongocxx_1_1string__options_1_1prefix_html_aef1b45135a2c0a88bac2b0b1036a8d8c"><div class="ttname"><a href="classmongocxx_1_1string__options_1_1prefix.html#aef1b45135a2c0a88bac2b0b1036a8d8c">mongocxx::string_options::prefix::prefix</a></div><div class="ttdeci">prefix(prefix &amp;&amp;other) noexcept</div><div class="ttdoc">Move constructor.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1string__options_1_1substring_html"><div class="ttname"><a href="classmongocxx_1_1string__options_1_1substring.html">mongocxx::string_options::substring</a></div><div class="ttdoc">Options related to substring queries in Queryable Encryption.</div><div class="ttdef"><b>Definition</b> string_options.hpp:295</div></div>
+<div class="ttc" id="aclassmongocxx_1_1string__options_1_1substring_html_ad959d4e8d05cd728e64f7a43d1d51f69"><div class="ttname"><a href="classmongocxx_1_1string__options_1_1substring.html#ad959d4e8d05cd728e64f7a43d1d51f69">mongocxx::string_options::substring::substring</a></div><div class="ttdeci">substring(substring &amp;&amp;other) noexcept</div><div class="ttdoc">Move constructor.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1string__options_1_1suffix_html"><div class="ttname"><a href="classmongocxx_1_1string__options_1_1suffix.html">mongocxx::string_options::suffix</a></div><div class="ttdoc">Options related to suffix queries in Queryable Encryption.</div><div class="ttdef"><b>Definition</b> string_options.hpp:224</div></div>
+<div class="ttc" id="aclassmongocxx_1_1string__options_1_1suffix_html_aca4e5b6fc0d5eb3fa68b7f9a5d2e0926"><div class="ttname"><a href="classmongocxx_1_1string__options_1_1suffix.html#aca4e5b6fc0d5eb3fa68b7f9a5d2e0926">mongocxx::string_options::suffix::suffix</a></div><div class="ttdeci">suffix(suffix &amp;&amp;other) noexcept</div><div class="ttdoc">Move constructor.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1string__options_html_af969d56b9326d3763c426fbbb177c096"><div class="ttname"><a href="classmongocxx_1_1string__options.html#af969d56b9326d3763c426fbbb177c096">mongocxx::string_options::string_options</a></div><div class="ttdeci">string_options(string_options &amp;&amp;other) noexcept</div><div class="ttdoc">Move constructor.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1string__options_1_1prefix_html"><div class="ttname"><a href="classmongocxx_1_1v1_1_1string__options_1_1prefix.html">mongocxx::v1::string_options::prefix</a></div><div class="ttdoc">Options related to prefix queries in Queryable Encryption.</div><div class="ttdef"><b>Definition</b> string_options.hpp:153</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1string__options_1_1prefix_html_a39baebc5e9f5a733009606052f15df81"><div class="ttname"><a href="classmongocxx_1_1v1_1_1string__options_1_1prefix.html#a39baebc5e9f5a733009606052f15df81">mongocxx::v1::string_options::prefix::~prefix</a></div><div class="ttdeci">~prefix()</div><div class="ttdoc">Destroy this object.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1string__options_1_1prefix_html_a4785c9cd91574273ffb15c6e090014e1"><div class="ttname"><a href="classmongocxx_1_1v1_1_1string__options_1_1prefix.html#a4785c9cd91574273ffb15c6e090014e1">mongocxx::v1::string_options::prefix::str_min_query_length</a></div><div class="ttdeci">prefix &amp; str_min_query_length(std::int32_t v)</div><div class="ttdoc">Set the &quot;strMinQueryLength&quot; field.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1string__options_1_1prefix_html_a7ecb2e5f98f60c187c35a1ca5b1a0d1b"><div class="ttname"><a href="classmongocxx_1_1v1_1_1string__options_1_1prefix.html#a7ecb2e5f98f60c187c35a1ca5b1a0d1b">mongocxx::v1::string_options::prefix::str_max_query_length</a></div><div class="ttdeci">prefix &amp; str_max_query_length(std::int32_t v)</div><div class="ttdoc">Set the &quot;strMaxQueryLength&quot; field.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1string__options_1_1prefix_html_aef1b45135a2c0a88bac2b0b1036a8d8c"><div class="ttname"><a href="classmongocxx_1_1v1_1_1string__options_1_1prefix.html#aef1b45135a2c0a88bac2b0b1036a8d8c">mongocxx::v1::string_options::prefix::prefix</a></div><div class="ttdeci">prefix(prefix &amp;&amp;other) noexcept</div><div class="ttdoc">Move constructor.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1string__options_1_1substring_html"><div class="ttname"><a href="classmongocxx_1_1v1_1_1string__options_1_1substring.html">mongocxx::v1::string_options::substring</a></div><div class="ttdoc">Options related to substring queries in Queryable Encryption.</div><div class="ttdef"><b>Definition</b> string_options.hpp:295</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1string__options_1_1substring_html_a0623a830acd6b1d8bbd6217cf114e570"><div class="ttname"><a href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#a0623a830acd6b1d8bbd6217cf114e570">mongocxx::v1::string_options::substring::str_max_length</a></div><div class="ttdeci">substring &amp; str_max_length(std::int32_t v)</div><div class="ttdoc">Set the &quot;strMaxLength&quot; field.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1string__options_1_1substring_html_a78a11cd7687267b4561ef54704e3c40a"><div class="ttname"><a href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#a78a11cd7687267b4561ef54704e3c40a">mongocxx::v1::string_options::substring::str_max_query_length</a></div><div class="ttdeci">substring &amp; str_max_query_length(std::int32_t v)</div><div class="ttdoc">Set the &quot;strMaxQueryLength&quot; field.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1string__options_1_1substring_html_ac948044e280061ef7385e76700b48dbc"><div class="ttname"><a href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#ac948044e280061ef7385e76700b48dbc">mongocxx::v1::string_options::substring::str_min_query_length</a></div><div class="ttdeci">substring &amp; str_min_query_length(std::int32_t v)</div><div class="ttdoc">Set the &quot;strMinQueryLength&quot; field.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1string__options_1_1substring_html_ad959d4e8d05cd728e64f7a43d1d51f69"><div class="ttname"><a href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#ad959d4e8d05cd728e64f7a43d1d51f69">mongocxx::v1::string_options::substring::substring</a></div><div class="ttdeci">substring(substring &amp;&amp;other) noexcept</div><div class="ttdoc">Move constructor.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1string__options_1_1substring_html_ae069d912e931db7765b0507d4dfc1ef6"><div class="ttname"><a href="classmongocxx_1_1v1_1_1string__options_1_1substring.html#ae069d912e931db7765b0507d4dfc1ef6">mongocxx::v1::string_options::substring::~substring</a></div><div class="ttdeci">~substring()</div><div class="ttdoc">Destroy this object.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1string__options_1_1suffix_html"><div class="ttname"><a href="classmongocxx_1_1v1_1_1string__options_1_1suffix.html">mongocxx::v1::string_options::suffix</a></div><div class="ttdoc">Options related to suffix queries in Queryable Encryption.</div><div class="ttdef"><b>Definition</b> string_options.hpp:224</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1string__options_1_1suffix_html_a388a74a2f4d4f6570eb1b0f816f4295d"><div class="ttname"><a href="classmongocxx_1_1v1_1_1string__options_1_1suffix.html#a388a74a2f4d4f6570eb1b0f816f4295d">mongocxx::v1::string_options::suffix::str_max_query_length</a></div><div class="ttdeci">suffix &amp; str_max_query_length(std::int32_t v)</div><div class="ttdoc">Set the &quot;strMaxQueryLength&quot; field.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1string__options_1_1suffix_html_a73e92d7ee6003ecd597fd0e0096abc31"><div class="ttname"><a href="classmongocxx_1_1v1_1_1string__options_1_1suffix.html#a73e92d7ee6003ecd597fd0e0096abc31">mongocxx::v1::string_options::suffix::~suffix</a></div><div class="ttdeci">~suffix()</div><div class="ttdoc">Destroy this object.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1string__options_1_1suffix_html_a75121130597088f03bd8ff1c7ca19eb2"><div class="ttname"><a href="classmongocxx_1_1v1_1_1string__options_1_1suffix.html#a75121130597088f03bd8ff1c7ca19eb2">mongocxx::v1::string_options::suffix::str_min_query_length</a></div><div class="ttdeci">suffix &amp; str_min_query_length(std::int32_t v)</div><div class="ttdoc">Set the &quot;strMinQueryLength&quot; field.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1string__options_1_1suffix_html_aca4e5b6fc0d5eb3fa68b7f9a5d2e0926"><div class="ttname"><a href="classmongocxx_1_1v1_1_1string__options_1_1suffix.html#aca4e5b6fc0d5eb3fa68b7f9a5d2e0926">mongocxx::v1::string_options::suffix::suffix</a></div><div class="ttdeci">suffix(suffix &amp;&amp;other) noexcept</div><div class="ttdoc">Move constructor.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1string__options_html_a02f4b5cc1e811273ee4815517827310f"><div class="ttname"><a href="classmongocxx_1_1v1_1_1string__options.html#a02f4b5cc1e811273ee4815517827310f">mongocxx::v1::string_options::prefix_opts</a></div><div class="ttdeci">string_options &amp; prefix_opts(prefix v)</div><div class="ttdoc">Set the &quot;prefix&quot; field.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1string__options_html_a2013632015ecc61d1d40c1ca2e08df89"><div class="ttname"><a href="classmongocxx_1_1v1_1_1string__options.html#a2013632015ecc61d1d40c1ca2e08df89">mongocxx::v1::string_options::~string_options</a></div><div class="ttdeci">~string_options()</div><div class="ttdoc">Destroy this object.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1string__options_html_a636b1a14f6e5af5dac6b20af05e11ae2"><div class="ttname"><a href="classmongocxx_1_1v1_1_1string__options.html#a636b1a14f6e5af5dac6b20af05e11ae2">mongocxx::v1::string_options::diacritic_sensitive</a></div><div class="ttdeci">string_options &amp; diacritic_sensitive(bool v)</div><div class="ttdoc">Set the &quot;diacriticSensitive&quot; field.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1string__options_html_a72fdab67c9ceada554759ae8ce1ffa90"><div class="ttname"><a href="classmongocxx_1_1v1_1_1string__options.html#a72fdab67c9ceada554759ae8ce1ffa90">mongocxx::v1::string_options::case_sensitive</a></div><div class="ttdeci">string_options &amp; case_sensitive(bool v)</div><div class="ttdoc">Set the &quot;caseSensitive&quot; field.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1string__options_html_a76b26f6765800fd54b8e11497454f96d"><div class="ttname"><a href="classmongocxx_1_1v1_1_1string__options.html#a76b26f6765800fd54b8e11497454f96d">mongocxx::v1::string_options::substring_opts</a></div><div class="ttdeci">string_options &amp; substring_opts(substring v)</div><div class="ttdoc">Set the &quot;substring&quot; field.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1string__options_html_ae73e4faa49bae04c4c63171065442bd2"><div class="ttname"><a href="classmongocxx_1_1v1_1_1string__options.html#ae73e4faa49bae04c4c63171065442bd2">mongocxx::v1::string_options::suffix_opts</a></div><div class="ttdeci">string_options &amp; suffix_opts(suffix v)</div><div class="ttdoc">Set the &quot;suffix&quot; field.</div></div>
+<div class="ttc" id="aclassmongocxx_1_1v1_1_1string__options_html_af969d56b9326d3763c426fbbb177c096"><div class="ttname"><a href="classmongocxx_1_1v1_1_1string__options.html#af969d56b9326d3763c426fbbb177c096">mongocxx::v1::string_options::string_options</a></div><div class="ttdeci">string_options(string_options &amp;&amp;other) noexcept</div><div class="ttdoc">Move constructor.</div></div>
+<div class="ttc" id="amongocxx_2v1_2config_2export_8hpp_html"><div class="ttname"><a href="mongocxx_2v1_2config_2export_8hpp.html">export.hpp</a></div><div class="ttdoc">Provides macros to control the set of symbols exported in the ABI.</div></div>
+<div class="ttc" id="amongocxx_2v1_2config_2export_8hpp_html_a753ba55c7c3b23542b2ec9f00333c6ba"><div class="ttname"><a href="mongocxx_2v1_2config_2export_8hpp.html#a753ba55c7c3b23542b2ec9f00333c6ba">MONGOCXX_ABI_EXPORT_CDECL</a></div><div class="ttdeci">#define MONGOCXX_ABI_EXPORT_CDECL(...)</div><div class="ttdoc">Equivalent to MONGOCXX_ABI_EXPORT with MONGOCXX_ABI_CDECL.</div><div class="ttdef"><b>Definition</b> export.hpp:52</div></div>
+<div class="ttc" id="amongocxx_2v1_2detail_2prelude_8hpp_html"><div class="ttname"><a href="mongocxx_2v1_2detail_2prelude_8hpp.html">prelude.hpp</a></div><div class="ttdoc">The mongocxx v1 macro guard prelude header.</div></div>
+<div class="ttc" id="anamespacebsoncxx_html"><div class="ttname"><a href="namespacebsoncxx.html">bsoncxx</a></div><div class="ttdoc">The top-level namespace within which all bsoncxx library entities are declared.</div></div>
+<div class="ttc" id="anamespacemongocxx_1_1v1_html"><div class="ttname"><a href="namespacemongocxx_1_1v1.html">mongocxx::v1</a></div><div class="ttdoc">Declares entities whose ABI stability is guaranteed for documented symbols.</div></div>
+<div class="ttc" id="anamespacemongocxx_html"><div class="ttname"><a href="namespacemongocxx.html">mongocxx</a></div><div class="ttdoc">The top-level namespace within which all mongocxx library entities are declared.</div></div>
+<div class="ttc" id="av1_2stdx_2optional_8hpp_html"><div class="ttname"><a href="v1_2stdx_2optional_8hpp.html">optional.hpp</a></div><div class="ttdoc">Provides std::optional-related polyfills for library API usage.</div></div>
+<div class="ttc" id="av1_2string__options-fwd_8hpp_html"><div class="ttname"><a href="v1_2string__options-fwd_8hpp.html">string_options-fwd.hpp</a></div><div class="ttdoc">Declares mongocxx::v1::string_options.</div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+</div><!-- container -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a href="dir_91a8f5678cf74af486032aa453ef5c2e.html">mongocxx</a></li><li class="navelem"><a href="dir_f4020fe3fe50540feaa0641bb256a47f.html">v1</a></li><li class="navelem"><a href="v1_2string__options_8hpp.html">string_options.hpp</a></li>
+    <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
+  </ul>
+</div>
+</body>
+</html>
