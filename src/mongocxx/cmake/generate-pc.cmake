@@ -9,6 +9,7 @@ set(input_vars
     is_static
     bsoncxx_name
     mongoc_req_ver
+    enable_unstable_abi
 )
 
 foreach(var ${input_vars})
@@ -37,7 +38,9 @@ if(1)
         list(APPEND cflags "-DMONGOCXX_STATIC")
     endif()
 
-    list(APPEND cflags "-I\${includedir}/mongocxx/v_noabi")
+    if(enable_unstable_abi)
+        list(APPEND cflags "-I\${includedir}/mongocxx/v_noabi")
+    endif()
     list(APPEND cflags "-I\${includedir}")
 
     list(JOIN cflags " " cflags)

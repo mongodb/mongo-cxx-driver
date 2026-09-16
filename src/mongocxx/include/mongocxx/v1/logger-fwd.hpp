@@ -27,6 +27,8 @@ class MONGOCXX_ABI_EXPORT logger;
 
 class default_logger;
 
+class logger_guard;
+
 } // namespace v1
 } // namespace mongocxx
 

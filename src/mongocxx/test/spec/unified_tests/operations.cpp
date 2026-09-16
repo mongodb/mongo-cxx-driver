@@ -32,6 +32,8 @@
 #include <mongocxx/collection.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 
+#include <mongocxx/private/mongoc.hh>
+
 #include <bsoncxx/test/catch.hh>
 
 #include <mongocxx/test/spec/monitoring.hh>
@@ -1963,6 +1965,49 @@ document::value create_data_key(entity::map& map, std::string const& object, doc
     return make_document(kvp("result", result));
 }
 
+document::value encrypt(entity::map& map, std::string const& object, document::view operation) {
+    auto const arguments = operation["arguments"].get_document().value;
+    auto const value = arguments["value"].get_value();
+
+    options::encrypt encrypt_opts;
+
+    auto const opts = arguments["opts"].get_document().value;
+    for (auto const& element : opts) {
+        auto const key = element.key();
+        if (key == "keyId") {
+            encrypt_opts.key_id(element.get_value());
+        } else if (key == "keyAltName") {
+            encrypt_opts.key_alt_name(std::string(element.get_string().value));
+        } else if (key == "algorithm") {
+            auto const algorithm = element.get_string().value;
+            if (algorithm == MONGOC_AEAD_AES_256_CBC_HMAC_SHA_512_DETERMINISTIC) {
+                encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_deterministic);
+            } else if (algorithm == MONGOC_AEAD_AES_256_CBC_HMAC_SHA_512_RANDOM) {
+                encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_random);
+            } else if (algorithm == MONGOC_ENCRYPT_ALGORITHM_INDEXED) {
+                encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_indexed);
+            } else if (algorithm == MONGOC_ENCRYPT_ALGORITHM_UNINDEXED) {
+                encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_unindexed);
+            } else if (algorithm == MONGOC_ENCRYPT_ALGORITHM_RANGE) {
+                encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_range);
+            } else if (algorithm == MONGOC_ENCRYPT_ALGORITHM_TEXTPREVIEW) {
+                encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_textPreview);
+            } else if (algorithm == MONGOC_ENCRYPT_ALGORITHM_STRING) {
+                encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_string);
+            } else {
+                throw std::logic_error{"unsupported encrypt algorithm: " + string::to_string(algorithm)};
+            }
+        } else {
+            throw std::logic_error{"unsupported field in encrypt opts: " + string::to_string(key)};
+        }
+    }
+
+    client_encryption& client_encryption = map.get_client_encryption(object);
+    auto result = client_encryption.encrypt(value, encrypt_opts);
+
+    return make_document(kvp("result", result));
+}
+
 document::value add_key_alt_name(entity::map& map, std::string const& object, document::view operation) {
     auto arguments = operation["arguments"].get_document().value;
     auto id = arguments["id"].get_value();
@@ -2115,6 +2160,20 @@ document::value list_search_indexes(collection& coll, document::view operation) 
     }));
 
     return result.extract();
+}
+
+document::value get_snapshot_time(entity::map& map, std::string const& object, document::view operation) {
+    auto& session = map.get_client_session(object);
+    auto const snapshot_time = session.snapshot_time();
+
+    types::bson_value::value result =
+        snapshot_time ? types::bson_value::value{*snapshot_time} : types::bson_value::value{types::b_null{}};
+
+    if (auto const save_result_as_entity = operation["saveResultAsEntity"]) {
+        map.insert(string::to_string(save_result_as_entity.get_string().value), types::bson_value::value{result});
+    }
+
+    return make_document(kvp("result", result));
 }
 
 document::value update_search_index(collection& coll, document::view operation) {
@@ -2312,6 +2371,9 @@ document::value operations::run(
         auto& session = entity_map.get_client_session(session_name);
         return assert_session_transaction_state(session, op_view);
     }
+    if (name == "getSnapshotTime") {
+        return get_snapshot_time(entity_map, object, op_view);
+    }
     if (name == "assertSessionPinned") {
         auto& session = entity_map.get_client_session(string::to_string(op["arguments"]["session"].get_string().value));
         REQUIRE(session.server_id() != 0);
@@ -2497,6 +2559,9 @@ document::value operations::run(
     }
     if (name == "removeKeyAltName") {
         return remove_key_alt_name(entity_map, object, op_view);
+    }
+    if (name == "encrypt") {
+        return encrypt(entity_map, object, op_view);
     }
     if (name == "createSearchIndex") {
         auto& coll = entity_map.get_collection(object);

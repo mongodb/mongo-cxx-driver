@@ -27,12 +27,20 @@ namespace v_noabi {
 
 using v1::to_string;
 
+using v1::log_handler;
+
+using v1::set_global_logger;
+
 } // namespace v_noabi
 } // namespace mongocxx
 
 namespace mongocxx {
 
 using v1::to_string;
+
+using v1::log_handler;
+
+using v1::set_global_logger;
 
 } // namespace mongocxx
 

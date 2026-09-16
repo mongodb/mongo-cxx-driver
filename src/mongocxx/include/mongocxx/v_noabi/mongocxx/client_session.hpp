@@ -106,6 +106,19 @@ class client_session {
     }
 
     ///
+    /// Get the session's snapshot time ("atClusterTime"), as a BSON timestamp. The snapshot time is
+    /// either the value configured via mongocxx::v_noabi::options::client_session::snapshot_time or
+    /// the value established by the server on the first read operation of a snapshot session.
+    ///
+    /// @return
+    ///   The snapshot time, or an empty optional if the snapshot time has not yet been established.
+    ///
+    /// @throws mongocxx::v_noabi::operation_exception if this session is not a snapshot session.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::b_timestamp>)
+    snapshot_time() const;
+
+    ///
     /// Get the server_id the session is pinned to. The server_id is zero if the session is not
     /// pinned to a server.
     ///

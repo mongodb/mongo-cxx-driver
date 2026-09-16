@@ -25,6 +25,7 @@
 #include <mongocxx/client_session-fwd.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/types.hpp>
 
 #include <mongocxx/options/transaction.hpp>
 
@@ -50,7 +51,11 @@ class client_session {
     /* explicit(false) */ client_session(v1::client_session::options const& opts)
         : _causal_consistency{opts.causal_consistency()},
           _snapshot{opts.snapshot()},
-          _default_transaction_opts{opts.default_transaction_opts()} {}
+          _default_transaction_opts{opts.default_transaction_opts()} {
+        if (auto const st = opts.snapshot_time()) {
+            _snapshot_time = bsoncxx::v_noabi::from_v1(*st);
+        }
+    }
 
     ///
     /// Convert to the @ref mongocxx::v1 equivalent.
@@ -66,6 +71,10 @@ class client_session {
 
         if (_snapshot) {
             ret.snapshot(*_snapshot);
+        }
+
+        if (_snapshot_time) {
+            ret.snapshot_time(bsoncxx::v_noabi::to_v1(*_snapshot_time));
         }
 
         if (_default_transaction_opts) {
@@ -133,6 +142,32 @@ class client_session {
     }
 
     ///
+    /// Sets the snapshot time ("atClusterTime") to use for a snapshot session.
+    ///
+    /// When set, this value is used as the snapshot time instead of a value determined from the
+    /// first read operation of the snapshot session. This option only has an effect when the
+    /// snapshot option is also enabled.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/read-concern-snapshot/
+    ///
+    client_session& snapshot_time(bsoncxx::v_noabi::types::b_timestamp snapshot_time) {
+        _snapshot_time = snapshot_time;
+        return *this;
+    }
+
+    ///
+    /// Gets the value of the snapshot_time option.
+    ///
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::b_timestamp> const& snapshot_time() const {
+        return _snapshot_time;
+    }
+
+    ///
     /// Sets the default transaction options.
     ///
     /// @param default_transaction_opts
@@ -159,6 +194,7 @@ class client_session {
    private:
     bsoncxx::v_noabi::stdx::optional<bool> _causal_consistency;
     bsoncxx::v_noabi::stdx::optional<bool> _snapshot;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::b_timestamp> _snapshot_time;
     bsoncxx::v_noabi::stdx::optional<transaction> _default_transaction_opts;
 };
 

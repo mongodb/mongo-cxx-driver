@@ -5,9 +5,10 @@ from shrub.v3.evg_command import KeyValueParam, expansions_update
 from shrub.v3.evg_task import EvgTask, EvgTaskRef
 
 from config_generator.components.funcs.compile import Compile
+from config_generator.components.funcs.csfle_setup import CSFLESetup
+from config_generator.components.funcs.csfle_teardown import CSFLETeardown
 from config_generator.components.funcs.fetch_det import FetchDET
 from config_generator.components.funcs.install_c_driver import InstallCDriver
-from config_generator.components.funcs.run_kms_servers import RunKMSServers
 from config_generator.components.funcs.setup import Setup
 from config_generator.components.funcs.start_mongod import StartMongod
 from config_generator.components.funcs.test import Test
@@ -21,11 +22,11 @@ TAG = 'integration'
 LINUX_MATRIX = [
     # Linux x86_64 (full).
     # RHEL 8 x86_64: 4.0+.
-    ('rhel80', None, ['Debug'], ['shared', 'static'], [11, 17], [None], ['plain', 'csfle'], ['4.2', '4.4', '5.0', '6.0', '7.0', '8.0', 'rapid', 'latest'], ['single', 'replica', 'sharded']),
+    ('rhel80', None, ['Debug'], ['shared', 'static'], [11, 17], [None], ['plain', 'csfle'], ['4.2', '4.4', '5.0', '6.0', '7.0', '8.0', '9.0', 'rapid', 'latest'], ['single', 'replica', 'sharded']),
 
     # Linux ARM64 (full).
     # RHEL 8 ARM64: 4.4+.
-    ('rhel8-arm64-latest', None, ['Debug'], ['shared', 'static'], [11, 17], [None], ['plain', 'csfle'], ['4.4', '5.0', '6.0', '7.0', '8.0', 'rapid', 'latest'], ['single', 'replica', 'sharded']),
+    ('rhel8-arm64-latest', None, ['Debug'], ['shared', 'static'], [11, 17], [None], ['plain', 'csfle'], ['4.4', '5.0', '6.0', '7.0', '8.0', '9.0', 'rapid', 'latest'], ['single', 'replica', 'sharded']),
 
     # Linux Power (Resource-limited: use sparingly).
     # RHEL 8 Power: 4.2+.
@@ -39,21 +40,21 @@ LINUX_MATRIX = [
 MACOS_MATRIX = [
     # MacOS ARM64 (shared only, no extra alignment, min-max-latest).
     # MacOS ARM64: 6.0+.
-    ('macos-14-arm64', None, ['Debug'], ['shared'], [11, 17], [None], ['plain', 'csfle'], ['6.0', '8.0', 'latest'], ['single', 'replica', 'sharded']),
+    ('macos-14-arm64', None, ['Debug'], ['shared'], [11, 17], [None], ['plain', 'csfle'], ['6.0', '8.0', '9.0', 'latest'], ['single', 'replica', 'sharded']),
 
     # MacOS x86_64 (shared only, C++11 only, no extra alignment, min-max-latest) (Resource-limited: use sparingly).
     # MacOS x86_64: 4.2+.
-    ('macos-14', None, ['Debug'], ['shared'], [11], [None], ['plain', 'csfle'], ['4.2', '8.0', 'latest'], ['single', 'replica', 'sharded']),
+    ('macos-14', None, ['Debug'], ['shared'], [11], [None], ['plain', 'csfle'], ['4.2', '8.0', '9.0', 'latest'], ['single', 'replica', 'sharded']),
 
 ]
 
 WINDOWS_MATRIX = [
     # Windows x86_64 (min-max-latest).
     # Windows x86_64: 4.2+.
-    ('windows-vsCurrent',   'vs2022x64', ['Debug'], ['shared'], [11, 17], [None], ['plain', 'csfle'], ['4.2',                ], ['single', 'replica', 'sharded']),
-    ('windows-2022-latest', 'vs2022x64', ['Debug'], ['shared'], [11, 17], [None], ['plain', 'csfle'], [       '8.0', 'latest'], ['single', 'replica', 'sharded']),
+    ('windows-vsCurrent',   'vs2022x64', ['Debug'], ['shared'], [11, 17], [None], ['plain', 'csfle'], ['4.2',                       ], ['single', 'replica', 'sharded']),
+    ('windows-2022-latest', 'vs2022x64', ['Debug'], ['shared'], [11, 17], [None], ['plain', 'csfle'], [       '9.0', 'latest'], ['single', 'replica', 'sharded']),
 
-    ('windows-2022-latest', 'gcc',       ['Debug'], ['shared'], [11, 17], [None], ['plain'         ], ['4.2', '8.0', 'latest'], ['single', 'replica', 'sharded']),
+    ('windows-2022-latest', 'gcc',       ['Debug'], ['shared'], [11, 17], [None], ['plain'         ], ['4.2', '9.0', 'latest'], ['single', 'replica', 'sharded']),
 ]
 
 MONGOCRYPTD_MATRIX = [
@@ -150,8 +151,9 @@ def tasks():
                 InstallCDriver.call(vars=icd_vars),
                 Compile.call(polyfill=polyfill, vars=compile_vars),
                 FetchDET.call(),
-                RunKMSServers.call(),
+                CSFLESetup.call(),
                 Test.call(vars=test_vars | ({'use_mongocryptd': True} if with_csfle == 'crypt' else {})),
+                CSFLETeardown.call(),
             ]
 
             # PowerPC and zSeries are limited resources.

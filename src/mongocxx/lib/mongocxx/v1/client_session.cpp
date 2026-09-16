@@ -121,6 +121,23 @@ bsoncxx::v1::types::b_timestamp client_session::operation_time() const {
     return ret;
 }
 
+bsoncxx::v1::stdx::optional<bsoncxx::v1::types::b_timestamp> client_session::snapshot_time() const {
+    bsoncxx::v1::types::b_timestamp ret = {};
+    bson_error_t error = {};
+
+    if (!libmongoc::client_session_get_snapshot_time(
+            impl::with(this)->_session, &ret.timestamp, &ret.increment, &error)) {
+        // No error is set when the snapshot time has not yet been established.
+        if (error.code || error.domain) {
+            v1::throw_exception(error);
+        }
+
+        return {};
+    }
+
+    return ret;
+}
+
 std::uint32_t client_session::server_id() const {
     return libmongoc::client_session_get_server_id(impl::with(this)->_session);
 }
@@ -359,6 +376,21 @@ client_session::options& client_session::options::snapshot(bool v) {
 
 bool client_session::options::snapshot() const {
     return libmongoc::session_opts_get_snapshot(to_mongoc(_impl));
+}
+
+client_session::options& client_session::options::snapshot_time(bsoncxx::v1::types::b_timestamp v) {
+    libmongoc::session_opts_set_snapshot_time(to_mongoc(_impl), v.timestamp, v.increment);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<bsoncxx::v1::types::b_timestamp> client_session::options::snapshot_time() const {
+    bsoncxx::v1::types::b_timestamp ret = {};
+
+    if (libmongoc::session_opts_get_snapshot_time(to_mongoc(_impl), &ret.timestamp, &ret.increment)) {
+        return ret;
+    }
+
+    return {};
 }
 
 client_session::options& client_session::options::default_transaction_opts(v1::transaction_options const& v) {

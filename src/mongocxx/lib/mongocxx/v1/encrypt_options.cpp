@@ -21,6 +21,7 @@
 #include <bsoncxx/v1/types/value.hpp>
 
 #include <mongocxx/v1/range_options.hpp>
+#include <mongocxx/v1/string_options.hpp>
 #include <mongocxx/v1/text_options.hpp>
 
 #include <cstdint>
@@ -39,6 +40,7 @@ class encrypt_options::impl {
     bsoncxx::v1::stdx::optional<std::int64_t> _contention_factor;
     bsoncxx::v1::stdx::optional<encryption_query_type> _query_type;
     bsoncxx::v1::stdx::optional<v1::range_options> _range_opts;
+    bsoncxx::v1::stdx::optional<v1::string_options> _string_opts;
     bsoncxx::v1::stdx::optional<v1::text_options> _text_opts;
 
     static impl const& with(encrypt_options const& other) {
@@ -146,6 +148,15 @@ bsoncxx::v1::stdx::optional<v1::range_options> encrypt_options::range_opts() con
     return impl::with(this)->_range_opts;
 }
 
+encrypt_options& encrypt_options::string_opts(v1::string_options v) {
+    impl::with(this)->_string_opts = std::move(v);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<v1::string_options> encrypt_options::string_opts() const {
+    return impl::with(this)->_string_opts;
+}
+
 encrypt_options& encrypt_options::text_opts(v1::text_options v) {
     impl::with(this)->_text_opts = std::move(v);
     return *this;
@@ -174,6 +185,11 @@ bsoncxx::v1::stdx::optional<v1::range_options> const& encrypt_options::internal:
     return impl::with(self)._range_opts;
 }
 
+bsoncxx::v1::stdx::optional<v1::string_options> const& encrypt_options::internal::string_opts(
+    encrypt_options const& self) {
+    return impl::with(self)._string_opts;
+}
+
 bsoncxx::v1::stdx::optional<v1::text_options> const& encrypt_options::internal::text_opts(encrypt_options const& self) {
     return impl::with(self)._text_opts;
 }
@@ -193,6 +209,10 @@ bsoncxx::v1::stdx::optional<encrypt_options::encryption_algorithm>& encrypt_opti
 
 bsoncxx::v1::stdx::optional<v1::range_options>& encrypt_options::internal::range_opts(encrypt_options& self) {
     return impl::with(self)._range_opts;
+}
+
+bsoncxx::v1::stdx::optional<v1::string_options>& encrypt_options::internal::string_opts(encrypt_options& self) {
+    return impl::with(self)._string_opts;
 }
 
 bsoncxx::v1::stdx::optional<v1::text_options>& encrypt_options::internal::text_opts(encrypt_options& self) {

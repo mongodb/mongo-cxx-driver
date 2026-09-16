@@ -35,8 +35,8 @@ if(1)
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT runtime
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT dev
         INCLUDES DESTINATION
-        ${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v_noabi
-        ${CMAKE_INSTALL_INCLUDEDIR}
+            "$<$<BOOL:$CACHE{BSONCXX_ENABLE_UNSTABLE_ABI}>:${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v_noabi>"
+            "${CMAKE_INSTALL_INCLUDEDIR}"
     )
 
     install(EXPORT bsoncxx_targets
@@ -79,6 +79,7 @@ if(1)
                 -D "version=$CACHE{BSONCXX_VERSION_NO_EXTRA}"
                 -D "is_static=${is_static}"
                 -D "bson_req_ver=${BSON_REQUIRED_VERSION}"
+                -D "enable_unstable_abi=$CACHE{BSONCXX_ENABLE_UNSTABLE_ABI}"
                 -P ${CMAKE_CURRENT_SOURCE_DIR}/generate-pc.cmake
             MAIN_DEPENDENCY
                 ${CMAKE_CURRENT_SOURCE_DIR}/libbsoncxx.pc.in

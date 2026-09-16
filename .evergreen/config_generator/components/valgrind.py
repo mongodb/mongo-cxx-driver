@@ -5,9 +5,10 @@ from shrub.v3.evg_command import KeyValueParam, expansions_update
 from shrub.v3.evg_task import EvgTask, EvgTaskRef
 
 from config_generator.components.funcs.compile import Compile
+from config_generator.components.funcs.csfle_setup import CSFLESetup
+from config_generator.components.funcs.csfle_teardown import CSFLETeardown
 from config_generator.components.funcs.fetch_det import FetchDET
 from config_generator.components.funcs.install_c_driver import InstallCDriver
-from config_generator.components.funcs.run_kms_servers import RunKMSServers
 from config_generator.components.funcs.setup import Setup
 from config_generator.components.funcs.start_mongod import StartMongod
 from config_generator.components.funcs.test import Test
@@ -20,7 +21,7 @@ TAG = 'valgrind'
 # fmt: off
 MATRIX = [
     # min-max-latest
-    ('rhel80', None, ['shared'], ['4.2', '8.0', 'latest'], ['single', 'replica', 'sharded']),
+    ('rhel80', None, ['shared'], ['4.2', '9.0', 'latest'], ['single', 'replica', 'sharded']),
 ]
 # fmt: on
 # pylint: enable=line-too-long
@@ -66,8 +67,9 @@ def tasks():
                 InstallCDriver.call(vars=icd_vars),
                 Compile.call(compiler=compiler, vars=compile_vars),
                 FetchDET.call(),
-                RunKMSServers.call(),
+                CSFLESetup.call(),
                 Test.call(compiler=compiler, vars=test_vars),
+                CSFLETeardown.call(),
             ]
 
             res.append(

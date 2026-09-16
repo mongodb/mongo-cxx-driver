@@ -1,3 +1,5 @@
+accessToken-azure.json
+accessToken-gcp.json
 addKeyAltName.json
 createDataKey-kms_providers-invalid.json
 createDataKey.json
