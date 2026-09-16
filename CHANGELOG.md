@@ -11,6 +11,23 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 <!-- Will contain entries for the next minor release. -->
 
+### Added
+
+- Support for In-Use Encryption String Indexes, replacing the experimental "text" API:
+  - `mongocxx::v1::string_options` and `mongocxx::string_options`.
+  - `mongocxx::v1::encrypt_options::string_opts()` and `mongocxx::options::encrypt::string_opts()`.
+    - This is a distinct field from the deprecated `text_opts()`. When both are set, `string_opts` takes precedence and `text_opts` is ignored.
+  - `mongocxx::v1::encrypt_options::encryption_algorithm::k_string` ("String").
+  - `mongocxx::v1::encrypt_options::encryption_query_type::k_prefix` ("prefix"), `k_suffix` ("suffix"), and `k_substring` ("substring").
+
+### Deprecated
+
+- The In-Use Encryption "text" API, which is superseded by the "string" API above. These remain documented as experimental and may be removed in a future release:
+  - `mongocxx::v1::text_options`, `mongocxx::text_options`, and `mongocxx::options::text`.
+  - `mongocxx::v1::encrypt_options::text_opts()` and `mongocxx::options::encrypt::text_opts()`.
+  - `mongocxx::v1::encrypt_options::encryption_algorithm::k_textPreview` ("TextPreview").
+  - `mongocxx::v1::encrypt_options::encryption_query_type::k_prefixPreview`, `k_suffixPreview`, and `k_substringPreview`.
+
 ### Changed
 
 - Bump the minimum required C Driver version to [2.5.1](https://github.com/mongodb/mongo-c-driver/releases/tag/2.5.1).

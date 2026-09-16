@@ -1992,6 +1992,8 @@ document::value encrypt(entity::map& map, std::string const& object, document::v
                 encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_range);
             } else if (algorithm == MONGOC_ENCRYPT_ALGORITHM_TEXTPREVIEW) {
                 encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_textPreview);
+            } else if (algorithm == MONGOC_ENCRYPT_ALGORITHM_STRING) {
+                encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_string);
             } else {
                 throw std::logic_error{"unsupported encrypt algorithm: " + string::to_string(algorithm)};
             }

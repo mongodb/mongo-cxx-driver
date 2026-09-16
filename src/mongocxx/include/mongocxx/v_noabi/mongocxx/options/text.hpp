@@ -48,6 +48,8 @@ using v_noabi::options::text;
 /// @file
 /// Provides @ref mongocxx::text_options.
 ///
+/// @deprecated Use @ref mongocxx/string_options.hpp instead.
+///
 /// @par Includes
 /// - @ref mongocxx/v1/text_options.hpp
 ///

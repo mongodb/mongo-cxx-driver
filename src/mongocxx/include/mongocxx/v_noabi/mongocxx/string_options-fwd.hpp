@@ -14,21 +14,13 @@
 
 #pragma once
 
-#include <mongocxx/v1/text_options-fwd.hpp> // IWYU pragma: export
+#include <mongocxx/v1/string_options-fwd.hpp> // IWYU pragma: export
 
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-namespace v_noabi {
 
-using v1::text_options;
-
-} // namespace v_noabi
-} // namespace mongocxx
-
-namespace mongocxx {
-
-using v1::text_options;
+using v1::string_options;
 
 } // namespace mongocxx
 
@@ -36,10 +28,8 @@ using v1::text_options;
 
 ///
 /// @file
-/// Declares @ref mongocxx::text_options.
-///
-/// @deprecated Use @ref mongocxx/string_options-fwd.hpp instead.
+/// Declares @ref mongocxx::string_options.
 ///
 /// @par Includes
-/// - @ref mongocxx/v1/text_options-fwd.hpp
+/// - @ref mongocxx/v1/string_options-fwd.hpp
 ///
