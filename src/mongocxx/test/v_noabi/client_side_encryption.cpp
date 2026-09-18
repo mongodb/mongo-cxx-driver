@@ -423,7 +423,8 @@ TEST_CASE("Datakey and double encryption", "[client_side_encryption]") {
             data_key_opts.key_alt_names({"azure_altname"});
 
             auto doc = make_document(
-                kvp("keyVaultEndpoint", "key-vault-csfle.vault.azure.net"), kvp("keyName", "key-name-csfle"));
+                kvp("keyVaultEndpoint", "drivers-3392-key-vault.vault.azure.net"),
+                kvp("keyName", "drivers-3392-keyname"));
             data_key_opts.master_key(doc.view());
 
             return client_encryption.create_data_key("azure", data_key_opts);
@@ -1301,8 +1302,8 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     // Call `client_encryption.createDataKey()` with "azure" as the provider and the following
     // masterKey:
     // {
-    //     "keyVaultEndpoint": "key-vault-csfle.vault.azure.net",
-    //     "keyName": "key-name-csfle"
+    //     "keyVaultEndpoint": "drivers-3392-key-vault.vault.azure.net",
+    //     "keyName": "drivers-3392-keyname"
     // }
     // Expect this to succeed. Use the returned UUID of the key to explicitly encrypt and decrypt
     // the string "test" to validate it works. Call ``client_encryption_invalid.createDataKey()``
@@ -1311,9 +1312,9 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     // "doesnotexist.invalid".
     SECTION("Test Case 7") {
         auto azure_masterkey = document{} << "keyVaultEndpoint"
-                                          << "key-vault-csfle.vault.azure.net"
+                                          << "drivers-3392-key-vault.vault.azure.net"
                                           << "keyName"
-                                          << "key-name-csfle" << finalize;
+                                          << "drivers-3392-keyname" << finalize;
         _run_endpoint_test(
             &setup_client,
             azure_masterkey.view(),

@@ -352,6 +352,8 @@ functions:
       params:
         binary: bash
         working_dir: drivers-evergreen-tools/.evergreen/csfle
+        env:
+          FLE_AZURE_USE_CORPORATE: "YES"
         include_expansions_in_env:
           - AWS_ACCESS_KEY_ID
           - AWS_SECRET_ACCESS_KEY
