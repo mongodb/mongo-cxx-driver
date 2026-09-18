@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Changes prior to 3.9.0 are documented as [release notes on GitHub](https://github.com/mongodb/mongo-cxx-driver/releases).
 
+## 4.7.0 [Unreleased]
+
+### Changed
+
+- Bump the minimum required C Driver version to [2.5.4](https://github.com/mongodb/mongo-c-driver/releases/tag/2.5.4).
+
 ## 4.6.0
 
 ### Added
