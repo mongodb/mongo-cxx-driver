@@ -38,7 +38,11 @@ done
 
 package=mongo-cxx-driver
 spec_file=../mongo-cxx-driver.spec
-config=${MOCK_TARGET_CONFIG:=fedora-43-aarch64}
+# Use the EPEL 10 chroot: it provides mongo-c-driver-devel 2.x (matching the
+# driver's required C driver version) and libmongocrypt, which Fedora stable
+# does not.  This mirrors the target used by mongo-c-driver's own RPM
+# packaging task.
+config=${MOCK_TARGET_CONFIG:=centos-stream+epel-10-aarch64}
 
 if [ ! -x /usr/bin/rpmbuild -o ! -x /usr/bin/rpmspec ]; then
   echo "Missing the rpmbuild or rpmspec utility from the rpm-build package"
