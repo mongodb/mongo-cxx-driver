@@ -72,16 +72,16 @@ fi
 
 build_dir=$(basename $(pwd))
 
-sudo mock -r ${config} --use-bootstrap-image --isolation=simple --clean
-sudo mock -r ${config} --use-bootstrap-image --isolation=simple --init
-mock_root=$(sudo mock -r ${config} --use-bootstrap-image --isolation=simple --print-root-path)
-sudo mock -r ${config} --use-bootstrap-image --isolation=simple --install rpmdevtools git rpm-build cmake utf8proc openssl-devel cyrus-sasl-devel libbson-devel mongo-c-driver-devel snappy-devel gcc-c++ libzstd-devel
-sudo mock -r ${config} --use-bootstrap-image --isolation=simple --copyin "$(pwd)" "$(pwd)/${spec_file}" /tmp
+sudo mock -r ${config} --use-bootstrap-image --enable-network --isolation=simple --clean
+sudo mock -r ${config} --use-bootstrap-image --enable-network --isolation=simple --init
+mock_root=$(sudo mock -r ${config} --use-bootstrap-image --enable-network --isolation=simple --print-root-path)
+sudo mock -r ${config} --use-bootstrap-image --enable-network --isolation=simple --install rpmdevtools git rpm-build cmake utf8proc openssl-devel cyrus-sasl-devel libbson-devel mongo-c-driver-devel snappy-devel gcc-c++ libzstd-devel
+sudo mock -r ${config} --use-bootstrap-image --enable-network --isolation=simple --copyin "$(pwd)" "$(pwd)/${spec_file}" /tmp
 if [ ! -f build/VERSION_CURRENT ]; then
-  sudo mock -r ${config} --use-bootstrap-image --isolation=simple --cwd "/tmp/${build_dir}" --chroot -- /bin/sh -c "(
+  sudo mock -r ${config} --use-bootstrap-image --enable-network --isolation=simple --cwd "/tmp/${build_dir}" --chroot -- /bin/sh -c "(
     python3 etc/calc_release_version.py | sed -E 's/([^-]+).*/\1/' > build/VERSION_CURRENT
     )"
-  sudo mock -r ${config} --use-bootstrap-image --isolation=simple --copyout "/tmp/${build_dir}/build/VERSION_CURRENT" build/
+  sudo mock -r ${config} --use-bootstrap-image --enable-network --isolation=simple --copyout "/tmp/${build_dir}/build/VERSION_CURRENT" build/
 fi
 
 bare_upstream_version=$(sed -E 's/([^-]+).*/\1/' build/VERSION_CURRENT)
@@ -96,12 +96,12 @@ current_package_version=$(rpmspec --srpm -q --qf "%{version}-%{release}" ${spec_
 
 if [ -n "${current_package_version##*${git_rev}*}" ]; then
   echo "Making RPM changelog entry"
-  sudo mock -r ${config} --use-bootstrap-image --isolation=simple --cwd "/tmp/${build_dir}" --chroot -- rpmdev-bumpspec --comment="Built from Git Snapshot." --userstring="Test User <test@example.com>" --new="${snapshot_version}%{?dist}" ${spec_file}
+  sudo mock -r ${config} --use-bootstrap-image --enable-network --isolation=simple --cwd "/tmp/${build_dir}" --chroot -- rpmdev-bumpspec --comment="Built from Git Snapshot." --userstring="Test User <test@example.com>" --new="${snapshot_version}%{?dist}" ${spec_file}
 fi
 
-sudo mock -r ${config} --use-bootstrap-image --isolation=simple --copyout "/tmp/${build_dir}/${spec_file}" ..
+sudo mock -r ${config} --use-bootstrap-image --enable-network --isolation=simple --copyout "/tmp/${build_dir}/${spec_file}" ..
 
-sudo mock -r ${config} --use-bootstrap-image --isolation=simple --cwd "/tmp/${build_dir}" --chroot -- /bin/sh -c "(
+sudo mock -r ${config} --use-bootstrap-image --enable-network --isolation=simple --cwd "/tmp/${build_dir}" --chroot -- /bin/sh -c "(
   [ -d build ] || mkdir build ;
   cd build ;
   /usr/bin/cmake -DCMAKE_BUILD_TYPE=Release -DENABLE_UNINSTALL=OFF .. ;
@@ -109,7 +109,7 @@ sudo mock -r ${config} --use-bootstrap-image --isolation=simple --cwd "/tmp/${bu
   )"
 
 [ -d build ] || mkdir build
-sudo mock -r ${config} --use-bootstrap-image --isolation=simple --copyout "/tmp/${build_dir}/build/${package}*.tar.gz" build
+sudo mock -r ${config} --use-bootstrap-image --enable-network --isolation=simple --copyout "/tmp/${build_dir}/build/${package}*.tar.gz" build
 
 [ -d ~/rpmbuild/SOURCES ] || mkdir -p ~/rpmbuild/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}
 mv build/${package}*.tar.gz ~/rpmbuild/SOURCES/
@@ -123,9 +123,9 @@ sudo mock --resultdir="${mock_result}" --use-bootstrap-image --isolation=simple 
   cat *.log
   exit 1
 )
-sudo mock -r ${config} --use-bootstrap-image --isolation=simple --copyin "${mock_result}" /tmp
+sudo mock -r ${config} --use-bootstrap-image --enable-network --isolation=simple --copyin "${mock_result}" /tmp
 
-sudo mock -r ${config} --use-bootstrap-image --isolation=simple --cwd "/tmp/${build_dir}" --chroot -- /bin/sh -c "(
+sudo mock -r ${config} --use-bootstrap-image --enable-network --isolation=simple --cwd "/tmp/${build_dir}" --chroot -- /bin/sh -c "(
   rpm -Uvh ../mock-result/*.rpm &&
   /usr/bin/g++ -I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -I. -o runcommand_examples examples/mongocxx/mongodb.com/runcommand_examples.cpp -lmongocxx -lbsoncxx &&
   /usr/bin/g++ -I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -I. -o aggregation_examples examples/mongocxx/mongodb.com/aggregation_examples.cpp -lmongocxx -lbsoncxx &&
@@ -135,29 +135,29 @@ sudo mock -r ${config} --use-bootstrap-image --isolation=simple --cwd "/tmp/${bu
 
 if [ ! -e "${mock_root}/tmp/${build_dir}/runcommand_examples" ]; then
   echo "Example was not built!"
-  sudo mock -r ${config} --use-bootstrap-image --isolation=simple --clean
+  sudo mock -r ${config} --use-bootstrap-image --enable-network --isolation=simple --clean
   exit 1
 fi
 
 if [ ! -e "${mock_root}/tmp/${build_dir}/aggregation_examples" ]; then
   echo "Example was not built!"
-  sudo mock -r ${config} --use-bootstrap-image --isolation=simple --clean
+  sudo mock -r ${config} --use-bootstrap-image --enable-network --isolation=simple --clean
   exit 1
 fi
 
 if [ ! -e "${mock_root}/tmp/${build_dir}/index_examples" ]; then
   echo "Example was not built!"
-  sudo mock -r ${config} --use-bootstrap-image --isolation=simple --clean
+  sudo mock -r ${config} --use-bootstrap-image --enable-network --isolation=simple --clean
   exit 1
 fi
 
 if [ ! -e "${mock_root}/tmp/${build_dir}/documentation_examples" ]; then
   echo "Example was not built!"
-  sudo mock -r ${config} --use-bootstrap-image --isolation=simple --clean
+  sudo mock -r ${config} --use-bootstrap-image --enable-network --isolation=simple --clean
   exit 1
 fi
 
-sudo mock -r ${config} --use-bootstrap-image --isolation=simple --clean
+sudo mock -r ${config} --use-bootstrap-image --enable-network --isolation=simple --clean
 (
   cd "${mock_result}"
   tar zcvf ../rpm.tar.gz *.rpm
