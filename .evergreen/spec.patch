@@ -62,7 +62,8 @@
  %{_includedir}/mongocxx/
 -%{_libdir}/libmongocxx.so
 +%{_libdir}/libmongocxx1.so
- %{_libdir}/pkgconfig/libmongocxx.pc
+-%{_libdir}/pkgconfig/libmongocxx.pc
++%{_libdir}/pkgconfig/libmongocxx1.pc
  %{_libdir}/cmake/*mongocxx*
 
  %files bsoncxx
@@ -73,5 +74,6 @@
  %{_includedir}/bsoncxx
 -%{_libdir}/libbsoncxx.so
 +%{_libdir}/libbsoncxx1.so
- %{_libdir}/pkgconfig/libbsoncxx.pc
+-%{_libdir}/pkgconfig/libbsoncxx.pc
++%{_libdir}/pkgconfig/libbsoncxx1.pc
  %{_libdir}/cmake/*bsoncxx*
