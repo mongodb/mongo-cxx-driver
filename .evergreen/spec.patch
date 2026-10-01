@@ -45,7 +45,7 @@
  %cmake \
      -DCMAKE_BUILD_TYPE=Release \
 -    -DBSONCXX_POLY_USE_BOOST=1 \
-+    -DBUILD_VERSION=4.1.0 \
++    -DBUILD_VERSION=%{version} \
 +    -DENABLE_UNINSTALL=OFF \
      .
  
