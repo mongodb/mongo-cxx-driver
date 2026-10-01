@@ -50,3 +50,28 @@
      .
  
  %cmake_build
+@@ -93,20 +92,20 @@
+ %files
+ %doc README.md
+ %license LICENSE
+ %license THIRD-PARTY-NOTICES
+-%{_libdir}/libmongocxx.so.*
++%{_libdir}/libmongocxx1.so.*
+
+ %files devel
+ %{_includedir}/mongocxx/
+-%{_libdir}/libmongocxx.so
++%{_libdir}/libmongocxx1.so
+ %{_libdir}/pkgconfig/libmongocxx.pc
+ %{_libdir}/cmake/*mongocxx*
+
+ %files bsoncxx
+-%{_libdir}/libbsoncxx.so.*
++%{_libdir}/libbsoncxx1.so.*
+
+ %files bsoncxx-devel
+ %{_includedir}/bsoncxx
+-%{_libdir}/libbsoncxx.so
++%{_libdir}/libbsoncxx1.so
+ %{_libdir}/pkgconfig/libbsoncxx.pc
+ %{_libdir}/cmake/*bsoncxx*
