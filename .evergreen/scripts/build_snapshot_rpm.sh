@@ -122,7 +122,10 @@ echo "Building source RPM ..."
 rpmbuild -bs ${spec_file}
 echo "Building binary RPMs ..."
 mock_result=$(readlink -f ../mock-result)
-sudo mock --resultdir="${mock_result}" --use-bootstrap-image --isolation=simple -r ${config} --no-clean --no-cleanup-after --rebuild ~/rpmbuild/SRPMS/${package}-${snapshot_version}*.src.rpm || (
+# --enable-network is required for the rebuild: if the chroot's mongo-c-driver
+# is older than the required version, the C++ driver's cmake falls back to
+# FetchContent-downloading the C driver from GitHub during %build.
+sudo mock --resultdir="${mock_result}" --use-bootstrap-image --isolation=simple --enable-network -r ${config} --no-clean --no-cleanup-after --rebuild ~/rpmbuild/SRPMS/${package}-${snapshot_version}*.src.rpm || (
   cd "${mock_result}"
   cat *.log
   exit 1
