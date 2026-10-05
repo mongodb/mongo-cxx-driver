@@ -9,7 +9,9 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ## 4.6.1 [unreleased]
 
-<!-- Will contain entries for the next patch release. -->
+### Changed
+
+- Bump the minimum required C Driver version to [2.5.5](https://github.com/mongodb/mongo-c-driver/releases/tag/2.5.5).
 
 ## 4.6.0
 
