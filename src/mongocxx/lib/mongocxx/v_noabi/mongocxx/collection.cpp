@@ -1140,6 +1140,10 @@ v_noabi::cursor collection::distinct(
     bsoncxx::v_noabi::string::view_or_value field_name,
     bsoncxx::v_noabi::document::view_or_value query,
     v_noabi::options::distinct const& options) {
+    if (!is_valid_field_name(field_name.view())) {
+        throw v_noabi::logic_error{v_noabi::error_code::k_invalid_parameter, "invalid field name"};
+    }
+
     scoped_bson doc;
 
     append_to(options, doc);
@@ -1159,6 +1163,10 @@ v_noabi::cursor collection::distinct(
     bsoncxx::v_noabi::string::view_or_value field_name,
     bsoncxx::v_noabi::document::view_or_value query,
     v_noabi::options::distinct const& options) {
+    if (!is_valid_field_name(field_name.view())) {
+        throw v_noabi::logic_error{v_noabi::error_code::k_invalid_parameter, "invalid field name"};
+    }
+
     scoped_bson doc;
 
     append_to(options, doc);

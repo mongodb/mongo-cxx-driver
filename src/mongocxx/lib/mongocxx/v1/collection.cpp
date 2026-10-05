@@ -1129,6 +1129,10 @@ v1::cursor collection::distinct(
     bsoncxx::v1::stdx::string_view key,
     bsoncxx::v1::document::view query,
     v1::distinct_options const& opts) {
+    if (!is_valid_field_name(key)) {
+        throw v1::exception::internal::make(code::invalid_field_name);
+    }
+
     scoped_bson doc;
 
     append_to(opts, doc);
@@ -1147,6 +1151,10 @@ v1::cursor collection::distinct(
     bsoncxx::v1::stdx::string_view key,
     bsoncxx::v1::document::view query,
     v1::distinct_options const& opts) {
+    if (!is_valid_field_name(key)) {
+        throw v1::exception::internal::make(code::invalid_field_name);
+    }
+
     scoped_bson doc;
 
     append_to(opts, doc);
@@ -1604,6 +1612,8 @@ std::error_category const& collection::error_category() {
                     return "the \"maxTimeMS\" field must be representable as a `std::uint32_t`";
                 case code::invalid_collection_name:
                     return "invalid collection name";
+                case code::invalid_field_name:
+                    return "invalid field name";
                 default:
                     return std::string(this->name()) + ':' + std::to_string(v);
             }
@@ -1618,6 +1628,7 @@ std::error_category const& collection::error_category() {
                 switch (static_cast<code>(v)) {
                     case code::max_time_u32:
                     case code::invalid_collection_name:
+                    case code::invalid_field_name:
                         return source == condition::mongocxx;
 
                     case code::zero:
@@ -1634,6 +1645,7 @@ std::error_category const& collection::error_category() {
                 switch (static_cast<code>(v)) {
                     case code::max_time_u32:
                     case code::invalid_collection_name:
+                    case code::invalid_field_name:
                         return type == condition::invalid_argument;
 
                     case code::zero:
