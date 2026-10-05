@@ -1,6 +1,6 @@
 from typing import Mapping
 
-from shrub.v3.evg_command import EvgCommandType, expansions_update
+from shrub.v3.evg_command import EvgCommandType, ec2_assume_role, expansions_update
 
 from config_generator.etc.function import Function
 from config_generator.etc.utils import bash_exec
@@ -9,6 +9,9 @@ from config_generator.etc.utils import bash_exec
 class StartMongod(Function):
     name = 'start_mongod'
     commands = [
+        # Downloads of the "latest" server binary require an AWS identity authorized for the
+        # private S3 bucket (DRIVERS-3628).
+        ec2_assume_role(role_arn='${aws_test_secrets_role}'),
         bash_exec(
             command_type=EvgCommandType.SETUP,
             include_expansions_in_env=[
@@ -18,6 +21,9 @@ class StartMongod(Function):
                 'ORCHESTRATION_FILE',
                 'REQUIRE_API_VERSION',
                 'TOPOLOGY',
+                'AWS_ACCESS_KEY_ID',
+                'AWS_SECRET_ACCESS_KEY',
+                'AWS_SESSION_TOKEN',
             ],
             script='mongo-cxx-driver/.evergreen/scripts/start-mongod.sh',
         ),
