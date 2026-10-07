@@ -174,6 +174,7 @@ set(mongocxx_test_sources_v1
     v1/search_indexes.cpp
     v1/server_api.cpp
     v1/server_error.cpp
+    v1/string_options.cpp
     v1/structured_log.cpp
     v1/structured_logging.cpp
     v1/text_options.cpp
@@ -365,7 +366,7 @@ set_property(TEST crud_specs APPEND PROPERTY ENVIRONMENT
 )
 
 set_property(TEST gridfs_specs APPEND PROPERTY ENVIRONMENT
-    "GRIDFS_TESTS_PATH=${DATA_SOURCE_DIR}/gridfs"
+    "GRIDFS_LEGACY_TESTS_PATH=${DATA_SOURCE_DIR}/gridfs/legacy"
 )
 
 set_property(TEST client_side_encryption_specs APPEND PROPERTY ENVIRONMENT
@@ -400,6 +401,7 @@ set_property(TEST unified_format_specs APPEND PROPERTY ENVIRONMENT
     "CLIENT_SIDE_ENCRYPTION_UNIFIED_TESTS_PATH=${DATA_SOURCE_DIR}/client_side_encryption/unified"
     "COLLECTION_MANAGEMENT_TESTS_PATH=${DATA_SOURCE_DIR}/collection-management"
     "CRUD_UNIFIED_TESTS_PATH=${DATA_SOURCE_DIR}/crud/unified"
+    "GRIDFS_UNIFIED_TESTS_PATH=${DATA_SOURCE_DIR}/gridfs/unified"
     "INDEX_MANAGEMENT_TESTS_PATH=${DATA_SOURCE_DIR}/index-management"
     "RETRYABLE_READS_UNIFIED_TESTS_PATH=${DATA_SOURCE_DIR}/retryable-reads/unified/"
     "RETRYABLE_WRITES_UNIFIED_TESTS_PATH=${DATA_SOURCE_DIR}/retryable-writes/unified/"

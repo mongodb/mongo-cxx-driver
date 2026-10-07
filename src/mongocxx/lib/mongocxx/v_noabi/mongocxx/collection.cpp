@@ -121,6 +121,7 @@
 #include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/namespace_validation.hh>
 
 using bsoncxx::v_noabi::builder::concatenate;
 using bsoncxx::v_noabi::builder::basic::kvp;
@@ -1433,6 +1434,10 @@ void collection::rename(
     bsoncxx::v_noabi::string::view_or_value new_name,
     bool drop_target_before_rename,
     bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> const& wc) {
+    if (!is_valid_collection_name(new_name.view())) {
+        throw v_noabi::logic_error{v_noabi::error_code::k_invalid_parameter, "invalid collection name"};
+    }
+
     scoped_bson doc;
 
     if (wc) {
@@ -1451,6 +1456,10 @@ void collection::rename(
     bsoncxx::v_noabi::string::view_or_value new_name,
     bool drop_target_before_rename,
     bsoncxx::v_noabi::stdx::optional<v_noabi::write_concern> const& wc) {
+    if (!is_valid_collection_name(new_name.view())) {
+        throw v_noabi::logic_error{v_noabi::error_code::k_invalid_parameter, "invalid collection name"};
+    }
+
     scoped_bson doc;
 
     if (wc) {

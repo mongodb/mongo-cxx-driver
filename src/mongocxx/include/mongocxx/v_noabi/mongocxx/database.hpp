@@ -248,6 +248,9 @@ class database {
     /// @exception
     ///   mongocxx::v_noabi::operation_exception if the operation fails.
     ///
+    /// @throws mongocxx::v_noabi::logic_error with
+    /// @ref mongocxx::v_noabi::error_code::k_invalid_parameter if `name` is not a valid collection name.
+    ///
     MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::collection)
     create_collection(
         bsoncxx::v_noabi::stdx::string_view name,
@@ -275,6 +278,9 @@ class database {
     ///
     /// @exception
     ///   mongocxx::v_noabi::operation_exception if the operation fails.
+    ///
+    /// @throws mongocxx::v_noabi::logic_error with
+    /// @ref mongocxx::v_noabi::error_code::k_invalid_parameter if `name` is not a valid collection name.
     ///
     MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::collection)
     create_collection(
@@ -328,6 +334,9 @@ class database {
     ///
     /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listCollections'
     /// command fails.
+    ///
+    /// @throws mongocxx::v_noabi::logic_error with
+    /// @ref mongocxx::v_noabi::error_code::k_invalid_parameter if `name` is not a valid collection name.
     ///
     MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(bool)
     has_collection(bsoncxx::v_noabi::string::view_or_value name) const;
@@ -479,6 +488,9 @@ class database {
     ///
     /// @return the collection.
     ///
+    /// @throws mongocxx::v_noabi::logic_error with
+    /// @ref mongocxx::v_noabi::error_code::k_invalid_parameter if `name` is not a valid collection name.
+    ///
     MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::collection)
     collection(bsoncxx::v_noabi::string::view_or_value name) const;
 
@@ -489,6 +501,9 @@ class database {
     /// @param name the name of the collection to get.
     ///
     /// @return the collection.
+    ///
+    /// @throws mongocxx::v_noabi::logic_error with
+    /// @ref mongocxx::v_noabi::error_code::k_invalid_parameter if `name` is not a valid collection name.
     ///
     v_noabi::collection operator[](bsoncxx::v_noabi::string::view_or_value name) const {
         return this->collection(name);

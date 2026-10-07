@@ -41,6 +41,7 @@
 
 #include <cstdint>
 #include <string>
+#include <system_error>
 #include <vector>
 
 namespace mongocxx {
@@ -159,6 +160,8 @@ class database {
     /// Explicitly create a new collection or view in this database.
     ///
     /// @throws mongocxx::v1::server_error when a server-side error is encountered and a raw server error is available.
+    /// @throws mongocxx::v1::exception with @ref mongocxx::v1::database::errc::invalid_collection_name when `name`
+    /// is not a valid collection name.
     /// @throws mongocxx::v1::exception for all other runtime errors.
     ///
     /// @see
@@ -200,6 +203,8 @@ class database {
     /// Return true when this database contains a collection with the given name.
     ///
     /// @throws mongocxx::v1::server_error when a server-side error is encountered and a raw server error is available.
+    /// @throws mongocxx::v1::exception with @ref mongocxx::v1::database::errc::invalid_collection_name when `name`
+    /// is not a valid collection name.
     /// @throws mongocxx::v1::exception for all other runtime errors.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bool) has_collection(bsoncxx::v1::stdx::string_view name);
@@ -293,10 +298,16 @@ class database {
     ///
     /// Access the collection with the given name.
     ///
+    /// @throws mongocxx::v1::exception with @ref mongocxx::v1::database::errc::invalid_collection_name when `name`
+    /// is not a valid collection name.
+    ///
     MONGOCXX_ABI_EXPORT_CDECL(v1::collection) collection(bsoncxx::v1::stdx::string_view name) const;
 
     ///
     /// Equivalent to `this->collection(name)`.
+    ///
+    /// @throws mongocxx::v1::exception with @ref mongocxx::v1::database::errc::invalid_collection_name when `name`
+    /// is not a valid collection name.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(v1::collection) operator[](bsoncxx::v1::stdx::string_view name) const;
 
@@ -305,6 +316,9 @@ class database {
     ///
     /// @note When the "bucketName" field is unset, the default bucket name "fs" is used instead.
     /// @note When the "chunkSizeBytes" field is unset, the default chunk size of 255 KiB is used instead.
+    ///
+    /// @throws mongocxx::v1::exception with @ref mongocxx::v1::database::errc::invalid_collection_name when the
+    /// "bucketName" field is not valid.
     ///
     /// @see
     /// - [GridFS (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/gridfs/)
@@ -342,6 +356,26 @@ class database {
     /// @}
     ///
 
+    ///
+    /// Errors codes which may be returned by @ref mongocxx::v1::database.
+    ///
+    enum class errc {
+        zero,                    ///< Zero.
+        invalid_collection_name, ///< The collection name is not valid.
+    };
+
+    ///
+    /// The error category for @ref mongocxx::v1::database::errc.
+    ///
+    static MONGOCXX_ABI_EXPORT_CDECL(std::error_category const&) error_category();
+
+    ///
+    /// Support implicit conversion to `std::error_code`.
+    ///
+    friend std::error_code make_error_code(errc v) {
+        return {static_cast<int>(v), error_category()};
+    }
+
     class internal;
 
    private:
@@ -350,6 +384,13 @@ class database {
 
 } // namespace v1
 } // namespace mongocxx
+
+namespace std {
+
+template <>
+struct is_error_code_enum<mongocxx::v1::database::errc> : true_type {};
+
+} // namespace std
 
 #include <mongocxx/v1/detail/postlude.hpp>
 

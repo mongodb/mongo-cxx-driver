@@ -21,10 +21,6 @@ find.json
 findOne.json
 findOne-serverErrors.json
 find-serverErrors.json
-gridfs-downloadByName.json
-gridfs-downloadByName-serverErrors.json
-gridfs-download.json
-gridfs-download-serverErrors.json
 listCollectionNames.json
 listCollectionNames-serverErrors.json
 listCollectionObjects.json

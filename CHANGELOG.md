@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Changes prior to 3.9.0 are documented as [release notes on GitHub](https://github.com/mongodb/mongo-cxx-driver/releases).
 
-## 4.6.0 [Unreleased]
+## 4.7.0 [Unreleased]
 
 ### Added
 
@@ -24,14 +24,68 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
     and all-component maximum levels, maximum document length, and environment
     overrides, applied per-client and per-pool via
     `structured_logging_opts()`.
+
+### Changed
+
+- Bump the minimum required C Driver version to [2.5.5](https://github.com/mongodb/mongo-c-driver/releases/tag/2.5.5).
+
+## 4.6.0
+
+### Added
+
+- Support for In-Use Encryption String Indexes, replacing the experimental "text" API:
+  - `mongocxx::v1::string_options` and `mongocxx::string_options`.
+  - `mongocxx::v1::encrypt_options::string_opts()` and `mongocxx::options::encrypt::string_opts()`.
+    - This is a distinct field from the deprecated `text_opts()`. When both are set, `string_opts` takes precedence and `text_opts` is ignored.
+  - `mongocxx::v1::encrypt_options::encryption_algorithm::k_string` ("String").
+  - `mongocxx::v1::encrypt_options::encryption_query_type::k_prefix` ("prefix"), `k_suffix` ("suffix"), and `k_substring` ("substring").
+- Expose `atClusterTime` parameter in snapshot sessions
+
+### Deprecated
+
+- The In-Use Encryption "text" API, which is superseded by the "string" API above. These remain documented as experimental and may be removed in a future release:
+  - `mongocxx::v1::text_options`, `mongocxx::text_options`, and `mongocxx::options::text`.
+  - `mongocxx::v1::encrypt_options::text_opts()` and `mongocxx::options::encrypt::text_opts()`.
+  - `mongocxx::v1::encrypt_options::encryption_algorithm::k_textPreview` ("TextPreview").
+  - `mongocxx::v1::encrypt_options::encryption_query_type::k_prefixPreview`, `k_suffixPreview`, and `k_substringPreview`.
+
+### Changed
+
+- Bump the minimum required C Driver version to [2.5.3](https://github.com/mongodb/mongo-c-driver/releases/tag/2.5.3).
+
+## 4.5.3
+
+### Fixed
+
+- Use exact match for file ID in GridFS methods
+
+## 4.5.2
+
+### Fixed
+
+- Validate key lengths.
+- Validate before casting length in `from_json`.
+
+### Fixed
+
+- Use the `$eq` operator when comparing a user-provided file ID in GridFS queries.
+
+## 4.5.1
+
+### Fixed
+
+- Validate database and collection name arguments against "." and NUL bytes.
+
+## 4.5.0
+
+### Added
+
 - `mongocxx::log_handler` (v1): a `std::function` type alias for
   unstructured log message handlers.
 - `mongocxx::set_global_logger()` (v1) to configure the unstructured log message
   handler at runtime.
 - `mongocxx::logger_guard` (v1): a scope guard to temporarily replace the current
   unstructured log message handler.
-
-## 4.5.0
 
 ### Removed
 

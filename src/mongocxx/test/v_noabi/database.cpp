@@ -16,6 +16,7 @@
 #include <mongocxx/test/v_noabi/client_helpers.hh>
 
 #include <set>
+#include <string>
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/string/to_string.hpp>
@@ -26,6 +27,7 @@
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/index_view.hpp>
 #include <mongocxx/instance.hpp>
+#include <mongocxx/options/gridfs/bucket.hpp>
 #include <mongocxx/options/index_view.hpp>
 
 #include <mongocxx/conversions.hh>
@@ -279,6 +281,50 @@ TEST_CASE("A database", "[database]") {
         database database = mongo_client[database_name];
         collection obtained_collection = database[collection_name];
         REQUIRE(obtained_collection.name() == collection_name);
+    }
+
+    // CXX-3552: a collection name is handed to mongoc as a NUL-terminated C string. Without
+    // validation, an embedded NUL silently truncates the name, so the namespace used is not the
+    // one the caller asked for. Unlike a database name, a "." is legal in a collection name.
+    SECTION("rejects a collection name containing a NUL") {
+        MOCK_COLLECTION;
+
+        database_get_collection
+            ->interpose([](mongoc_database_t*, char const*) -> mongoc_collection_t* {
+                FAIL("an invalid collection name must be rejected before reaching mongoc");
+                return nullptr;
+            })
+            .forever();
+
+        auto database_create_collection = libmongoc::database_create_collection.create_instance();
+        database_create_collection
+            ->interpose([](mongoc_database_t*, char const*, bson_t const*, bson_error_t*) -> mongoc_collection_t* {
+                FAIL("an invalid collection name must be rejected before reaching mongoc");
+                return nullptr;
+            })
+            .forever();
+
+        database_has_collection
+            ->interpose([](mongoc_database_t*, char const*, bson_error_t*) -> bool {
+                FAIL("an invalid collection name must be rejected before reaching mongoc");
+                return false;
+            })
+            .forever();
+
+        database database = mongo_client[database_name];
+
+        std::string const name{"coll\0.bad", 9};
+        bsoncxx::stdx::string_view const view{name.data(), name.size()};
+
+        CHECK_THROWS_AS(database.collection(view), logic_error);
+        CHECK_THROWS_AS(database[view], logic_error);
+        CHECK_THROWS_AS(database.create_collection(view), logic_error);
+        CHECK_THROWS_AS(database.has_collection(view), logic_error);
+
+        // The bucket name is concatenated into the ".files" and ".chunks" collection names, so an
+        // embedded NUL in the bucket name truncates the resulting collection name.
+        CHECK_THROWS_AS(
+            database.gridfs_bucket(options::gridfs::bucket{}.bucket_name(std::string{"fs\0.bad", 7})), logic_error);
     }
 
     SECTION("supports run_command") {

@@ -48,35 +48,35 @@ generate_abi_report() (
   echo "Generating ${label:?} ABI report..."
 
   # Use "new" usage pattern based on binary debug-info analysis.
-  # -keep-registers-and-offsets: abi-dumper doesn't detect `-Og` with Clang.
+  # -quiet: abi-dumper doesn't detect `-Og` with Clang (noisy false-positive warnings).
   # "WARNING: a "Struct" type with no attributes detected in the DWARF dump" is caused by missing mongoc debug-info.
   # "ERROR: missed type id <N>" is false-positive caused by otherwise-unused forward-decls in a template parameter.
   parallel --halt now,fail=1 --keep-order --tagstring '[{#}]' ::: \
     "abi-dumper '${bsoncxx_old:?}' \
       -o bsoncxx-old.dump \
       -lver '${old_ver:?}' \
-      -keep-registers-and-offsets \
+      -quiet \
       -public-headers '${working_dir:?}/install/old/include/bsoncxx/${abi:?}' \
       -include-paths '${working_dir:?}/install/old/include/bsoncxx/v_noabi/bsoncxx' \
       -include-paths '${working_dir:?}/install/old/include/bsoncxx'" \
     "abi-dumper '${bsoncxx_new:?}' \
       -o bsoncxx-new.dump \
       -lver '${new_ver:?}' \
-      -keep-registers-and-offsets \
+      -quiet \
       -public-headers '${working_dir:?}/install/new/include/bsoncxx/${abi:?}' \
       -include-paths '${working_dir:?}/install/new/include/bsoncxx/v_noabi/bsoncxx' \
       -include-paths '${working_dir:?}/install/new/include/bsoncxx'" \
     "abi-dumper '${mongocxx_old:?}' \
       -o mongocxx-old.dump \
       -lver '${old_ver:?}' \
-      -keep-registers-and-offsets \
+      -quiet \
       -public-headers '${working_dir:?}/install/old/include/mongocxx/${abi:?}' \
       -include-paths '${working_dir:?}/install/old/include/mongocxx/v_noabi/mongocxx' \
       -include-paths '${working_dir:?}/install/old/include/mongocxx'" \
     "abi-dumper '${mongocxx_new:?}' \
       -o mongocxx-new.dump \
       -lver '${new_ver:?}' \
-      -keep-registers-and-offsets \
+      -quiet \
       -public-headers '${working_dir:?}/install/new/include/mongocxx/${abi:?}' \
       -include-paths '${working_dir:?}/install/new/include/mongocxx/v_noabi/mongocxx' \
       -include-paths '${working_dir:?}/install/new/include/mongocxx'" \

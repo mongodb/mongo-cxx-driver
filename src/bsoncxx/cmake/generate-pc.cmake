@@ -8,6 +8,7 @@ set(input_vars
     version
     is_static
     bson_req_ver
+    enable_unstable_abi
 )
 
 foreach(var ${input_vars})
@@ -33,7 +34,9 @@ if(1)
         list(APPEND cflags "-DBSONCXX_STATIC")
     endif()
 
-    list(APPEND cflags "-I\${includedir}/bsoncxx/v_noabi")
+    if(enable_unstable_abi)
+        list(APPEND cflags "-I\${includedir}/bsoncxx/v_noabi")
+    endif()
     list(APPEND cflags "-I\${includedir}")
 
     list(JOIN cflags " " cflags)

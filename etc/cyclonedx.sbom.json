@@ -1,16 +1,16 @@
 {
   "components": [
     {
-      "bom-ref": "pkg:github/mongodb/mongo-c-driver@2.3.3",
+      "bom-ref": "pkg:github/mongodb/mongo-c-driver@2.5.5",
       "copyright": "Copyright 2009-present MongoDB, Inc.",
       "externalReferences": [
         {
           "type": "distribution",
-          "url": "https://github.com/mongodb/mongo-c-driver/archive/2.3.3.tar.gz"
+          "url": "https://github.com/mongodb/mongo-c-driver/archive/2.5.5.tar.gz"
         },
         {
           "type": "website",
-          "url": "https://github.com/mongodb/mongo-c-driver/tree/2.3.3"
+          "url": "https://github.com/mongodb/mongo-c-driver/tree/2.5.5"
         }
       ],
       "group": "mongodb",
@@ -22,18 +22,18 @@
         }
       ],
       "name": "mongo-c-driver",
-      "purl": "pkg:github/mongodb/mongo-c-driver@2.3.3",
+      "purl": "pkg:github/mongodb/mongo-c-driver@2.5.5",
       "type": "library",
-      "version": "2.3.3"
+      "version": "2.5.5"
     }
   ],
   "dependencies": [
     {
-      "ref": "pkg:github/mongodb/mongo-c-driver@2.3.3"
+      "ref": "pkg:github/mongodb/mongo-c-driver@2.5.5"
     }
   ],
   "metadata": {
-    "timestamp": "2026-08-04T13:04:18.467291+00:00",
+    "timestamp": "2026-09-16T19:04:37.279882+00:00",
     "tools": [
       {
         "externalReferences": [
@@ -76,7 +76,7 @@
       }
     ]
   },
-  "serialNumber": "urn:uuid:ee4e6214-b3de-474b-990e-35c262cdc6f2",
+  "serialNumber": "urn:uuid:9598f7ab-118b-49dd-a440-983e30db9cb5",
   "version": 1,
   "$schema": "http://cyclonedx.org/schema/bom-1.5.schema.json",
   "bomFormat": "CycloneDX",

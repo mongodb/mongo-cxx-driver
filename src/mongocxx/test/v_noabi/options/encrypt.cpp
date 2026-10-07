@@ -27,6 +27,9 @@
 
 #include <mongocxx/options/range.hpp>
 #include <mongocxx/options/text.hpp>
+#include <mongocxx/string_options.hpp>
+
+#include <bsoncxx/private/suppress_deprecation_warnings.hh>
 
 #include <bsoncxx/test/catch.hh>
 
@@ -47,7 +50,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][encrypt]") {
     bsoncxx::v1::stdx::optional<std::int64_t> contention_factor;
     bsoncxx::v1::stdx::optional<v1::encrypt_options::encryption_query_type> query_type;
     bsoncxx::v1::stdx::optional<v1::range_options> range_opts;
-    bsoncxx::v1::stdx::optional<v1::text_options> text_opts;
+    bsoncxx::v1::stdx::optional<v1::string_options> string_opts;
 
     if (has_value) {
         key_id.emplace();
@@ -56,7 +59,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][encrypt]") {
         contention_factor.emplace();
         query_type.emplace();
         range_opts.emplace();
-        text_opts.emplace();
+        string_opts.emplace();
     }
 
     using v_noabi = v_noabi::options::encrypt;
@@ -72,7 +75,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][encrypt]") {
             from.contention_factor(*contention_factor);
             from.query_type(*query_type);
             from.range_opts(*range_opts);
-            from.text_opts(*text_opts);
+            from.string_opts(*string_opts);
         }
 
         v_noabi const to{from};
@@ -84,7 +87,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][encrypt]") {
             CHECK(to.contention_factor() == *contention_factor);
             CHECK(to.query_type() == *query_type);
             CHECK(to.range_opts().has_value());
-            CHECK(to.text_opts().has_value());
+            CHECK(to.string_opts().has_value());
         } else {
             CHECK_FALSE(to.key_id().has_value());
             CHECK_FALSE(to.key_alt_name().has_value());
@@ -92,7 +95,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][encrypt]") {
             CHECK_FALSE(to.contention_factor().has_value());
             CHECK_FALSE(to.query_type().has_value());
             CHECK_FALSE(to.range_opts().has_value());
-            CHECK_FALSE(to.text_opts().has_value());
+            CHECK_FALSE(to.string_opts().has_value());
         }
     }
 
@@ -106,7 +109,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][encrypt]") {
             from.contention_factor(*contention_factor);
             from.query_type(*query_type);
             from.range_opts(from_v1(*range_opts));
-            from.text_opts(*text_opts);
+            from.string_opts(*string_opts);
         }
 
         v1 const to{from};
@@ -118,7 +121,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][encrypt]") {
             CHECK(to.contention_factor() == *contention_factor);
             CHECK(to.query_type() == *query_type);
             CHECK(to.range_opts().has_value());
-            CHECK(to.text_opts().has_value());
+            CHECK(to.string_opts().has_value());
         } else {
             CHECK_FALSE(to.key_id().has_value());
             CHECK_FALSE(to.key_alt_name().has_value());
@@ -126,9 +129,29 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][encrypt]") {
             CHECK_FALSE(to.contention_factor().has_value());
             CHECK_FALSE(to.query_type().has_value());
             CHECK_FALSE(to.range_opts().has_value());
-            CHECK_FALSE(to.text_opts().has_value());
+            CHECK_FALSE(to.string_opts().has_value());
         }
     }
 }
+
+// `text_opts` and `string_opts` are distinct fields which both convert to "stringOpts".
+BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
+
+TEST_CASE("encrypt: text_opts and string_opts are distinct fields", "[mongocxx][v_noabi][options][encrypt]") {
+    auto const opts = v_noabi::options::encrypt{}.text_opts(v1::text_options{}.case_sensitive(true));
+
+    CHECK_FALSE(opts.string_opts().has_value());
+
+    REQUIRE(opts.text_opts());
+    CHECK(opts.text_opts()->case_sensitive() == true);
+
+    // The deprecated field survives the round-trip through the v1 equivalent.
+    auto const v1_opts = v1::encrypt_options{opts};
+    CHECK_FALSE(v1_opts.string_opts().has_value());
+    REQUIRE(v1_opts.text_opts());
+    CHECK(v1_opts.text_opts()->case_sensitive() == true);
+}
+
+BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
 
 } // namespace mongocxx

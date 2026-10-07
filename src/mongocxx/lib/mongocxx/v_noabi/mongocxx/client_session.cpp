@@ -77,6 +77,18 @@ void client_session::abort_transaction() try { _session.abort_transaction(); } c
     v_noabi::throw_exception<v_noabi::operation_exception>(ex);
 }
 
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::b_timestamp> client_session::snapshot_time() const try {
+    if (auto const st = _session.snapshot_time()) {
+        return bsoncxx::v_noabi::from_v1(*st);
+    }
+
+    return {};
+} catch (v1::server_error const&) {
+    MONGOCXX_PRIVATE_UNREACHABLE; // Only client-side errors.
+} catch (v1::exception const& ex) {
+    v_noabi::throw_exception<v_noabi::operation_exception>(ex);
+}
+
 namespace {
 
 struct with_transaction_ctx {

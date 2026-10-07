@@ -691,6 +691,8 @@ class collection {
     ///
     /// Change the name of this collection.
     ///
+    /// @throws mongocxx::v1::exception with @ref mongocxx::v1::collection::errc::invalid_collection_name when
+    /// `new_name` is invalid.
     /// @throws mongocxx::v1::exception when a client-side or server-side error is encountered. (mongoc does not return
     /// the raw server response for this command.)
     ///
@@ -903,8 +905,9 @@ class collection {
     /// Errors codes which may be returned by @ref mongocxx::v1::collection.
     ///
     enum class errc {
-        zero,         ///< Zero.
-        max_time_u32, ///< The "maxTimeMS" field must be representable as an `std::uint32_t`.
+        zero,                    ///< Zero.
+        max_time_u32,            ///< The "maxTimeMS" field must be representable as an `std::uint32_t`.
+        invalid_collection_name, ///< The collection name is not valid.
     };
 
     ///

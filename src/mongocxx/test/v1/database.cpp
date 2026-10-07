@@ -58,6 +58,61 @@
 namespace mongocxx {
 namespace v1 {
 
+using code = mongocxx::v1::database::errc;
+
+TEST_CASE("error code", "[mongocxx][v1][database][error]") {
+    using mongocxx::v1::source_errc;
+    using mongocxx::v1::type_errc;
+
+    auto const& category = mongocxx::v1::database::error_category();
+    CHECK_THAT(category.name(), Catch::Matchers::Equals("mongocxx::v1::database"));
+
+    auto const zero_errc = make_error_condition(static_cast<std::errc>(0));
+
+    SECTION("unknown") {
+        std::error_code const ec = static_cast<code>(-1);
+
+        CHECK(ec.category() == category);
+        CHECK(ec.value() == -1);
+        CHECK(ec);
+        CHECK(ec.message() == std::string(category.name()) + ":-1");
+    }
+
+    SECTION("zero") {
+        std::error_code const ec = code::zero;
+
+        CHECK(ec.category() == category);
+        CHECK(ec.value() == 0);
+        CHECK_FALSE(ec);
+        CHECK(ec.message() == "zero");
+
+        CHECK(ec != zero_errc);
+        CHECK(ec != source_errc::zero);
+        CHECK(ec != type_errc::zero);
+    }
+
+    SECTION("non-zero") {
+        std::error_code const ec = code::invalid_collection_name;
+
+        CHECK(ec.category() == category);
+        CHECK(ec.value() != static_cast<int>(code::zero));
+        CHECK(ec);
+        CHECK(ec.message() != "zero");
+
+        CHECK(ec != zero_errc);
+        CHECK(ec != source_errc::zero);
+        CHECK(ec != type_errc::zero);
+    }
+
+    SECTION("source") {
+        CHECK(make_error_code(code::invalid_collection_name) == source_errc::mongocxx);
+    }
+
+    SECTION("type") {
+        CHECK(make_error_code(code::invalid_collection_name) == type_errc::invalid_argument);
+    }
+}
+
 namespace {
 
 struct identity_type {};
@@ -1385,6 +1440,65 @@ TEST_CASE("collection", "[mongocxx][v1][database]") {
 
     auto const coll = db[input];
     CHECK(v1::collection::internal::as_mongoc(coll) == coll_id);
+}
+
+// CXX-3552: a collection name is handed to mongoc as a NUL-terminated C string. Without
+// validation, an embedded NUL silently truncates the name, so the namespace used is not the one
+// the caller asked for. Unlike a database name, a "." is legal in a collection name.
+TEST_CASE("collection with an invalid name", "[mongocxx][v1][database]") {
+    database_mocks_type mocks;
+
+    auto db = mocks.make();
+
+    auto get_collection = libmongoc::database_get_collection.create_instance();
+    auto create_collection = libmongoc::database_create_collection.create_instance();
+    auto has_collection = libmongoc::database_has_collection.create_instance();
+
+    get_collection
+        ->interpose([&](mongoc_database_t*, char const*) -> mongoc_collection_t* {
+            FAIL("an invalid collection name must be rejected before reaching mongoc");
+            return nullptr;
+        })
+        .forever();
+
+    create_collection
+        ->interpose([&](mongoc_database_t*, char const*, bson_t const*, bson_error_t*) -> mongoc_collection_t* {
+            FAIL("an invalid collection name must be rejected before reaching mongoc");
+            return nullptr;
+        })
+        .forever();
+
+    has_collection
+        ->interpose([&](mongoc_database_t*, char const*, bson_error_t*) -> bool {
+            FAIL("an invalid collection name must be rejected before reaching mongoc");
+            return false;
+        })
+        .forever();
+
+    std::string const name{"coll\0.bad", 9};
+    bsoncxx::v1::stdx::string_view const view{name.data(), name.size()};
+
+    SECTION("collection") {
+        CHECK_THROWS_WITH_CODE(db.collection(view), code::invalid_collection_name);
+        CHECK_THROWS_WITH_CODE(db[view], code::invalid_collection_name);
+    }
+
+    SECTION("create_collection") {
+        CHECK_THROWS_WITH_CODE(db.create_collection(view, {}), code::invalid_collection_name);
+    }
+
+    SECTION("has_collection") {
+        CHECK_THROWS_WITH_CODE(db.has_collection(view), code::invalid_collection_name);
+    }
+
+    // The bucket name is concatenated into the ".files" and ".chunks" collection names, so an
+    // embedded NUL in the bucket name truncates the resulting collection name.
+    SECTION("gridfs_bucket") {
+        std::string const name{"fs\0.bad", 7};
+
+        CHECK_THROWS_WITH_CODE(
+            db.gridfs_bucket(v1::gridfs::bucket::options{}.bucket_name(name)), code::invalid_collection_name);
+    }
 }
 
 TEST_CASE("gridfs_bucket", "[mongocxx][v1][database]") {

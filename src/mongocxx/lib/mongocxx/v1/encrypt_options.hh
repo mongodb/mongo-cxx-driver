@@ -21,6 +21,7 @@
 #include <bsoncxx/v1/types/value-fwd.hpp>
 
 #include <mongocxx/v1/range_options-fwd.hpp>
+#include <mongocxx/v1/string_options-fwd.hpp>
 #include <mongocxx/v1/text_options-fwd.hpp>
 
 #include <bsoncxx/v1/stdx/optional.hpp>
@@ -42,6 +43,8 @@ class encrypt_options::internal {
         encrypt_options const& self);
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(bsoncxx::v1::stdx::optional<v1::range_options> const&) range_opts(
         encrypt_options const& self);
+    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(bsoncxx::v1::stdx::optional<v1::string_options> const&) string_opts(
+        encrypt_options const& self);
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(bsoncxx::v1::stdx::optional<v1::text_options> const&) text_opts(
         encrypt_options const& self);
 
@@ -49,6 +52,7 @@ class encrypt_options::internal {
     static bsoncxx::v1::stdx::optional<std::string>& key_alt_name(encrypt_options& self);
     static bsoncxx::v1::stdx::optional<encryption_algorithm>& algorithm(encrypt_options& self);
     static bsoncxx::v1::stdx::optional<v1::range_options>& range_opts(encrypt_options& self);
+    static bsoncxx::v1::stdx::optional<v1::string_options>& string_opts(encrypt_options& self);
     static bsoncxx::v1::stdx::optional<v1::text_options>& text_opts(encrypt_options& self);
 };
 

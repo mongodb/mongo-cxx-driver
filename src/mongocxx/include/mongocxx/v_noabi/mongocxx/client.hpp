@@ -235,6 +235,9 @@ class client {
     ///
     /// @return The database
     ///
+    /// @throws mongocxx::v_noabi::logic_error with
+    /// @ref mongocxx::v_noabi::error_code::k_invalid_parameter if `name` is not a valid database name.
+    ///
     MONGOCXX_ABI_EXPORT_CDECL_UNSTABLE(v_noabi::database)
     database(bsoncxx::v_noabi::string::view_or_value name) const&;
 
@@ -250,6 +253,9 @@ class client {
     ///   The name of the database.
     ///
     /// @return Client side representation of a server side database
+    ///
+    /// @throws mongocxx::v_noabi::logic_error with
+    /// @ref mongocxx::v_noabi::error_code::k_invalid_parameter if `name` is not a valid database name.
     ///
     v_noabi::database operator[](bsoncxx::v_noabi::string::view_or_value name) const& {
         return database(name);

@@ -117,8 +117,6 @@ void run_retryable_reads_tests_in_file(std::string test_path) {
 
 TEST_CASE("retryable reads spec tests", "[retryable_reads_specs]") {
     std::set<std::string> unsupported_tests{
-        "gridfs-downloadByName.json",
-        "gridfs-downloadByName-serverErrors.json",
         "listCollectionObjects.json",
         "listCollectionObjects-serverErrors.json",
         "listDatabaseObjects.json",

@@ -21,6 +21,8 @@
 #include <mongocxx/test/v_noabi/catch_helpers.hh>
 #include <mongocxx/test/v_noabi/client_helpers.hh>
 
+#include <string>
+
 #include <bsoncxx/string/to_string.hpp>
 
 #include <mongocxx/exception/logic_error.hpp>
@@ -34,6 +36,8 @@
 #include <mongocxx/private/ssl.hh>
 
 #include <bsoncxx/test/catch.hh>
+
+#include <catch2/generators/catch_generators.hpp>
 
 namespace {
 using namespace mongocxx;
@@ -341,6 +345,40 @@ TEST_CASE("A client can create a named database object", "[client]") {
     client mongo_client{uri{}, test_util::add_test_server_api()};
     database obtained_database = mongo_client[name];
     REQUIRE(obtained_database.name() == name);
+}
+
+// CXX-3552: a database name is handed to mongoc as a NUL-terminated C string. Without validation,
+// an embedded NUL silently truncates the name and a "." is re-interpreted by the server as a
+// namespace separator, so the namespace used is not the one the caller asked for.
+TEST_CASE("A client rejects a database name containing a NUL or a dot", "[client]") {
+    MOCK_CLIENT;
+
+    auto database_get = libmongoc::client_get_database.create_instance();
+    database_get
+        ->interpose([](mongoc_client_t*, char const*) -> mongoc_database_t* {
+            FAIL("an invalid database name must be rejected before reaching mongoc");
+            return nullptr;
+        })
+        .forever();
+    auto database_destroy = libmongoc::database_destroy.create_instance();
+    database_destroy->interpose([](mongoc_database_t*) {}).forever();
+
+    client mongo_client{uri{}, test_util::add_test_server_api()};
+
+    SECTION("embedded NUL") {
+        std::string const name{"db\0.bad", 7};
+        bsoncxx::stdx::string_view const view{name.data(), name.size()};
+
+        CHECK_THROWS_AS(mongo_client.database(view), logic_error);
+        CHECK_THROWS_AS(mongo_client[view], logic_error);
+    }
+
+    SECTION("dot") {
+        auto const name = GENERATE("db.bad", ".", "a.b");
+
+        CHECK_THROWS_AS(mongo_client.database(name), logic_error);
+        CHECK_THROWS_AS(mongo_client[name], logic_error);
+    }
 }
 
 TEST_CASE("integration tests for client metadata handshake feature") {

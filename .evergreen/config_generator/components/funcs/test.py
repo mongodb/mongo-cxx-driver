@@ -19,13 +19,6 @@ class Test(Function):
             'ASAN_SYMBOLIZER_PATH',
             'build_type',
             'CRYPT_SHARED_LIB_PATH',  # Set by run-mongodb.sh in "start_mongod".
-            'cse_aws_access_key_id',
-            'cse_aws_secret_access_key',
-            'cse_azure_client_id',
-            'cse_azure_client_secret',
-            'cse_azure_tenant_id',
-            'cse_gcp_email',
-            'cse_gcp_privatekey',
             'disable_slow_tests',
             'distro_id',
             'example_projects_cxxflags',

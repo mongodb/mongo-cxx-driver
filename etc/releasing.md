@@ -479,7 +479,7 @@ Configure and build the CXX Driver (do not reuse an existing C Driver installati
 
 ```bash
 cmake -S . -B build
-cmake --build build
+cmake --build build --parallel
 ```
 
 Then run:
