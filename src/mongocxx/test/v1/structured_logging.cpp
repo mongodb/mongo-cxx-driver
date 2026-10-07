@@ -19,10 +19,12 @@
 #include <mongocxx/v1/structured_log.hpp>
 
 #include <cstddef>
+#include <stdexcept>
 
 #include <mongocxx/private/mongoc.hh>
 
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/generators/catch_generators.hpp>
 
 namespace mongocxx {
 namespace v1 {
@@ -41,7 +43,7 @@ mongoc_structured_log_opts_t* fake_opts(opts_identity* id) {
 
 } // namespace
 
-TEST_CASE("structured_logging builder", "[mongocxx][test][v1][structured_logging]") {
+TEST_CASE("structured_logging builder", "[mongocxx][v1][structured_logging]") {
     structured_logging cfg;
 
     SECTION("defaults are empty") {
@@ -72,9 +74,17 @@ TEST_CASE("structured_logging builder", "[mongocxx][test][v1][structured_logging
         auto const copy = cfg;
         CHECK(copy.max_document_length() == std::size_t{500});
     }
+
+    SECTION("rejects an out-of-range component") {
+        auto const component = static_cast<structured_log_component>(GENERATE(-1, 4));
+        cfg.max_level_for_component(structured_log_component::k_connection, structured_log_level::k_trace);
+        CHECK_THROWS_AS(cfg.max_level_for_component(component), std::out_of_range);
+        CHECK_THROWS_AS(cfg.max_level_for_component(component, structured_log_level::k_debug), std::out_of_range);
+        CHECK(cfg.max_level_for_component(structured_log_component::k_connection) == structured_log_level::k_trace);
+    }
 }
 
-TEST_CASE("structured_logging apply_to", "[mongocxx][test][v1][structured_logging]") {
+TEST_CASE("structured_logging apply_to", "[mongocxx][v1][structured_logging]") {
     opts_identity opts_id;
 
     auto opts_new = libmongoc::structured_log_opts_new.create_instance();

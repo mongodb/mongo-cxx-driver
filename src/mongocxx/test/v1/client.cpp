@@ -1100,12 +1100,14 @@ TEST_CASE("structured_logging_opts", "[mongocxx][v1][client]") {
     auto opts_destroy = libmongoc::structured_log_opts_destroy.create_instance();
     opts_destroy->interpose([&](mongoc_structured_log_opts_t* ptr) { CHECK(ptr == opts_id); }).forever();
 
+    bool installed_handler = false;
     auto set_handler = libmongoc::structured_log_opts_set_handler.create_instance();
     set_handler->interpose(
         [&](mongoc_structured_log_opts_t* ptr, mongoc_structured_log_func_t func, void* ctx) -> void {
             CHECK(ptr == opts_id);
             CHECK(func != nullptr);
             CHECK(ctx != nullptr);
+            installed_handler = true;
         });
 
     bool installed = false;
@@ -1127,6 +1129,7 @@ TEST_CASE("structured_logging_opts", "[mongocxx][v1][client]") {
     }
 
     CHECK(installed);
+    CHECK(installed_handler);
 }
 
 TEST_CASE("server_api_opts", "[mongocxx][v1][client]") {

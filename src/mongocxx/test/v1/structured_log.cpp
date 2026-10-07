@@ -18,7 +18,7 @@
 
 #include <bsoncxx/v1/stdx/string_view.hpp>
 
-#include <cstring>
+#include <mongocxx/test/private/scoped_bson.hh>
 
 #include <bsoncxx/private/bson.hh>
 
@@ -53,6 +53,7 @@ TEST_CASE("structured_log_component to_string", "[mongocxx][v1][structured_log]"
     // Names must match the standardized logging specification.
     CHECK(to_string(structured_log_component::k_command) == "command");
     CHECK(to_string(structured_log_component::k_topology) == "topology");
+    CHECK(to_string(structured_log_component::k_server_selection) == "serverSelection");
     CHECK(to_string(structured_log_component::k_connection) == "connection");
     CHECK(to_string(static_cast<structured_log_component>(-1)) == "unknown");
 }
@@ -145,21 +146,16 @@ TEST_CASE("structured_log_entry accessors", "[mongocxx][v1][structured_log]") {
     }
 
     SECTION("message_as_bson yields an owned copy") {
-        bson_t* const expected = BCON_NEW("message", "Command started", "commandName", "find");
+        scoped_bson const expected{R"({"message": "Command started", "commandName": "find"})"};
 
         auto message_as_bson = libmongoc::structured_log_entry_message_as_bson.create_instance();
         message_as_bson->interpose([&](mongoc_structured_log_entry_t const* ptr) -> bson_t* {
             CHECK(static_cast<void const*>(ptr) == &identity);
             // The caller (mongocxx) takes ownership; hand back a fresh allocation.
-            return bson_copy(expected);
+            return bson_copy(expected.bson());
         });
 
-        auto const doc = entry.message_as_bson();
-        auto const view = doc.view();
-        REQUIRE(view.length() == expected->len);
-        CHECK(std::memcmp(view.data(), bson_get_data(expected), expected->len) == 0);
-
-        bson_destroy(expected);
+        CHECK(entry.message_as_bson().view() == expected.view());
     }
 }
 

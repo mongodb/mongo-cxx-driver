@@ -106,11 +106,15 @@ class structured_logging {
     ///
     /// Set the maximum (least severe) level emitted for a single component.
     ///
+    /// @throws std::out_of_range if `component` is not a supported component.
+    ///
     MONGOCXX_ABI_EXPORT_CDECL(structured_logging&)
     max_level_for_component(v1::structured_log_component component, v1::structured_log_level v);
 
     ///
     /// Return the maximum level configured for a single component, if any was set on this object.
+    ///
+    /// @throws std::out_of_range if `v` is not a supported component.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<v1::structured_log_level>)
     max_level_for_component(v1::structured_log_component v) const;
@@ -127,10 +131,12 @@ class structured_logging {
     max_level_for_all_components() const;
 
     ///
-    /// Read the per-component maximum levels from the environment (the `MONGODB_LOG_*` variables)
-    /// when this configuration is applied.
+    /// When `v` is true, reapply the per-component maximum levels from the environment
+    /// (the `MONGODB_LOG_*` variables) after programmatic level settings.
     ///
-    /// Applied after any programmatic level settings, so environment values take precedence.
+    /// Environment settings are always read when this configuration is applied. By default,
+    /// programmatic level settings take precedence; when `v` is true, environment values take
+    /// precedence instead.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(structured_logging&) max_levels_from_env(bool v);
 
@@ -145,11 +151,12 @@ class structured_logging {
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<std::size_t>) max_document_length() const;
 
     ///
-    /// Read the maximum document length from the environment
-    /// (`MONGODB_LOG_MAX_DOCUMENT_LENGTH`) when this configuration is applied.
+    /// When `v` is true, reapply the maximum document length from the environment
+    /// (`MONGODB_LOG_MAX_DOCUMENT_LENGTH`) after the programmatic document-length setting.
     ///
-    /// Applied after any programmatic document-length setting, so the environment value takes
-    /// precedence.
+    /// Environment settings are always read when this configuration is applied. By default,
+    /// the programmatic document-length setting takes precedence; when `v` is true, the
+    /// environment value takes precedence instead.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(structured_logging&) max_document_length_from_env(bool v);
 

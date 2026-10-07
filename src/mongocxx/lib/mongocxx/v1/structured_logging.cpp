@@ -18,6 +18,8 @@
 
 #include <bsoncxx/v1/stdx/optional.hpp>
 
+#include <mongocxx/v1/detail/macros.hpp>
+
 #include <mongocxx/v1/structured_log.hh>
 
 #include <array>
@@ -32,12 +34,19 @@
 namespace mongocxx {
 namespace v1 {
 
+namespace {
+
+// Number of enumerators in structured_log_component.
+constexpr std::size_t structured_log_component_count = 4u;
+
+} // namespace
+
 class structured_logging::impl {
    public:
     v1::structured_log_handler _handler;
     bsoncxx::v1::stdx::optional<v1::structured_log_level> _all_components_level;
     // Indexed by `static_cast<std::size_t>(structured_log_component)`.
-    std::array<bsoncxx::v1::stdx::optional<v1::structured_log_level>, 4> _component_levels;
+    std::array<bsoncxx::v1::stdx::optional<v1::structured_log_level>, structured_log_component_count> _component_levels;
     bsoncxx::v1::stdx::optional<std::size_t> _max_document_length;
     bool _max_levels_from_env = false;
     bool _max_document_length_from_env = false;
@@ -92,14 +101,14 @@ v1::structured_log_handler structured_logging::handler() const {
 
 structured_logging& structured_logging::max_level_for_component(
     v1::structured_log_component component,
-    v1::structured_log_level level) {
-    impl::with(*this)._component_levels[static_cast<std::size_t>(component)] = level;
+    v1::structured_log_level v) {
+    impl::with(*this)._component_levels.at(static_cast<std::size_t>(component)) = v;
     return *this;
 }
 
 bsoncxx::v1::stdx::optional<v1::structured_log_level> structured_logging::max_level_for_component(
-    v1::structured_log_component component) const {
-    return impl::with(*this)._component_levels[static_cast<std::size_t>(component)];
+    v1::structured_log_component v) const {
+    return impl::with(*this)._component_levels.at(static_cast<std::size_t>(v));
 }
 
 structured_logging& structured_logging::max_level_for_all_components(v1::structured_log_level v) {
@@ -111,8 +120,8 @@ bsoncxx::v1::stdx::optional<v1::structured_log_level> structured_logging::max_le
     return impl::with(*this)._all_components_level;
 }
 
-structured_logging& structured_logging::max_levels_from_env(bool toggle) {
-    impl::with(*this)._max_levels_from_env = toggle;
+structured_logging& structured_logging::max_levels_from_env(bool v) {
+    impl::with(*this)._max_levels_from_env = v;
     return *this;
 }
 
@@ -125,8 +134,8 @@ bsoncxx::v1::stdx::optional<std::size_t> structured_logging::max_document_length
     return impl::with(*this)._max_document_length;
 }
 
-structured_logging& structured_logging::max_document_length_from_env(bool toggle) {
-    impl::with(*this)._max_document_length_from_env = toggle;
+structured_logging& structured_logging::max_document_length_from_env(bool v) {
+    impl::with(*this)._max_document_length_from_env = v;
     return *this;
 }
 
@@ -148,7 +157,15 @@ void exception_guard(char const* source, Fn fn) noexcept {
 void handle_structured_log(mongoc_structured_log_entry_t const* entry, void* user_data) noexcept {
     auto const& self = *static_cast<structured_logging const*>(user_data);
     auto const view = structured_log_entry::internal::make(entry);
-    exception_guard(__func__, [&] { structured_logging::internal::handler(self)(view); });
+    exception_guard(__func__, [&] {
+        if (auto const& handler = structured_logging::internal::handler(self)) {
+            handler(view);
+        } else {
+            // Invariant: `structured_logging::internal::make_opts()` never registers
+            // `handle_structured_log()` with a null handler.
+            MONGOCXX_PRIVATE_UNREACHABLE;
+        }
+    });
 }
 
 } // namespace
@@ -161,14 +178,17 @@ mongoc_structured_log_opts_t* structured_logging::internal::make_opts(structured
     auto const opts = libmongoc::structured_log_opts_new();
     auto& i = impl::with(self);
 
+    // Preserve libmongoc's handling of invalid settings: rejected values leave the existing
+    // settings unchanged. Malformed environment values also produce warnings in libmongoc.
+
     if (i._all_components_level) {
-        libmongoc::structured_log_opts_set_max_level_for_all_components(
+        (void)libmongoc::structured_log_opts_set_max_level_for_all_components(
             opts, static_cast<mongoc_structured_log_level_t>(*i._all_components_level));
     }
 
     for (std::size_t idx = 0; idx < i._component_levels.size(); ++idx) {
         if (auto const& level = i._component_levels[idx]) {
-            libmongoc::structured_log_opts_set_max_level_for_component(
+            (void)libmongoc::structured_log_opts_set_max_level_for_component(
                 opts,
                 static_cast<mongoc_structured_log_component_t>(idx),
                 static_cast<mongoc_structured_log_level_t>(*level));
@@ -177,15 +197,15 @@ mongoc_structured_log_opts_t* structured_logging::internal::make_opts(structured
 
     // Applied after the programmatic settings so the environment takes precedence.
     if (i._max_levels_from_env) {
-        libmongoc::structured_log_opts_set_max_levels_from_env(opts);
+        (void)libmongoc::structured_log_opts_set_max_levels_from_env(opts);
     }
 
     if (i._max_document_length) {
-        libmongoc::structured_log_opts_set_max_document_length(opts, *i._max_document_length);
+        (void)libmongoc::structured_log_opts_set_max_document_length(opts, *i._max_document_length);
     }
 
     if (i._max_document_length_from_env) {
-        libmongoc::structured_log_opts_set_max_document_length_from_env(opts);
+        (void)libmongoc::structured_log_opts_set_max_document_length_from_env(opts);
     }
 
     // An empty handler disables structured logging (NULL func).

@@ -452,10 +452,11 @@ lib/
 
 > [!NOTE]
 >
-> - `inline` variables require C++17 and newer. - `constexpr` implies `inline`
-> for variables only in C++17 and newer. - Before C++17, non-`inline`
-> `constexpr` variables which are ODR-used require an out-of-line definition. -
-> Use `BSONCXX_PRIVATE_INLINE_CXX17` for pre-C++17 compatibility.
+> - `inline` variables require C++17 and newer.
+> - `constexpr` implies `inline` for variables only in C++17 and newer.
+> - Before C++17, non-`inline` `constexpr` variables which are ODR-used require
+>   an out-of-line definition.
+> - Use `BSONCXX_PRIVATE_INLINE_CXX17` for pre-C++17 compatibility.
 
 ### Export Macros
 
