@@ -399,6 +399,8 @@ class collection {
     ///
     /// Return the distinct values for the specified field within this collection.
     ///
+    /// @throws mongocxx::v1::exception with @ref mongocxx::v1::collection::errc::invalid_field_name when
+    /// `key` is invalid.
     /// @throws mongocxx::v1::server_error when a server-side error is encountered and a raw server error is available.
     /// @throws mongocxx::v1::exception for all other runtime errors.
     ///
@@ -908,6 +910,7 @@ class collection {
         zero,                    ///< Zero.
         max_time_u32,            ///< The "maxTimeMS" field must be representable as an `std::uint32_t`.
         invalid_collection_name, ///< The collection name is not valid.
+        invalid_field_name,      ///< The field name is not valid.
     };
 
     ///

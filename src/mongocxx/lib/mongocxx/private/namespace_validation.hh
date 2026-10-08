@@ -40,4 +40,14 @@ inline bool is_valid_collection_name(bsoncxx::v1::stdx::string_view name) {
     return name.find('\0') == name.npos;
 }
 
+///
+/// Return true when `name` is a valid field name.
+///
+/// A field name must not contain a NUL character (which would truncate the name when it is converted
+/// to a C string).
+///
+inline bool is_valid_field_name(bsoncxx::v1::stdx::string_view name) {
+    return name.find('\0') == name.npos;
+}
+
 } // namespace mongocxx

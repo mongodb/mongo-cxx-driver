@@ -683,6 +683,9 @@ class collection {
     /// field.  If the operation fails, the cursor throws
     /// mongocxx::v_noabi::query_exception when the returned cursor is iterated.
     ///
+    /// @throws mongocxx::v_noabi::logic_error with
+    /// @ref mongocxx::v_noabi::error_code::k_invalid_parameter if `name` is not a valid field name.
+    ///
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
@@ -707,6 +710,9 @@ class collection {
     /// @return mongocxx::v_noabi::cursor having the distinct values for the specified
     /// field.  If the operation fails, the cursor throws
     /// mongocxx::v_noabi::query_exception when the returned cursor is iterated.
+    ///
+    /// @throws mongocxx::v_noabi::logic_error with
+    /// @ref mongocxx::v_noabi::error_code::k_invalid_parameter if `name` is not a valid field name.
     ///
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/distinct/

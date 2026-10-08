@@ -440,7 +440,7 @@ functions:
       type: setup
       params:
         updates:
-          - { key: mongoc_version_minimum, value: 2.5.3 }
+          - { key: mongoc_version_minimum, value: 2.5.6 }
     - command: subprocess.exec
       type: setup
       params:
@@ -511,6 +511,9 @@ functions:
     params:
       directory: mongo-cxx-driver
   start_mongod:
+    - command: ec2.assume_role
+      params:
+        role_arn: ${aws_test_secrets_role}
     - command: subprocess.exec
       type: setup
       params:
@@ -522,6 +525,9 @@ functions:
           - ORCHESTRATION_FILE
           - REQUIRE_API_VERSION
           - TOPOLOGY
+          - AWS_ACCESS_KEY_ID
+          - AWS_SECRET_ACCESS_KEY
+          - AWS_SESSION_TOKEN
         args:
           - -c
           - mongo-cxx-driver/.evergreen/scripts/start-mongod.sh

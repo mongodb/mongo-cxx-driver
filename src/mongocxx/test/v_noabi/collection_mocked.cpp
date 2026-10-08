@@ -103,6 +103,30 @@ TEST_CASE("rename with an invalid name", "[mongocxx][v_noabi][collection]") {
     CHECK_THROWS_AS(mongo_coll.rename(bsoncxx::string::view_or_value{name}, false), logic_error);
 }
 
+// Regression test for CXX-3551. Test a field name with an embedded NUL.
+TEST_CASE("distinct with an invalid field name", "[mongocxx][v_noabi][collection]") {
+    MOCK_DATABASE;
+    MOCK_COLLECTION; // "mocked_collection.dummy_collection"
+
+    client mongo_client{uri{}};
+    auto mongo_coll = mongo_client["mocked_collection"]["dummy_collection"];
+    REQUIRE(mongo_coll);
+
+    auto collection_read_command_with_opts = libmongoc::collection_read_command_with_opts.create_instance();
+    collection_read_command_with_opts
+        ->interpose(
+            [](::mongoc_collection_t*, bson_t const*, mongoc_read_prefs_t const*, bson_t const*, bson_t*, bson_error_t*)
+                -> bool {
+                FAIL("an invalid field name must be rejected before reaching mongoc");
+                return false;
+            })
+        .forever();
+
+    std::string const name{"field\0.bad", 10};
+
+    CHECK_THROWS_AS(mongo_coll.distinct(bsoncxx::string::view_or_value{name}, make_document()), logic_error);
+}
+
 TEST_CASE("aggregate", "[mongocxx][v_noabi][collection]") {
     MOCK_DATABASE;
     MOCK_COLLECTION; // "mocked_collection.dummy_collection"

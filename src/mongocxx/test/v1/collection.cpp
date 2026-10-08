@@ -86,11 +86,13 @@ TEST_CASE("error code", "[mongocxx][v1][collection][error]") {
     SECTION("source") {
         CHECK(make_error_code(code::max_time_u32) == source_errc::mongocxx);
         CHECK(make_error_code(code::invalid_collection_name) == source_errc::mongocxx);
+        CHECK(make_error_code(code::invalid_field_name) == source_errc::mongocxx);
     }
 
     SECTION("type") {
         CHECK(make_error_code(code::max_time_u32) == type_errc::invalid_argument);
         CHECK(make_error_code(code::invalid_collection_name) == type_errc::invalid_argument);
+        CHECK(make_error_code(code::invalid_field_name) == type_errc::invalid_argument);
     }
 }
 
@@ -222,6 +224,35 @@ TEST_CASE("rename with an invalid name", "[mongocxx][v1][collection]") {
     bsoncxx::v1::stdx::string_view const view{name.data(), name.size()};
 
     CHECK_THROWS_WITH_CODE(coll.rename(view, false), code::invalid_collection_name);
+}
+
+// Regression test for CXX-3551. Test a field name with an embedded NUL.
+TEST_CASE("distinct with an invalid field name", "[mongocxx][v1][collection]") {
+    identity_type client_identity;
+    identity_type coll_identity;
+
+    auto const client_id = reinterpret_cast<mongoc_client_t*>(&client_identity);
+    auto const coll_id = reinterpret_cast<mongoc_collection_t*>(&coll_identity);
+
+    auto destroy = libmongoc::collection_destroy.create_instance();
+    destroy->interpose([&](mongoc_collection_t*) -> void {}).forever();
+
+    auto read_command = libmongoc::collection_read_command_with_opts.create_instance();
+    read_command
+        ->interpose(
+            [&](mongoc_collection_t*, bson_t const*, mongoc_read_prefs_t const*, bson_t const*, bson_t*, bson_error_t*)
+                -> bool {
+                FAIL("an invalid field name must be rejected before reaching mongoc");
+                return false;
+            })
+        .forever();
+
+    auto coll = collection::internal::make(coll_id, client_id);
+
+    std::string const name{"field\0.bad", 10};
+    bsoncxx::v1::stdx::string_view const view{name.data(), name.size()};
+
+    CHECK_THROWS_WITH_CODE(coll.distinct(view, {}), code::invalid_field_name);
 }
 
 } // namespace v1
