@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Changes prior to 3.9.0 are documented as [release notes on GitHub](https://github.com/mongodb/mongo-cxx-driver/releases).
 
-## 4.6.1 [unreleased]
+## 4.6.1
+
+### Fixed
+
+- Reject embedded NUL characters in `distinct` fields.
 
 ### Changed
 
