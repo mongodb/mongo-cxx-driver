@@ -135,6 +135,23 @@ src/<library>/
     - Internal interfaces required by test files MUST be exported using
       `BSONCXX_ABI_EXPORT_CDECL_TESTING`.
 
+### Test Case Tags
+
+- Use namespace and component tags on `TEST_CASE()` for test filtering, e.g.
+  `[mongocxx][v1][structured_logging]`. Tags belong on the test case, not on
+  `SECTION()`.
+- Add `[test]` only when the behavior under test belongs to a test utility,
+  such as a Catch2 `StringMaker<T>` specialization. For example,
+  `[bsoncxx][test][v1][document][view]` identifies tests of document-view
+  stringification used by the test suite.
+- Do not add `[test]` to tests of library APIs merely because they are tests,
+  use mocks, or include test utilities. For example, structured-logging
+  configuration tests use `[mongocxx][v1][structured_logging]` without
+  `[test]`.
+- When maintaining existing tags, decide based on the behavior being tested:
+  retain `[test]` for test-utility tests and remove it from library-API tests.
+  Do not copy or remove it indiscriminately based on neighboring test cases.
+
 ### Namespaces
 
 The library root namespace declares ABI namespaces (e.g. `mongocxx::v_noabi`,
