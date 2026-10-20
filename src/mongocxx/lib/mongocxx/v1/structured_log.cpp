@@ -70,10 +70,10 @@ static_assert(
         static_cast<int>(MONGOC_STRUCTURED_LOG_COMPONENT_CONNECTION),
     "");
 
-bsoncxx::v1::stdx::string_view to_string(structured_log_level level) {
+bsoncxx::v1::stdx::string_view to_string(structured_log_level v) {
     // mongoc's `structured_log_get_level_name` returns display names (e.g. "Informational") which
     // do not match the standardized logging specification. Emit the spec severity names directly.
-    switch (level) {
+    switch (v) {
         case structured_log_level::k_emergency:
             return "emergency";
         case structured_log_level::k_alert:
@@ -97,14 +97,14 @@ bsoncxx::v1::stdx::string_view to_string(structured_log_level level) {
     }
 }
 
-bsoncxx::v1::stdx::string_view to_string(structured_log_component component) {
-    switch (component) {
+bsoncxx::v1::stdx::string_view to_string(structured_log_component v) {
+    switch (v) {
         case structured_log_component::k_command:
         case structured_log_component::k_topology:
         case structured_log_component::k_server_selection:
         case structured_log_component::k_connection:
-            if (auto const name = libmongoc::structured_log_get_component_name(
-                    static_cast<mongoc_structured_log_component_t>(component))) {
+            if (auto const name =
+                    libmongoc::structured_log_get_component_name(static_cast<mongoc_structured_log_component_t>(v))) {
                 return name;
             }
             break;
@@ -166,10 +166,6 @@ structured_log_entry::structured_log_entry(void const* impl) : _impl{impl} {}
 
 structured_log_entry structured_log_entry::internal::make(mongoc_structured_log_entry_t const* ptr) {
     return {ptr};
-}
-
-mongoc_structured_log_entry_t const* structured_log_entry::internal::as_mongoc(structured_log_entry const& self) {
-    return to_mongoc(self._impl);
 }
 
 } // namespace v1

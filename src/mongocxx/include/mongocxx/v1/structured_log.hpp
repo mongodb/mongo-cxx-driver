@@ -77,7 +77,7 @@ enum class structured_log_component {
 /// The returned names are the lowercase severity names used by the standardized logging
 /// specification. Returns `"unknown"` for an unrecognized value.
 ///
-MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) to_string(structured_log_level level);
+MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) to_string(structured_log_level v);
 
 ///
 /// Return the canonical name of a structured log component (e.g. `"serverSelection"`).
@@ -85,7 +85,7 @@ MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) to_string(structured_l
 /// Backed by `mongoc_structured_log_get_component_name`. The returned names match those used by
 /// the standardized logging specification. Returns `"unknown"` for an unrecognized value.
 ///
-MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) to_string(structured_log_component component);
+MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::string_view) to_string(structured_log_component v);
 
 ///
 /// Parse a structured log level from its canonical name (case-insensitive).

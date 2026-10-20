@@ -27,9 +27,6 @@ namespace v1 {
 class structured_log_entry::internal {
    public:
     static MONGOCXX_ABI_EXPORT_CDECL_TESTING(structured_log_entry) make(mongoc_structured_log_entry_t const* ptr);
-
-    static MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_structured_log_entry_t const*) as_mongoc(
-        structured_log_entry const& self);
 };
 
 } // namespace v1
