@@ -49,6 +49,206 @@ using code = v1::types::value::errc;
 static_assert(is_regular<value>::value, "bsoncxx::v1::types::value must be regular");
 static_assert(is_nothrow_moveable<value>::value, "bsoncxx::v1::types::value must be nothrow moveable");
 
+namespace {
+
+v1::stdx::string_view to_sv(char const* data) {
+    // `std::string_view` does not accept null pointers.
+    return data ? v1::stdx::string_view{data} : v1::stdx::string_view{};
+}
+
+char* to_bson_copy(v1::stdx::string_view sv) {
+    // Guard the call to `memcpy()` (passing nullptr is UB).
+    if (sv.data() == nullptr) {
+        return nullptr;
+    }
+
+    // For BSON compatibility, an empty string is always represented as a not-null string.
+    auto const ret = static_cast<char*>(bson_malloc(sv.size() + 1u));
+    std::memcpy(ret, sv.data(), sv.size());
+    ret[sv.size()] = '\0';
+    return ret;
+}
+
+std::uint8_t* to_bson_copy(std::uint8_t const* data, std::size_t size) {
+    // Guard the call to `memcpy()` (passing nullptr is UB).
+    if (!data || size == 0u) {
+        return nullptr;
+    }
+
+    // BSON bytes do not have the same not-null requirement as strings.
+    auto const ret = static_cast<std::uint8_t*>(bson_malloc(size));
+    std::memcpy(ret, data, size);
+    return ret;
+}
+
+void assign_to(bson_value_t& dst, v1::types::b_string const value) {
+    if (value.value.size() > UINT32_MAX) {
+        throw v1::exception{code::invalid_length_u32};
+    }
+
+    dst.value_type = BSON_TYPE_UTF8;
+
+    auto& v_utf8 = dst.value.v_utf8;
+
+    v_utf8.str = to_bson_copy(value.value);
+    v_utf8.len = static_cast<std::uint32_t>(value.value.size());
+}
+
+void assign_to(bson_value_t& dst, v1::types::b_document const value) {
+    dst.value_type = BSON_TYPE_DOCUMENT;
+
+    auto& v_doc = dst.value.v_doc;
+
+    v_doc.data = to_bson_copy(value.value.data(), value.value.size());
+    v_doc.data_len = static_cast<std::uint32_t>(value.value.size()); // Invariant: enforced by
+                                                                     // `v1::document::view::raw_size()`.
+}
+
+void assign_to(bson_value_t& dst, v1::types::b_array const value) {
+    dst.value_type = BSON_TYPE_ARRAY;
+
+    auto& v_doc = dst.value.v_doc;
+
+    v_doc.data = to_bson_copy(value.value.data(), value.value.size());
+    v_doc.data_len = static_cast<std::uint32_t>(value.value.size()); // Invariant: enforced by
+                                                                     // `v1::document::view::raw_size()`.
+}
+
+void assign_to(bson_value_t& dst, v1::types::b_binary const value) {
+    dst.value_type = BSON_TYPE_BINARY;
+
+    auto& v_binary = dst.value.v_binary;
+
+    v_binary.subtype = static_cast<bson_subtype_t>(value.subtype);
+    v_binary.data = to_bson_copy(value.bytes, value.size);
+    v_binary.data_len = value.size;
+}
+
+void assign_to(bson_value_t& dst, v1::types::b_regex const value) {
+    dst.value_type = BSON_TYPE_REGEX;
+
+    auto& v_regex = dst.value.v_regex;
+
+    v_regex.regex = to_bson_copy(value.regex);
+    v_regex.options = to_bson_copy(value.options);
+}
+
+void assign_to(bson_value_t& dst, v1::types::b_dbpointer const value) {
+    if (value.collection.size() > UINT32_MAX) {
+        throw v1::exception{code::invalid_length_u32};
+    }
+
+    dst.value_type = BSON_TYPE_DBPOINTER;
+
+    auto& v_dbpointer = dst.value.v_dbpointer;
+
+    v_dbpointer.collection = to_bson_copy(value.collection);
+    v_dbpointer.collection_len = static_cast<std::uint32_t>(value.collection.size());
+    std::memcpy(v_dbpointer.oid.bytes, value.value.bytes(), value.value.size());
+}
+
+void assign_to(bson_value_t& dst, v1::types::b_code const value) {
+    if (value.code.size() > UINT32_MAX) {
+        throw v1::exception{code::invalid_length_u32};
+    }
+
+    dst.value_type = BSON_TYPE_CODE;
+
+    auto& v_code = dst.value.v_code;
+
+    v_code.code = to_bson_copy(value.code);
+    v_code.code_len = static_cast<std::uint32_t>(value.code.size());
+}
+
+void assign_to(bson_value_t& dst, v1::types::b_symbol const value) {
+    if (value.symbol.size() > UINT32_MAX) {
+        throw v1::exception{code::invalid_length_u32};
+    }
+
+    dst.value_type = BSON_TYPE_SYMBOL;
+
+    auto& v_symbol = dst.value.v_symbol;
+
+    v_symbol.symbol = to_bson_copy(value.symbol);
+    v_symbol.len = static_cast<std::uint32_t>(value.symbol.size());
+}
+
+void assign_to(bson_value_t& dst, v1::types::b_codewscope const value) {
+    if (value.code.size() > UINT32_MAX) {
+        throw v1::exception{code::invalid_length_u32};
+    }
+
+    dst.value_type = BSON_TYPE_CODEWSCOPE;
+
+    auto& v_codewscope = dst.value.v_codewscope;
+
+    v_codewscope.code = to_bson_copy(value.code);
+    v_codewscope.code_len = static_cast<std::uint32_t>(value.code.size());
+    v_codewscope.scope_data = to_bson_copy(value.scope.data(), value.scope.size());
+    v_codewscope.scope_len = static_cast<std::uint32_t>(value.scope.size()); // Invariant: enforced by
+                                                                             // `v1::document::view::raw_size()`.
+}
+
+void assign_to(bson_value_t& dst, v1::types::b_double const value) {
+    dst.value_type = BSON_TYPE_DOUBLE;
+    dst.value.v_double = value.value;
+}
+
+void assign_to(bson_value_t& dst, v1::types::b_undefined) {
+    dst.value_type = BSON_TYPE_UNDEFINED;
+}
+
+void assign_to(bson_value_t& dst, v1::types::b_oid const value) {
+    dst.value_type = BSON_TYPE_OID;
+    std::memcpy(dst.value.v_oid.bytes, value.value.bytes(), value.value.size());
+}
+
+void assign_to(bson_value_t& dst, v1::types::b_bool const value) {
+    dst.value_type = BSON_TYPE_BOOL;
+    dst.value.v_bool = value.value;
+}
+
+void assign_to(bson_value_t& dst, v1::types::b_date const value) {
+    dst.value_type = BSON_TYPE_DATE_TIME;
+    dst.value.v_datetime = value.value.count();
+}
+
+void assign_to(bson_value_t& dst, v1::types::b_null) {
+    dst.value_type = BSON_TYPE_NULL;
+}
+
+void assign_to(bson_value_t& dst, v1::types::b_int32 const value) {
+    dst.value_type = BSON_TYPE_INT32;
+    dst.value.v_int32 = value.value;
+}
+
+void assign_to(bson_value_t& dst, v1::types::b_timestamp const value) {
+    dst.value_type = BSON_TYPE_TIMESTAMP;
+    dst.value.v_timestamp.timestamp = value.timestamp;
+    dst.value.v_timestamp.increment = value.increment;
+}
+
+void assign_to(bson_value_t& dst, v1::types::b_int64 const value) {
+    dst.value_type = BSON_TYPE_INT64;
+    dst.value.v_int64 = value.value;
+}
+
+void assign_to(bson_value_t& dst, v1::types::b_decimal128 const value) {
+    dst.value_type = BSON_TYPE_DECIMAL128;
+    dst.value.v_decimal128.high = value.value.high();
+    dst.value.v_decimal128.low = value.value.low();
+}
+
+void assign_to(bson_value_t& dst, v1::types::b_maxkey) {
+    dst.value_type = BSON_TYPE_MAXKEY;
+}
+
+void assign_to(bson_value_t& dst, v1::types::b_minkey) {
+    dst.value_type = BSON_TYPE_MINKEY;
+}
+
+} // namespace
+
 class alignas(BSONCXX_PRIVATE_MAX_ALIGN_T) value::impl {
     friend value::internal;
 
@@ -74,23 +274,126 @@ class alignas(BSONCXX_PRIVATE_MAX_ALIGN_T) value::impl {
 
     impl& operator=(impl&& other) noexcept {
         if (&other != this) {
-            bson_value_destroy(&_value);
-            _value = other._value; // Ownership transfer.
-            other._value = {BSON_TYPE_NULL, {}, {}};
+            auto tmp = std::move(other);
+            this->swap(tmp);
         }
         return *this;
     }
 
     impl(impl const& other) {
-        bson_value_copy(&other._value, &_value);
+        // BSONCXX_V1_TYPES_XMACRO: update below.
+        switch (other._value.value_type) {
+            case BSON_TYPE_UTF8: {
+                auto& v_utf8 = other._value.value.v_utf8;
+                assign_to(_value, v1::types::b_string{v1::stdx::string_view{v_utf8.str, v_utf8.len}});
+                return;
+            }
+
+            case BSON_TYPE_DOCUMENT: {
+                auto& v_doc = other._value.value.v_doc;
+                assign_to(_value, v1::types::b_document{v1::document::view{v_doc.data, v_doc.data_len}});
+                return;
+            }
+
+            case BSON_TYPE_ARRAY: {
+                auto& v_doc = other._value.value.v_doc;
+                assign_to(_value, v1::types::b_array{v1::array::view{v_doc.data, v_doc.data_len}});
+                return;
+            }
+
+            case BSON_TYPE_BINARY: {
+                auto& v_binary = other._value.value.v_binary;
+                assign_to(
+                    _value,
+                    v1::types::b_binary{
+                        static_cast<v1::types::binary_subtype>(v_binary.subtype),
+                        v_binary.data_len,
+                        v_binary.data,
+                    });
+                return;
+            }
+
+            case BSON_TYPE_REGEX: {
+                auto& v_regex = other._value.value.v_regex;
+                assign_to(_value, v1::types::b_regex{to_sv(v_regex.regex), to_sv(v_regex.options)});
+                return;
+            }
+
+            case BSON_TYPE_DBPOINTER: {
+                auto& v_dbpointer = other._value.value.v_dbpointer;
+                assign_to(
+                    _value,
+                    v1::types::b_dbpointer{
+                        v1::stdx::string_view{
+                            v_dbpointer.collection,
+                            v_dbpointer.collection_len,
+                        },
+                        v1::oid{v_dbpointer.oid.bytes, sizeof(bson_oid_t)},
+                    });
+                return;
+            }
+
+            case BSON_TYPE_CODE: {
+                auto& v_code = other._value.value.v_code;
+                assign_to(_value, v1::types::b_code{v1::stdx::string_view{v_code.code, v_code.code_len}});
+                return;
+            }
+
+            case BSON_TYPE_SYMBOL: {
+                auto& v_symbol = other._value.value.v_symbol;
+                assign_to(_value, v1::types::b_symbol{v1::stdx::string_view{v_symbol.symbol, v_symbol.len}});
+                return;
+            }
+
+            case BSON_TYPE_CODEWSCOPE: {
+                auto& v_codewscope = other._value.value.v_codewscope;
+                assign_to(
+                    _value,
+                    v1::types::b_codewscope{
+                        v1::stdx::string_view{
+                            v_codewscope.code,
+                            v_codewscope.code_len,
+                        },
+                        v1::document::view{
+                            v_codewscope.scope_data,
+                            v_codewscope.scope_len,
+                        },
+                    });
+                return;
+            }
+
+            case BSON_TYPE_EOD:
+            case BSON_TYPE_DOUBLE:
+            case BSON_TYPE_UNDEFINED:
+            case BSON_TYPE_OID:
+            case BSON_TYPE_BOOL:
+            case BSON_TYPE_DATE_TIME:
+            case BSON_TYPE_NULL:
+            case BSON_TYPE_INT32:
+            case BSON_TYPE_TIMESTAMP:
+            case BSON_TYPE_INT64:
+            case BSON_TYPE_DECIMAL128:
+            case BSON_TYPE_MAXKEY:
+            case BSON_TYPE_MINKEY:
+                // Straightforward copy: no potentially-nullable values.
+                bson_value_copy(&other._value, &_value);
+                return;
+        }
+        // BSONCXX_V1_TYPES_XMACRO: update above.
+
+        BSONCXX_PRIVATE_UNREACHABLE;
     }
 
     impl& operator=(impl const& other) {
         if (&other != this) {
-            bson_value_destroy(&_value);
-            bson_value_copy(&other._value, &_value);
+            auto tmp = other;
+            this->swap(tmp);
         }
         return *this;
+    }
+
+    void swap(impl& other) {
+        std::swap(_value, other._value);
     }
 
     impl() = default;
@@ -168,33 +471,6 @@ value& value::operator=(value const& other) {
     return *this;
 }
 
-namespace {
-
-// For backward compatibility, do not prematurely truncate strings in bsoncxx API. Instead, defer handling of potential
-// embedded null bytes to the bson library.
-char* to_bson_copy(v1::stdx::string_view sv) {
-    if (sv.data() == nullptr) {
-        return nullptr;
-    }
-
-    auto ret = static_cast<char*>(bson_malloc(sv.size() + 1u));
-    std::memcpy(ret, sv.data(), sv.size());
-    ret[sv.size()] = '\0';
-    return ret;
-}
-
-std::uint8_t* to_bson_copy(void const* data, std::size_t size) {
-    if (!data) {
-        return nullptr;
-    }
-
-    auto ret = static_cast<std::uint8_t*>(bson_malloc(size));
-    std::memcpy(ret, data, size);
-    return ret;
-}
-
-} // namespace
-
 value::value(v1::types::view const& v) : value{} {
 #pragma push_macro("X")
 #undef X
@@ -215,188 +491,89 @@ value::value(v1::types::view const& v) : value{} {
 // BSONCXX_V1_TYPES_XMACRO: update below.
 
 value::value(v1::types::b_double const v) : value{} {
-    impl::with(this)->t() = BSON_TYPE_DOUBLE;
-    impl::with(this)->v().v_double = v;
+    assign_to(impl::with(this)->_value, v);
 }
 
 value::value(v1::types::b_string const v) : value{} {
-    if (v.value.size() > UINT32_MAX) {
-        throw v1::exception{code::invalid_length_u32};
-    }
-    auto const len = static_cast<std::uint32_t>(v.value.size());
-
-    impl::with(this)->t() = BSON_TYPE_UTF8;
-
-    auto& v_utf8 = impl::with(this)->v().v_utf8;
-
-    v_utf8.str = to_bson_copy(v.value);
-    v_utf8.len = len;
+    assign_to(impl::with(this)->_value, v);
 }
 
 value::value(v1::types::b_document const v) : value{} {
-    // Range is guaranteed by bsoncxx::v1::document::view::raw_size().
-    auto const data_len = static_cast<std::uint32_t>(v.value.size());
-
-    impl::with(this)->t() = BSON_TYPE_DOCUMENT;
-
-    auto& v_doc = impl::with(this)->v().v_doc;
-
-    v_doc.data = to_bson_copy(v.value.data(), v.value.size());
-    v_doc.data_len = data_len;
+    assign_to(impl::with(this)->_value, v);
 }
 
 value::value(v1::types::b_array const v) : value{} {
-    // Range is guaranteed by bsoncxx::v1::document::view::raw_size().
-    auto const data_len = static_cast<std::uint32_t>(v.value.size());
-
-    impl::with(this)->t() = BSON_TYPE_ARRAY;
-
-    auto& v_doc = impl::with(this)->v().v_doc;
-
-    v_doc.data = to_bson_copy(v.value.data(), v.value.size());
-    v_doc.data_len = data_len;
+    assign_to(impl::with(this)->_value, v);
 }
 
 value::value(v1::types::b_binary const v) : value{} {
-    impl::with(this)->t() = BSON_TYPE_BINARY;
-
-    auto& v_binary = impl::with(this)->v().v_binary;
-
-    v_binary.subtype = static_cast<bson_subtype_t>(v.subtype);
-    v_binary.data = to_bson_copy(v.bytes, v.size);
-    v_binary.data_len = v.size;
+    assign_to(impl::with(this)->_value, v);
 }
 
-value::value(v1::types::b_undefined) : value{} {
-    impl::with(this)->t() = BSON_TYPE_UNDEFINED;
+value::value(v1::types::b_undefined v) : value{} {
+    assign_to(impl::with(this)->_value, v);
 }
 
 value::value(v1::types::b_oid const v) : value{} {
-    impl::with(this)->t() = BSON_TYPE_OID;
-    std::memcpy(impl::with(this)->v().v_oid.bytes, v.value.bytes(), v.value.size());
+    assign_to(impl::with(this)->_value, v);
 }
 
 value::value(v1::types::b_bool const v) : value{} {
-    impl::with(this)->t() = BSON_TYPE_BOOL;
-    impl::with(this)->v().v_bool = v.value;
+    assign_to(impl::with(this)->_value, v);
 }
 
 value::value(v1::types::b_date const v) : value{} {
-    impl::with(this)->t() = BSON_TYPE_DATE_TIME;
-    impl::with(this)->v().v_datetime = v.value.count();
+    assign_to(impl::with(this)->_value, v);
 }
 
 // _storage: initialized with placement new.
 // NOLINTNEXTLINE(cppcoreguidelines-pro-type-member-init)
-value::value(v1::types::b_null) {
-    (new (_storage.data()) impl{})->t() = BSON_TYPE_NULL;
+value::value(v1::types::b_null v) {
+    assign_to((new (_storage.data()) impl{})->_value, v);
 }
 
 value::value(v1::types::b_regex const v) : value{} {
-    impl::with(this)->t() = BSON_TYPE_REGEX;
-
-    auto& v_regex = impl::with(this)->v().v_regex;
-
-    v_regex.regex = to_bson_copy(v.regex);
-    v_regex.options = to_bson_copy(v.options);
+    assign_to(impl::with(this)->_value, v);
 }
 
 value::value(v1::types::b_dbpointer const v) : value{} {
-    if (v.collection.size() > UINT32_MAX) {
-        throw v1::exception{code::invalid_length_u32};
-    }
-    auto const collection_len = static_cast<std::uint32_t>(v.collection.size());
-
-    impl::with(this)->t() = BSON_TYPE_DBPOINTER;
-
-    auto& v_dbpointer = impl::with(this)->v().v_dbpointer;
-
-    v_dbpointer.collection = to_bson_copy(v.collection);
-    v_dbpointer.collection_len = collection_len;
-    std::memcpy(v_dbpointer.oid.bytes, v.value.bytes(), v.value.size());
+    assign_to(impl::with(this)->_value, v);
 }
 
 value::value(v1::types::b_code const v) : value{} {
-    if (v.code.size() > UINT32_MAX) {
-        throw v1::exception{code::invalid_length_u32};
-    }
-    auto const code_len = static_cast<std::uint32_t>(v.code.size());
-
-    impl::with(this)->t() = BSON_TYPE_CODE;
-
-    auto& v_code = impl::with(this)->v().v_code;
-
-    v_code.code = to_bson_copy(v.code);
-    v_code.code_len = code_len;
+    assign_to(impl::with(this)->_value, v);
 }
 
 value::value(v1::types::b_symbol const v) : value{} {
-    if (v.symbol.size() > UINT32_MAX) {
-        throw v1::exception{code::invalid_length_u32};
-    }
-    auto const len = static_cast<std::uint32_t>(v.symbol.size());
-
-    impl::with(this)->t() = BSON_TYPE_SYMBOL;
-
-    auto& v_symbol = impl::with(this)->v().v_symbol;
-
-    v_symbol.symbol = to_bson_copy(v.symbol);
-    v_symbol.len = len;
+    assign_to(impl::with(this)->_value, v);
 }
 
 value::value(v1::types::b_codewscope const v) : value{} {
-    if (v.code.size() > UINT32_MAX) {
-        throw v1::exception{code::invalid_length_u32};
-    }
-    auto const code_len = static_cast<std::uint32_t>(v.code.size());
-
-    // Range is guaranteed by bsoncxx::v1::document::view::raw_size().
-    auto const scope_len = static_cast<std::uint32_t>(v.scope.size());
-
-    impl::with(this)->t() = BSON_TYPE_CODEWSCOPE;
-
-    auto& v_codewscope = impl::with(this)->v().v_codewscope;
-
-    v_codewscope.code = to_bson_copy(v.code);
-    v_codewscope.code_len = code_len;
-    v_codewscope.scope_data = to_bson_copy(v.scope.data(), v.scope.size());
-    v_codewscope.scope_len = scope_len;
+    assign_to(impl::with(this)->_value, v);
 }
 
 value::value(v1::types::b_int32 const v) : value{} {
-    impl::with(this)->t() = BSON_TYPE_INT32;
-    impl::with(this)->v().v_int32 = v.value;
+    assign_to(impl::with(this)->_value, v);
 }
 
 value::value(v1::types::b_timestamp const v) : value{} {
-    impl::with(this)->t() = BSON_TYPE_TIMESTAMP;
-
-    auto& v_timestamp = impl::with(this)->v().v_timestamp;
-
-    v_timestamp.timestamp = v.timestamp;
-    v_timestamp.increment = v.increment;
+    assign_to(impl::with(this)->_value, v);
 }
 
 value::value(v1::types::b_int64 const v) : value{} {
-    impl::with(this)->t() = BSON_TYPE_INT64;
-    impl::with(this)->v().v_int64 = v.value;
+    assign_to(impl::with(this)->_value, v);
 }
 
 value::value(v1::types::b_decimal128 const v) : value{} {
-    impl::with(this)->t() = BSON_TYPE_DECIMAL128;
-
-    auto& v_decimal128 = impl::with(this)->v().v_decimal128;
-
-    v_decimal128.high = v.value.high();
-    v_decimal128.low = v.value.low();
+    assign_to(impl::with(this)->_value, v);
 }
 
-value::value(v1::types::b_maxkey) : value{} {
-    impl::with(this)->t() = BSON_TYPE_MAXKEY;
+value::value(v1::types::b_maxkey v) : value{} {
+    assign_to(impl::with(this)->_value, v);
 }
 
-value::value(v1::types::b_minkey) : value{} {
-    impl::with(this)->t() = BSON_TYPE_MINKEY;
+value::value(v1::types::b_minkey v) : value{} {
+    assign_to(impl::with(this)->_value, v);
 }
 
 // BSONCXX_V1_TYPES_XMACRO: update above.
