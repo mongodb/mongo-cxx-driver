@@ -16,6 +16,8 @@
 
 //
 
+#include <mongocxx/v1/structured_logging.hpp>
+
 #include <mongocxx/v1/client.hh>
 
 #include <utility>
@@ -33,7 +35,8 @@ client::client(v1::client::options opts)
       _apm_opts{std::move(v1::client::options::internal::apm_opts(opts))},
       _auto_encrypt_opts{},
       _server_api_opts{std::move(v1::client::options::internal::server_api_opts(opts))},
-      _oidc_callback{std::move(v1::client::options::internal::oidc_callback(opts))} {}
+      _oidc_callback{std::move(v1::client::options::internal::oidc_callback(opts))},
+      _structured_logging_opts{std::move(v1::client::options::internal::structured_logging_opts(opts))} {}
 
 client::operator v1::client::options() const {
     using mongocxx::v_noabi::from_v1;
@@ -56,6 +59,10 @@ client::operator v1::client::options() const {
 
     if (_oidc_callback) {
         ret.oidc_callback(*_oidc_callback);
+    }
+
+    if (_structured_logging_opts) {
+        ret.structured_logging_opts(*_structured_logging_opts);
     }
 
     return ret;
