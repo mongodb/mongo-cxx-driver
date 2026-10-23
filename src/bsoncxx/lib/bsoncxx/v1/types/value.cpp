@@ -173,7 +173,7 @@ namespace {
 // For backward compatibility, do not prematurely truncate strings in bsoncxx API. Instead, defer handling of potential
 // embedded null bytes to the bson library.
 char* to_bson_copy(v1::stdx::string_view sv) {
-    if (sv.empty()) {
+    if (sv.data() == nullptr) {
         return nullptr;
     }
 
@@ -298,7 +298,7 @@ value::value(v1::types::b_regex const v) : value{} {
     auto& v_regex = impl::with(this)->v().v_regex;
 
     v_regex.regex = to_bson_copy(v.regex);
-    v_regex.options = v.options.empty() ? nullptr : to_bson_copy(v.options);
+    v_regex.options = to_bson_copy(v.options);
 }
 
 value::value(v1::types::b_dbpointer const v) : value{} {

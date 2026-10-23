@@ -9,6 +9,13 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ## 4.7.0 [Unreleased]
 
+### Fixed
+
+- Do not convert empty string-like BSON type values into null strings in v_noabi API.
+  - This occurred whenever the BSON type value was accessed as a `types::view` or `types::value`, e.g. via `element::get_*()`.
+  - This affected BSON type values: string, symbol, code, regex, dbpointer, and codewscope.
+  - This does not affect v1 API, where an empty string is always represented as a default-initialized string view.
+
 ### Changed
 
 - Bump the minimum required C Driver version to [2.5.7](https://github.com/mongodb/mongo-c-driver/releases/tag/2.5.7).
