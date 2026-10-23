@@ -907,7 +907,9 @@ inline v_noabi::types::b_double from_v1(v1::types::b_double const& v) {
 }
 
 inline v_noabi::types::b_string from_v1(v1::types::b_string const& v) {
-    return v_noabi::types::b_string{v.value};
+    auto const value = v.value.data() != nullptr ? v.value : v_noabi::stdx::string_view{""};
+
+    return v_noabi::types::b_string{value};
 }
 
 inline v_noabi::types::b_document from_v1(v1::types::b_document const& v) {
@@ -945,23 +947,34 @@ inline v_noabi::types::b_null from_v1(v1::types::b_null const& v) {
 }
 
 inline v_noabi::types::b_regex from_v1(v1::types::b_regex const& v) {
-    return v_noabi::types::b_regex{v.regex, v.options};
+    auto const regex = v.regex.data() != nullptr ? v.regex : v_noabi::stdx::string_view{""};
+    auto const options = v.options.data() != nullptr ? v.options : v_noabi::stdx::string_view{""};
+
+    return v_noabi::types::b_regex{regex, options};
 }
 
 inline v_noabi::types::b_dbpointer from_v1(v1::types::b_dbpointer const& v) {
-    return {v.collection, v.value};
+    auto const collection = v.collection.data() != nullptr ? v.collection : v_noabi::stdx::string_view{""};
+
+    return {collection, v.value};
 }
 
 inline v_noabi::types::b_code from_v1(v1::types::b_code const& v) {
-    return v_noabi::types::b_code{v.code};
+    auto const code = v.code.data() != nullptr ? v.code : v_noabi::stdx::string_view{""};
+
+    return v_noabi::types::b_code{code};
 }
 
 inline v_noabi::types::b_symbol from_v1(v1::types::b_symbol const& v) {
-    return v_noabi::types::b_symbol{v.symbol};
+    auto const symbol = v.symbol.data() != nullptr ? v.symbol : v_noabi::stdx::string_view{""};
+
+    return v_noabi::types::b_symbol{symbol};
 }
 
 inline v_noabi::types::b_codewscope from_v1(v1::types::b_codewscope const& v) {
-    return v_noabi::types::b_codewscope{v.code, v.scope};
+    auto const code = v.code.data() != nullptr ? v.code : v_noabi::stdx::string_view{""};
+
+    return v_noabi::types::b_codewscope{code, v.scope};
 }
 
 inline v_noabi::types::b_int32 from_v1(v1::types::b_int32 const& v) {
@@ -1003,7 +1016,7 @@ inline v1::types::b_double to_v1(v_noabi::types::b_double const& v) {
 }
 
 inline v1::types::b_string to_v1(v_noabi::types::b_string const& v) {
-    return v1::types::b_string{v.value};
+    return v.value.empty() ? v1::types::b_string{} : v1::types::b_string{v.value};
 }
 
 inline v1::types::b_document to_v1(v_noabi::types::b_document const& v) {
@@ -1041,23 +1054,30 @@ inline v1::types::b_null to_v1(v_noabi::types::b_null const& v) {
 }
 
 inline v1::types::b_regex to_v1(v_noabi::types::b_regex const& v) {
-    return v1::types::b_regex{v.regex, v.options};
+    auto const regex = v.regex.empty() ? v1::stdx::string_view{} : v.regex;
+    auto const options = v.options.empty() ? v1::stdx::string_view{} : v.options;
+
+    return v1::types::b_regex{regex, options};
 }
 
 inline v1::types::b_dbpointer to_v1(v_noabi::types::b_dbpointer const& v) {
-    return v1::types::b_dbpointer{v.collection, to_v1(v.value)};
+    auto const collection = v.collection.empty() ? v1::stdx::string_view{} : v.collection;
+
+    return v1::types::b_dbpointer{collection, to_v1(v.value)};
 }
 
 inline v1::types::b_code to_v1(v_noabi::types::b_code const& v) {
-    return v1::types::b_code{v.code};
+    return v.code.empty() ? v1::types::b_code{} : v1::types::b_code{v.code};
 }
 
 inline v1::types::b_symbol to_v1(v_noabi::types::b_symbol const& v) {
-    return v1::types::b_symbol{v.symbol};
+    return v.symbol.empty() ? v1::types::b_symbol{} : v1::types::b_symbol{v.symbol};
 }
 
 inline v1::types::b_codewscope to_v1(v_noabi::types::b_codewscope const& v) {
-    return v1::types::b_codewscope{v.code, to_v1(v.scope)};
+    auto const code = v.code.empty() ? v1::stdx::string_view{} : v.code;
+
+    return v1::types::b_codewscope{code, to_v1(v.scope)};
 }
 
 inline v1::types::b_int32 to_v1(v_noabi::types::b_int32 const& v) {

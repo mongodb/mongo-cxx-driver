@@ -12,24 +12,39 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <chrono>
 #include <cstdint>
 #include <cstdlib>
 #include <cstring>
+#include <iterator>
 #include <limits>
 #include <memory>
+#include <string>
+#include <utility>
 
+#include <bsoncxx/array/value.hpp>
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/helpers.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/builder/basic/sub_binary.hpp>
+#include <bsoncxx/builder/concatenate.hpp>
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/builder/list.hpp>
 #include <bsoncxx/builder/stream/array.hpp>
 #include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/builder/stream/helpers.hpp>
+#include <bsoncxx/decimal128.hpp>
+#include <bsoncxx/document/value.hpp>
+#include <bsoncxx/document/view.hpp>
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/oid.hpp>
+#include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types.hpp>
-#include <bsoncxx/types/bson_value/view.hpp>
+#include <bsoncxx/types/value.hpp>
+#include <bsoncxx/types/view.hpp>
 
 #include <bsoncxx/private/bson.hh>
 
@@ -60,6 +75,8 @@ void viewable_eq_viewable(T const& stream, U const& basic) {
     INFO("expected = " << to_json(expected));
     INFO("basic = " << to_json(test));
     REQUIRE(expected.length() == test.length());
+    REQUIRE(expected.data() != nullptr);
+    REQUIRE(test.data() != nullptr);
     CHECK(std::memcmp(expected.data(), test.data(), expected.length()) == 0);
 }
 
@@ -1277,6 +1294,109 @@ TEST_CASE("builder::basic::make_array works", "[bsoncxx::builder::basic::make_ar
     CHECK(array_view[1].get_int32().value == 1);
     CHECK(array_view[2].type() == type::k_bool);
     CHECK(array_view[2].get_bool().value == true);
+}
+
+TEST_CASE(
+    "builder::basic::document::append preserves not-null empty strings-like values given types::view",
+    "[bsoncxx::builder::basic]") {
+    static constexpr auto empty = stdx::string_view{""};
+
+    auto const doc = [&]() -> document::value {
+        auto const scope = builder::basic::make_document();
+        builder::basic::document builder;
+        builder.append(
+            builder::basic::kvp("string", types::b_string{empty}),
+            builder::basic::kvp("symbol", types::b_symbol{empty}),
+            builder::basic::kvp("code", types::b_code{empty}),
+            builder::basic::kvp("regex", types::b_regex{empty, empty}),
+            builder::basic::kvp("dbpointer", types::b_dbpointer{empty, oid{"507f1f77bcf86cd799439011"}}),
+            builder::basic::kvp("codewscope", types::b_codewscope{empty, scope}));
+        return builder.extract();
+    }();
+
+    builder::basic::document builder;
+    builder.append(
+        builder::basic::kvp(doc["string"].key(), doc["string"].type_view()),
+        builder::basic::kvp(doc["symbol"].key(), doc["symbol"].type_view()),
+        builder::basic::kvp(doc["code"].key(), doc["code"].type_view()),
+        builder::basic::kvp(doc["regex"].key(), doc["regex"].type_view()),
+        builder::basic::kvp(doc["dbpointer"].key(), doc["dbpointer"].type_view()),
+        builder::basic::kvp(doc["codewscope"].key(), doc["codewscope"].type_view()));
+    viewable_eq_viewable(doc, builder);
+}
+
+TEST_CASE(
+    "builder::basic::document::append preserves not-null empty string-like values given types::value",
+    "[bsoncxx::builder::basic]") {
+    static constexpr auto empty = stdx::string_view{""};
+
+    auto const doc = [&]() -> document::value {
+        auto const scope = builder::basic::make_document();
+        builder::basic::document builder;
+        builder.append(
+            builder::basic::kvp("string", types::b_string{empty}),
+            builder::basic::kvp("symbol", types::b_symbol{empty}),
+            builder::basic::kvp("code", types::b_code{empty}),
+            builder::basic::kvp("regex", types::b_regex{empty, empty}),
+            builder::basic::kvp("dbpointer", types::b_dbpointer{empty, oid{"507f1f77bcf86cd799439011"}}),
+            builder::basic::kvp("codewscope", types::b_codewscope{empty, scope}));
+        return builder.extract();
+    }();
+
+    builder::basic::document builder;
+    builder.append(
+        builder::basic::kvp(doc["string"].key(), doc["string"].type_value()),
+        builder::basic::kvp(doc["symbol"].key(), doc["symbol"].type_value()),
+        builder::basic::kvp(doc["code"].key(), doc["code"].type_value()),
+        builder::basic::kvp(doc["regex"].key(), doc["regex"].type_value()),
+        builder::basic::kvp(doc["dbpointer"].key(), doc["dbpointer"].type_value()),
+        builder::basic::kvp(doc["codewscope"].key(), doc["codewscope"].type_value()));
+    viewable_eq_viewable(doc, builder);
+}
+
+TEST_CASE(
+    "builder::basic::document::append converts string-like BSON type values from null to empty",
+    "[bsoncxx::builder::basic]") {
+    static constexpr stdx::string_view empty{""};
+    static constexpr stdx::string_view null{};
+
+    oid const o{"507f1f77bcf86cd799439011"};
+    auto const scope = builder::basic::make_document();
+
+    types::bson_value::view const str{types::b_string{null}};
+    types::bson_value::view const symbol{types::b_symbol{null}};
+    types::bson_value::view const code{types::b_code{null}};
+    types::bson_value::view const regex{types::b_regex{null, null}};
+    types::bson_value::view const dbpointer{types::b_dbpointer{null, o}};
+    types::bson_value::view const codewscope{types::b_codewscope{null, scope.view()}};
+
+    REQUIRE(str.get_string().value.data() != nullptr);
+    REQUIRE(symbol.get_symbol().symbol.data() != nullptr);
+    REQUIRE(code.get_code().code.data() != nullptr);
+    REQUIRE(regex.get_regex().regex.data() != nullptr);
+    REQUIRE(regex.get_regex().options.data() != nullptr);
+    REQUIRE(dbpointer.get_dbpointer().collection.data() != nullptr);
+    REQUIRE(codewscope.get_codewscope().code.data() != nullptr);
+
+    builder::basic::document expected;
+    expected.append(
+        builder::basic::kvp("string", types::b_string{empty}),
+        builder::basic::kvp("symbol", types::b_symbol{empty}),
+        builder::basic::kvp("code", types::b_code{empty}),
+        builder::basic::kvp("regex", types::b_regex{empty, empty}),
+        builder::basic::kvp("dbpointer", types::b_dbpointer{empty, o}),
+        builder::basic::kvp("codewscope", types::b_codewscope{empty, scope.view()}));
+
+    builder::basic::document actual;
+    actual.append(
+        builder::basic::kvp("string", str),
+        builder::basic::kvp("symbol", symbol),
+        builder::basic::kvp("code", code),
+        builder::basic::kvp("regex", regex),
+        builder::basic::kvp("dbpointer", dbpointer),
+        builder::basic::kvp("codewscope", codewscope));
+
+    viewable_eq_viewable(expected, actual);
 }
 
 TEST_CASE("stream in a document::view works", "[bsoncxx::builder::stream]") {
