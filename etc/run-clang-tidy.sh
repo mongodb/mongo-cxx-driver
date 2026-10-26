@@ -22,7 +22,7 @@ echo "clang-tidy version: ${version:?}"
 # Obtain the run-clang-tidy.py script.
 bindir="$(mktemp -d)"
 curl -sSL -o "${bindir:?}/run-clang-tidy.py" "https://raw.githubusercontent.com/llvm/llvm-project/refs/tags/llvmorg-${version:?}/clang-tools-extra/clang-tidy/tool/run-clang-tidy.py"
-checksum=a651a6529eefbd12b7845afe6719773ba6578ecca222603d1262b4d2d48e1422 # 22.1.*
+checksum=a832f51f5aa10ac777e2ae18c6e82e134414aed7bd74752c5fd11bf13158e2f8 # 23.1.*
 echo "${checksum:?}" "${bindir:?}/run-clang-tidy.py" | sha256sum -c >/dev/null
 
 # Use ccache if available.
