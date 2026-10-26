@@ -9,6 +9,11 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ## 4.7.0 [Unreleased]
 
+### Fixed
+
+- Fix unconditionally-dangling references returned by `get_<type>()` accessors for `bsoncxx::v_noabi::types::bson_value::value`.
+  - The unusable `T const&` reference return type is replaced with a `T` by-value return type to satisfy the API's documented behavior.
+
 ### Changed
 
 - Bump the minimum required C Driver version to [2.5.7](https://github.com/mongodb/mongo-c-driver/releases/tag/2.5.7).
