@@ -68,7 +68,7 @@ class managed_bson_t {
 
 class core::impl {
    public:
-    impl(bool is_array) : _root_is_array(is_array) {}
+    explicit impl(bool is_array) : _root_is_array(is_array) {}
 
     void reinit() {
         while (!_stack.empty()) {

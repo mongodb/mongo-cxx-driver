@@ -29,7 +29,7 @@ class delete_many_result::impl {
    public:
     v1::bulk_write::result _result;
 
-    impl(v1::bulk_write::result result) : _result{std::move(result)} {}
+    explicit impl(v1::bulk_write::result result) : _result{std::move(result)} {}
 
     static impl const& with(delete_many_result const& other) {
         return *static_cast<impl const*>(other._impl);

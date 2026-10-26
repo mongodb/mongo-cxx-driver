@@ -65,7 +65,7 @@ class change_stream::impl {
     impl(impl const&) = delete;
     impl& operator=(impl const&) = delete;
 
-    /* explicit(false) */ impl(mongoc_change_stream_t* stream) : _stream{stream} {}
+    explicit impl(mongoc_change_stream_t* stream) : _stream{stream} {}
 
     static impl const& with(change_stream const& self) {
         return *static_cast<impl const*>(self._impl);
