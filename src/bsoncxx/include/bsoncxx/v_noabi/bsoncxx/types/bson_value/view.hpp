@@ -96,8 +96,11 @@ class view {
 
 #pragma push_macro("X")
 #undef X
+
+// For backward compatibility, the `from_v1(to_v1(v))` round-trip ensures empty string-like BSON type values are always
+// represented as not-null empty strings.
 #define X(_name, _value) \
-    explicit view(v_noabi::types::b_##_name v) noexcept : _id{v.type_id}, _b_##_name{v} {}
+    explicit view(v_noabi::types::b_##_name v) noexcept : _id{v.type_id}, _b_##_name{from_v1(to_v1(v))} {}
 
     ///
     /// Construct a bson_value::view from the provided BSON type.
