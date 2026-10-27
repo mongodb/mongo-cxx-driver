@@ -1299,7 +1299,7 @@ TEST_CASE("builder::basic::make_array works", "[bsoncxx::builder::basic::make_ar
 TEST_CASE(
     "builder::basic::document::append preserves not-null empty strings-like values given types::view",
     "[bsoncxx::builder::basic]") {
-    static constexpr auto empty = stdx::string_view{""};
+    auto const empty = stdx::string_view{""};
 
     auto const doc = [&]() -> document::value {
         auto const scope = builder::basic::make_document();
@@ -1328,7 +1328,7 @@ TEST_CASE(
 TEST_CASE(
     "builder::basic::document::append preserves not-null empty string-like values given types::value",
     "[bsoncxx::builder::basic]") {
-    static constexpr auto empty = stdx::string_view{""};
+    auto const empty = stdx::string_view{""};
 
     auto const doc = [&]() -> document::value {
         auto const scope = builder::basic::make_document();
@@ -1357,8 +1357,8 @@ TEST_CASE(
 TEST_CASE(
     "builder::basic::document::append converts string-like BSON type values from null to empty",
     "[bsoncxx::builder::basic]") {
-    static constexpr stdx::string_view empty{""};
-    static constexpr stdx::string_view null{};
+    auto const empty = stdx::string_view{""};
+    auto const null = stdx::string_view{};
 
     oid const o{"507f1f77bcf86cd799439011"};
     auto const scope = builder::basic::make_document();
