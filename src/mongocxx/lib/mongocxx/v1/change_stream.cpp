@@ -65,6 +65,7 @@ class change_stream::impl {
     impl(impl const&) = delete;
     impl& operator=(impl const&) = delete;
 
+    // NOLINTNEXTLINE(cppcoreguidelines-explicit-constructor): internal use only.
     /* explicit(false) */ impl(mongoc_change_stream_t* stream) : _stream{stream} {}
 
     static impl const& with(change_stream const& self) {
