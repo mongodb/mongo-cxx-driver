@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/v1/types/value.hh>
+#include <bsoncxx/test/v1/types/value.hh>
 
 #include <chrono>
 #include <cstdint>
