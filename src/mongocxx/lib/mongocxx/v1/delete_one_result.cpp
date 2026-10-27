@@ -29,6 +29,7 @@ class delete_one_result::impl {
    public:
     v1::bulk_write::result _result;
 
+    // NOLINTNEXTLINE(cppcoreguidelines-explicit-constructor): internal use only.
     impl(v1::bulk_write::result result) : _result{std::move(result)} {}
 
     static impl const& with(delete_one_result const& other) {

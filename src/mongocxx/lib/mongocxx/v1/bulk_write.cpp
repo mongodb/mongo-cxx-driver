@@ -992,12 +992,14 @@ class bulk_write::single::impl {
 
     impl& operator=(impl const& other) = delete;
 
+    // NOLINTBEGIN(cppcoreguidelines-explicit-constructor): internal use only.
     impl(insert_one op) : _type{v1::bulk_write::type::k_insert_one}, _insert_one{std::move(op)} {}
     impl(update_one op) : _type{v1::bulk_write::type::k_update_one}, _update_one{std::move(op)} {}
     impl(update_many op) : _type{v1::bulk_write::type::k_update_many}, _update_many{std::move(op)} {}
     impl(delete_one op) : _type{v1::bulk_write::type::k_delete_one}, _delete_one{std::move(op)} {}
     impl(delete_many op) : _type{v1::bulk_write::type::k_delete_many}, _delete_many{std::move(op)} {}
     impl(replace_one op) : _type{v1::bulk_write::type::k_replace_one}, _replace_one{std::move(op)} {}
+    // NOLINTEND(cppcoreguidelines-explicit-constructor)
 
     static impl const& with(single const& self) {
         return *static_cast<impl const*>(self._impl);

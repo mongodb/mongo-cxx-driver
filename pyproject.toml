@@ -36,6 +36,11 @@ format-scripts = [
     "shfmt-py>=3.12.0.2",
 ]
 
+tidy = [
+    # etc/run-clang-tidy.sh
+    "clang-tidy>=23.1.0 ; platform_system == 'Linux' and platform_machine == 'x86_64'",
+]
+
 config_generator = [
     # .evergreen/config_generator/generate.py
     "packaging>=14.0",
