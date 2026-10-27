@@ -26,6 +26,10 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 - Bump the minimum required C Driver version to [2.5.7](https://github.com/mongodb/mongo-c-driver/releases/tag/2.5.7).
 
+### Deprecated
+
+- Support for MacOS 14 (EoL since September 2026).
+
 ## 4.6.1
 
 ### Fixed

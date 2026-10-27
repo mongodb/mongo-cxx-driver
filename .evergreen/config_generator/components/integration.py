@@ -40,11 +40,11 @@ LINUX_MATRIX = [
 MACOS_MATRIX = [
     # MacOS ARM64 (shared only, no extra alignment, min-max-latest).
     # MacOS ARM64: 6.0+.
-    ('macos-14-arm64', None, ['Debug'], ['shared'], [11, 17], [None], ['plain', 'csfle'], ['6.0', '8.0', '9.0', 'latest'], ['single', 'replica', 'sharded']),
+    ('macos-15-arm64', None, ['Debug'], ['shared'], [11, 17], [None], ['plain', 'csfle'], ['6.0', '8.0', '9.0', 'latest'], ['single', 'replica', 'sharded']),
 
     # MacOS x86_64 (shared only, C++11 only, no extra alignment, min-max-latest) (Resource-limited: use sparingly).
     # MacOS x86_64: 4.2+.
-    ('macos-14', None, ['Debug'], ['shared'], [11], [None], ['plain', 'csfle'], ['4.2', '8.0', '9.0', 'latest'], ['single', 'replica', 'sharded']),
+    ('macos-15-amd64', None, ['Debug'], ['shared'], [11], [None], ['plain', 'csfle'], ['4.2', '8.0', '9.0', 'latest'], ['single', 'replica', 'sharded']),
 
 ]
 
@@ -62,8 +62,8 @@ MONGOCRYPTD_MATRIX = [
     ('rhel8-arm64-latest',  None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
     ('rhel8-power',         None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
     ('rhel8-zseries',       None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
-    ('macos-14-arm64',      None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
-    ('macos-14',            None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
+    ('macos-15-arm64',      None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
+    ('macos-15-amd64',      None,        ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
     ('windows-2022-latest', 'vs2022x64', ['Debug'], ['shared'], [11], [None], ['crypt'], ['latest'], ['replica']),
 ]
 
