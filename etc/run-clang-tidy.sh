@@ -14,16 +14,25 @@ fi
 # shellcheck source=/dev/null
 . .evergreen/scripts/install-build-tools.sh
 install_build_tools
+export UV_FROZEN='1'
 
-uv tool install -q clang-tidy
-version="$(clang-tidy --version | perl -lne 'print $1 if m|LLVM version (\d+\.\d+\.\d+)|')"
+version="$(uv run --only-group tidy -- clang-tidy --version | perl -lne 'print $1 if m|LLVM version (\d+\.\d+\.\d+)|')"
 echo "clang-tidy version: ${version:?}"
 
-# Obtain the run-clang-tidy.py script.
-bindir="$(mktemp -d)"
-curl -sSL -o "${bindir:?}/run-clang-tidy.py" "https://raw.githubusercontent.com/llvm/llvm-project/refs/tags/llvmorg-${version:?}/clang-tools-extra/clang-tidy/tool/run-clang-tidy.py"
-checksum=a651a6529eefbd12b7845afe6719773ba6578ecca222603d1262b4d2d48e1422 # 22.1.*
-echo "${checksum:?}" "${bindir:?}/run-clang-tidy.py" | sha256sum -c >/dev/null
+# Ensure the run-clang-tidy.py script is consistent with the clang-tidy version.
+# Helper script is located at <prefix>/clang-tidy/data/bin/run-clang-tidy.py.
+# See: https://github.com/ssciwr/clang-tidy-wheel/blob/741851932dba91accf68c29f31b0dccf30567e06/CMakeLists.txt#L49-L57
+script="$(
+  cat <<'DOC'
+  import clang_tidy, os
+  print(os.path.join(os.path.dirname(clang_tidy.__file__), "data", "bin", "run-clang-tidy.py"))
+DOC
+)"
+runner="$(uv run --only-group tidy -- python -c "${script:?}")"
+if [[ ! -f "${runner:?}" ]]; then
+  echo "missing run-clang-tidy.py: ${runner:?}" 1>&2
+  exit 1
+fi
 
 # Use ccache if available.
 if [[ -f "../mongoc/.evergreen/scripts/find-ccache.sh" ]]; then
@@ -52,4 +61,4 @@ flags=(
 )
 
 # Use the parallel clang-tidy runner.
-uv run --script "${bindir:?}/run-clang-tidy.py" "${flags[@]:?}"
+uv run --only-group tidy -- python "${runner:?}" "${flags[@]:?}"
