@@ -120,7 +120,7 @@ TEST_CASE("exceptions", "[bsoncxx][v1][types][value]") {
 
     SECTION("invalid_length_u32") {
         try {
-            auto const size = std::size_t{UINT32_MAX} + 1u;
+            auto const size = std::size_t{UINT32_MAX};
             auto const data = bsoncxx::make_unique_for_overwrite<unsigned char[]>(size);
 
             auto const big_string = bsoncxx::v1::stdx::string_view{reinterpret_cast<char const*>(data.get()), size};
@@ -129,6 +129,16 @@ TEST_CASE("exceptions", "[bsoncxx][v1][types][value]") {
 
             SECTION("b_string") {
                 auto const expr = [&] { value v{b_string{big_string}}; };
+                CHECK_THROWS_WITH_CODE(expr(), code::invalid_length_u32);
+            }
+
+            SECTION("b_regex (regex)") {
+                auto const expr = [&] { value v{b_regex{big_string, {}}}; };
+                CHECK_THROWS_WITH_CODE(expr(), code::invalid_length_u32);
+            }
+
+            SECTION("b_regex (options)") {
+                auto const expr = [&] { value v{b_regex{{}, big_string}}; };
                 CHECK_THROWS_WITH_CODE(expr(), code::invalid_length_u32);
             }
 
@@ -149,6 +159,11 @@ TEST_CASE("exceptions", "[bsoncxx][v1][types][value]") {
 
             SECTION("b_codewscope") {
                 auto const expr = [&] { value v{b_codewscope{big_string, bsoncxx::v1::document::view{}}}; };
+                CHECK_THROWS_WITH_CODE(expr(), code::invalid_length_u32);
+            }
+
+            SECTION("view") {
+                auto const expr = [&] { value v{bsoncxx::v1::types::view{bsoncxx::v1::types::b_string{big_string}}}; };
                 CHECK_THROWS_WITH_CODE(expr(), code::invalid_length_u32);
             }
 

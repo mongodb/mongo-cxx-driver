@@ -63,6 +63,7 @@ char* to_bson_copy(v1::stdx::string_view sv) {
     }
 
     // For BSON compatibility, an empty string is always represented as a not-null string.
+    // Invariant: `sv.size() < UINT32_MAX` is enforced by `code::invalid_length_u32`.
     auto const ret = static_cast<char*>(bson_malloc(sv.size() + 1u));
     std::memcpy(ret, sv.data(), sv.size());
     ret[sv.size()] = '\0';
@@ -82,16 +83,12 @@ std::uint8_t* to_bson_copy(std::uint8_t const* data, std::size_t size) {
 }
 
 void assign_to(bson_value_t& dst, v1::types::b_string const value) {
-    if (value.value.size() > UINT32_MAX) {
-        throw v1::exception{code::invalid_length_u32};
-    }
-
     dst.value_type = BSON_TYPE_UTF8;
 
     auto& v_utf8 = dst.value.v_utf8;
 
     v_utf8.str = to_bson_copy(value.value);
-    v_utf8.len = static_cast<std::uint32_t>(value.value.size());
+    v_utf8.len = static_cast<std::uint32_t>(value.value.size()); // Invariant: enforced by `code::invalid_length_u32`.
 }
 
 void assign_to(bson_value_t& dst, v1::types::b_document const value) {
@@ -134,56 +131,44 @@ void assign_to(bson_value_t& dst, v1::types::b_regex const value) {
 }
 
 void assign_to(bson_value_t& dst, v1::types::b_dbpointer const value) {
-    if (value.collection.size() > UINT32_MAX) {
-        throw v1::exception{code::invalid_length_u32};
-    }
-
     dst.value_type = BSON_TYPE_DBPOINTER;
 
     auto& v_dbpointer = dst.value.v_dbpointer;
 
     v_dbpointer.collection = to_bson_copy(value.collection);
-    v_dbpointer.collection_len = static_cast<std::uint32_t>(value.collection.size());
+    v_dbpointer.collection_len =
+        static_cast<std::uint32_t>(value.collection.size()); // Invariant: enforced by `code::invalid_length_u32`.
     std::memcpy(v_dbpointer.oid.bytes, value.value.bytes(), value.value.size());
 }
 
 void assign_to(bson_value_t& dst, v1::types::b_code const value) {
-    if (value.code.size() > UINT32_MAX) {
-        throw v1::exception{code::invalid_length_u32};
-    }
-
     dst.value_type = BSON_TYPE_CODE;
 
     auto& v_code = dst.value.v_code;
 
     v_code.code = to_bson_copy(value.code);
-    v_code.code_len = static_cast<std::uint32_t>(value.code.size());
+    v_code.code_len =
+        static_cast<std::uint32_t>(value.code.size()); // Invariant: enforced by `code::invalid_length_u32`.
 }
 
 void assign_to(bson_value_t& dst, v1::types::b_symbol const value) {
-    if (value.symbol.size() > UINT32_MAX) {
-        throw v1::exception{code::invalid_length_u32};
-    }
-
     dst.value_type = BSON_TYPE_SYMBOL;
 
     auto& v_symbol = dst.value.v_symbol;
 
     v_symbol.symbol = to_bson_copy(value.symbol);
-    v_symbol.len = static_cast<std::uint32_t>(value.symbol.size());
+    v_symbol.len =
+        static_cast<std::uint32_t>(value.symbol.size()); // Invariant: enforced by `code::invalid_length_u32`.
 }
 
 void assign_to(bson_value_t& dst, v1::types::b_codewscope const value) {
-    if (value.code.size() > UINT32_MAX) {
-        throw v1::exception{code::invalid_length_u32};
-    }
-
     dst.value_type = BSON_TYPE_CODEWSCOPE;
 
     auto& v_codewscope = dst.value.v_codewscope;
 
     v_codewscope.code = to_bson_copy(value.code);
-    v_codewscope.code_len = static_cast<std::uint32_t>(value.code.size());
+    v_codewscope.code_len =
+        static_cast<std::uint32_t>(value.code.size()); // Invariant: enforced by `code::invalid_length_u32`.
     v_codewscope.scope_data = to_bson_copy(value.scope.data(), value.scope.size());
     v_codewscope.scope_len = static_cast<std::uint32_t>(value.scope.size()); // Invariant: enforced by
                                                                              // `v1::document::view::raw_size()`.
@@ -495,6 +480,10 @@ value::value(v1::types::b_double const v) : value{} {
 }
 
 value::value(v1::types::b_string const v) : value{} {
+    if (v.value.size() >= UINT32_MAX) {
+        throw v1::exception{code::invalid_length_u32};
+    }
+
     assign_to(impl::with(this)->_value, v);
 }
 
@@ -533,22 +522,42 @@ value::value(v1::types::b_null v) {
 }
 
 value::value(v1::types::b_regex const v) : value{} {
+    if (v.regex.size() >= UINT32_MAX || v.options.size() >= UINT32_MAX) {
+        throw v1::exception{code::invalid_length_u32};
+    }
+
     assign_to(impl::with(this)->_value, v);
 }
 
 value::value(v1::types::b_dbpointer const v) : value{} {
+    if (v.collection.size() >= UINT32_MAX) {
+        throw v1::exception{code::invalid_length_u32};
+    }
+
     assign_to(impl::with(this)->_value, v);
 }
 
 value::value(v1::types::b_code const v) : value{} {
+    if (v.code.size() >= UINT32_MAX) {
+        throw v1::exception{code::invalid_length_u32};
+    }
+
     assign_to(impl::with(this)->_value, v);
 }
 
 value::value(v1::types::b_symbol const v) : value{} {
+    if (v.symbol.size() >= UINT32_MAX) {
+        throw v1::exception{code::invalid_length_u32};
+    }
+
     assign_to(impl::with(this)->_value, v);
 }
 
 value::value(v1::types::b_codewscope const v) : value{} {
+    if (v.code.size() >= UINT32_MAX) {
+        throw v1::exception{code::invalid_length_u32};
+    }
+
     assign_to(impl::with(this)->_value, v);
 }
 
