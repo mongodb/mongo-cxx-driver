@@ -333,9 +333,9 @@ class value {
 
 #pragma push_macro("X")
 #undef X
-#define X(_name, _value)                                   \
-    v_noabi::types::b_##_name const& get_##_name() const { \
-        return this->view().get_##_name();                 \
+#define X(_name, _value)                            \
+    v_noabi::types::b_##_name get_##_name() const { \
+        return this->view().get_##_name();          \
     }
 
     ///
