@@ -427,6 +427,48 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
     }
 }
 
+TEST_CASE("types::bson_value::value::get_*", "[bsoncxx::types::bson_value::value]") {
+    bson_value::value const values[] = {
+        b_minkey{},
+        b_double{1.0},
+        b_string{"abc"},
+        b_document{make_document(kvp("x", 1))},
+        b_array{make_array(1, 2, 3)},
+        b_binary{},
+        b_undefined{},
+        b_oid{oid{"507f1f77bcf86cd799439011"}},
+        b_bool{},
+        b_date{std::chrono::milliseconds{123456789}},
+        b_null{},
+        b_regex{"abc", "i"},
+        b_dbpointer{"dbpointer", oid{"507f1f77bcf86cd799439011"}},
+        b_code{"code"},
+        b_symbol{"symbol"},
+        b_codewscope{"code", make_document(kvp("x", 1))},
+        b_int32{},
+        b_timestamp{},
+        b_int64{},
+        b_decimal128{decimal128{}},
+        b_maxkey{},
+    };
+
+#pragma push_macro("X")
+#undef X
+#define X(_name, _value)                                  \
+    case type::k_##_name: {                               \
+        auto const view = value.view();                   \
+        CHECK(value.type_id() == type::k_##_name);        \
+        CHECK(value.get_##_name() == view.get_##_name()); \
+        break;                                            \
+    }
+
+    for (auto const& value : values) {
+        switch (value.type_id()) { BSONCXX_V1_TYPES_XMACRO(X) }
+    }
+#undef X
+#pragma pop_macro("X")
+}
+
 TEST_CASE("empty string-like BSON type values", "[bsoncxx::types::bson_value::value]") {
     // An empty string must never be represented as a null pointer.
 #define CHECK_EMPTY_STRING(sv)          \
