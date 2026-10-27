@@ -9,7 +9,16 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ## 4.6.2 [Unreleased]
 
-<!-- Will contain entries for the next patch release. -->
+### Fixed
+
+- Do not convert empty string-like BSON type values into null strings in v_noabi API.
+  - This occurred whenever the BSON type value was accessed as a `types::view` or `types::value`, e.g. via `element::get_*()`.
+  - This affected BSON type values: string, symbol, code, regex, dbpointer, and codewscope.
+  - This does not affect v1 API, where an empty string is always represented as a default-initialized string view.
+- Do not invoke undefined behavior when copying or assigning null string-like BSON type values in v1 API.
+  - This occurred on copy construction and copy assignment of `v1::types::value` given a null string-like BSON type value.
+  - This affected BSON type values: string, symbol, code, dbpointer, and codewscope.
+  - This did not affect string-like values when set to a non-empty value.
 
 ## 4.6.1
 
