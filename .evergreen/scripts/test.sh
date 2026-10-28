@@ -158,7 +158,15 @@ else
       certutil.exe -addstore "Root" "${DRIVERS_TOOLS:?}\.evergreen\x509gen\ca.pem"
       ;;
     darwin*)
-      sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain "${DRIVERS_TOOLS:?}/.evergreen/x509gen/ca.pem"
+      # MacOS 15 refuses scripted trust-settings writes:
+      #     SecTrustSettingsSetTrustSettings: The authorization was denied
+      #     since no user interaction was possible.
+      # (DEVPROD-45695). Fall back to skipping the KMS TLS tests that require
+      # the CA to be registered in the system trust store. KMS TLS tests that
+      # pass the CA via `tlsCAFile` are unaffected.
+      if ! sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain "${DRIVERS_TOOLS:?}/.evergreen/x509gen/ca.pem"; then
+        export MONGOCXX_TEST_SKIP_KMS_TLS_TESTS=1
+      fi
       ;;
     *)
       if [ -f /etc/redhat-release ]; then
