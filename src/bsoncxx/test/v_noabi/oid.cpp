@@ -18,6 +18,8 @@
 
 #include <bsoncxx/v1/detail/bit.hpp>
 
+#include <bsoncxx/test/v1/oid.hh>
+
 #include <cstdint>
 #include <cstring>
 #include <ctime>
