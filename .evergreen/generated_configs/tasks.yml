@@ -356,9 +356,9 @@ tasks:
           build_type: Debug
           cc_compiler: gcc
           cxx_compiler: g++
-  - name: compile-only-macos-14-arm64-cxx11-debug
-    run_on: macos-14-arm64
-    tags: [compile-only, macos-14-arm64, cxx11, debug]
+  - name: compile-only-macos-15-amd64-cxx11-debug
+    run_on: macos-15-amd64
+    tags: [compile-only, macos-15-amd64, cxx11, debug]
     commands:
       - command: expansions.update
         params:
@@ -371,9 +371,9 @@ tasks:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
           REQUIRED_CXX_STANDARD: 11
           build_type: Debug
-  - name: compile-only-macos-14-arm64-cxx17-debug
-    run_on: macos-14-arm64
-    tags: [compile-only, macos-14-arm64, cxx17, debug]
+  - name: compile-only-macos-15-amd64-cxx17-debug
+    run_on: macos-15-amd64
+    tags: [compile-only, macos-15-amd64, cxx17, debug]
     commands:
       - command: expansions.update
         params:
@@ -386,9 +386,9 @@ tasks:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
           REQUIRED_CXX_STANDARD: 17
           build_type: Debug
-  - name: compile-only-macos-14-cxx11-debug
-    run_on: macos-14
-    tags: [compile-only, macos-14, cxx11, debug]
+  - name: compile-only-macos-15-arm64-cxx11-debug
+    run_on: macos-15-arm64
+    tags: [compile-only, macos-15-arm64, cxx11, debug]
     commands:
       - command: expansions.update
         params:
@@ -401,9 +401,9 @@ tasks:
           BUILD_SHARED_AND_STATIC_LIBS: "ON"
           REQUIRED_CXX_STANDARD: 11
           build_type: Debug
-  - name: compile-only-macos-14-cxx17-debug
-    run_on: macos-14
-    tags: [compile-only, macos-14, cxx17, debug]
+  - name: compile-only-macos-15-arm64-cxx17-debug
+    run_on: macos-15-arm64
+    tags: [compile-only, macos-15-arm64, cxx17, debug]
     commands:
       - command: expansions.update
         params:
@@ -2147,9 +2147,9 @@ tasks:
     commands:
       - func: setup
       - func: docker-image-build
-  - name: integration-macos-14-arm64-debug-shared-cxx11-6.0-replica
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, "6.0", replica]
+  - name: integration-macos-15-amd64-debug-shared-cxx11-4.2-replica
+    run_on: macos-15-amd64
+    tags: [integration, macos-15-amd64, macos, debug, shared, cxx11, "4.2", replica]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -2160,7 +2160,7 @@ tasks:
       - func: start_mongod
         vars:
           TOPOLOGY: replica_set
-          mongodb_version: "6.0"
+          mongodb_version: "4.2"
       - func: install_c_driver
       - func: compile
         vars:
@@ -2174,9 +2174,9 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: replica
           REQUIRED_CXX_STANDARD: 11
       - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx11-6.0-sharded
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, "6.0", sharded]
+  - name: integration-macos-15-amd64-debug-shared-cxx11-4.2-sharded
+    run_on: macos-15-amd64
+    tags: [integration, macos-15-amd64, macos, debug, shared, cxx11, "4.2", sharded]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -2187,7 +2187,7 @@ tasks:
       - func: start_mongod
         vars:
           TOPOLOGY: sharded_cluster
-          mongodb_version: "6.0"
+          mongodb_version: "4.2"
       - func: install_c_driver
       - func: compile
         vars:
@@ -2201,9 +2201,9 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: sharded
           REQUIRED_CXX_STANDARD: 11
       - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx11-6.0-single
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, "6.0", single]
+  - name: integration-macos-15-amd64-debug-shared-cxx11-4.2-single
+    run_on: macos-15-amd64
+    tags: [integration, macos-15-amd64, macos, debug, shared, cxx11, "4.2", single]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -2213,7 +2213,7 @@ tasks:
       - func: setup
       - func: start_mongod
         vars:
-          mongodb_version: "6.0"
+          mongodb_version: "4.2"
       - func: install_c_driver
       - func: compile
         vars:
@@ -2227,252 +2227,9 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: single
           REQUIRED_CXX_STANDARD: 11
       - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx11-8.0-replica
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, "8.0", replica]
-    exec_timeout_secs: 7200
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: replica_set
-          mongodb_version: "8.0"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: csfle-setup
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: replica
-          REQUIRED_CXX_STANDARD: 11
-      - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx11-8.0-sharded
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, "8.0", sharded]
-    exec_timeout_secs: 7200
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: sharded_cluster
-          mongodb_version: "8.0"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: csfle-setup
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: sharded
-          REQUIRED_CXX_STANDARD: 11
-      - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx11-8.0-single
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, "8.0", single]
-    exec_timeout_secs: 7200
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          mongodb_version: "8.0"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: csfle-setup
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: single
-          REQUIRED_CXX_STANDARD: 11
-      - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx11-9.0-replica
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, "9.0", replica]
-    exec_timeout_secs: 7200
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: replica_set
-          mongodb_version: "9.0"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: csfle-setup
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: replica
-          REQUIRED_CXX_STANDARD: 11
-      - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx11-9.0-sharded
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, "9.0", sharded]
-    exec_timeout_secs: 7200
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: sharded_cluster
-          mongodb_version: "9.0"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: csfle-setup
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: sharded
-          REQUIRED_CXX_STANDARD: 11
-      - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx11-9.0-single
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, "9.0", single]
-    exec_timeout_secs: 7200
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          mongodb_version: "9.0"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: csfle-setup
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: single
-          REQUIRED_CXX_STANDARD: 11
-      - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx11-csfle-6.0-replica
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, csfle, "6.0", replica]
-    exec_timeout_secs: 7200
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: replica_set
-          mongodb_version: "6.0"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: csfle-setup
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: replica
-          REQUIRED_CXX_STANDARD: 11
-          TEST_WITH_CSFLE: "ON"
-      - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx11-csfle-6.0-sharded
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, csfle, "6.0", sharded]
-    exec_timeout_secs: 7200
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: sharded_cluster
-          mongodb_version: "6.0"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: csfle-setup
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: sharded
-          REQUIRED_CXX_STANDARD: 11
-          TEST_WITH_CSFLE: "ON"
-      - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx11-csfle-6.0-single
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, csfle, "6.0", single]
-    exec_timeout_secs: 7200
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          mongodb_version: "6.0"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: csfle-setup
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: single
-          REQUIRED_CXX_STANDARD: 11
-          TEST_WITH_CSFLE: "ON"
-      - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx11-csfle-8.0-replica
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, csfle, "8.0", replica]
+  - name: integration-macos-15-amd64-debug-shared-cxx11-8.0-replica
+    run_on: macos-15-amd64
+    tags: [integration, macos-15-amd64, macos, debug, shared, cxx11, "8.0", replica]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -2496,11 +2253,254 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
           REQUIRED_CXX_STANDARD: 11
+      - func: csfle-teardown
+  - name: integration-macos-15-amd64-debug-shared-cxx11-8.0-sharded
+    run_on: macos-15-amd64
+    tags: [integration, macos-15-amd64, macos, debug, shared, cxx11, "8.0", sharded]
+    exec_timeout_secs: 7200
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "8.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: csfle-setup
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          REQUIRED_CXX_STANDARD: 11
+      - func: csfle-teardown
+  - name: integration-macos-15-amd64-debug-shared-cxx11-8.0-single
+    run_on: macos-15-amd64
+    tags: [integration, macos-15-amd64, macos, debug, shared, cxx11, "8.0", single]
+    exec_timeout_secs: 7200
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "8.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: csfle-setup
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          REQUIRED_CXX_STANDARD: 11
+      - func: csfle-teardown
+  - name: integration-macos-15-amd64-debug-shared-cxx11-9.0-replica
+    run_on: macos-15-amd64
+    tags: [integration, macos-15-amd64, macos, debug, shared, cxx11, "9.0", replica]
+    exec_timeout_secs: 7200
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: "9.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: csfle-setup
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 11
+      - func: csfle-teardown
+  - name: integration-macos-15-amd64-debug-shared-cxx11-9.0-sharded
+    run_on: macos-15-amd64
+    tags: [integration, macos-15-amd64, macos, debug, shared, cxx11, "9.0", sharded]
+    exec_timeout_secs: 7200
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "9.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: csfle-setup
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          REQUIRED_CXX_STANDARD: 11
+      - func: csfle-teardown
+  - name: integration-macos-15-amd64-debug-shared-cxx11-9.0-single
+    run_on: macos-15-amd64
+    tags: [integration, macos-15-amd64, macos, debug, shared, cxx11, "9.0", single]
+    exec_timeout_secs: 7200
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "9.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: csfle-setup
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          REQUIRED_CXX_STANDARD: 11
+      - func: csfle-teardown
+  - name: integration-macos-15-amd64-debug-shared-cxx11-csfle-4.2-replica
+    run_on: macos-15-amd64
+    tags: [integration, macos-15-amd64, macos, debug, shared, cxx11, csfle, "4.2", replica]
+    exec_timeout_secs: 7200
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: "4.2"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: csfle-setup
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 11
           TEST_WITH_CSFLE: "ON"
       - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx11-csfle-8.0-sharded
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, csfle, "8.0", sharded]
+  - name: integration-macos-15-amd64-debug-shared-cxx11-csfle-4.2-sharded
+    run_on: macos-15-amd64
+    tags: [integration, macos-15-amd64, macos, debug, shared, cxx11, csfle, "4.2", sharded]
+    exec_timeout_secs: 7200
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "4.2"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: csfle-setup
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          REQUIRED_CXX_STANDARD: 11
+          TEST_WITH_CSFLE: "ON"
+      - func: csfle-teardown
+  - name: integration-macos-15-amd64-debug-shared-cxx11-csfle-4.2-single
+    run_on: macos-15-amd64
+    tags: [integration, macos-15-amd64, macos, debug, shared, cxx11, csfle, "4.2", single]
+    exec_timeout_secs: 7200
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "4.2"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: csfle-setup
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          REQUIRED_CXX_STANDARD: 11
+          TEST_WITH_CSFLE: "ON"
+      - func: csfle-teardown
+  - name: integration-macos-15-amd64-debug-shared-cxx11-csfle-8.0-replica
+    run_on: macos-15-amd64
+    tags: [integration, macos-15-amd64, macos, debug, shared, cxx11, csfle, "8.0", replica]
+    exec_timeout_secs: 7200
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: "8.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 11
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: csfle-setup
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 11
+          TEST_WITH_CSFLE: "ON"
+      - func: csfle-teardown
+  - name: integration-macos-15-amd64-debug-shared-cxx11-csfle-8.0-sharded
+    run_on: macos-15-amd64
+    tags: [integration, macos-15-amd64, macos, debug, shared, cxx11, csfle, "8.0", sharded]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -2526,9 +2526,9 @@ tasks:
           REQUIRED_CXX_STANDARD: 11
           TEST_WITH_CSFLE: "ON"
       - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx11-csfle-8.0-single
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, csfle, "8.0", single]
+  - name: integration-macos-15-amd64-debug-shared-cxx11-csfle-8.0-single
+    run_on: macos-15-amd64
+    tags: [integration, macos-15-amd64, macos, debug, shared, cxx11, csfle, "8.0", single]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -2553,9 +2553,9 @@ tasks:
           REQUIRED_CXX_STANDARD: 11
           TEST_WITH_CSFLE: "ON"
       - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx11-csfle-9.0-replica
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, csfle, "9.0", replica]
+  - name: integration-macos-15-amd64-debug-shared-cxx11-csfle-9.0-replica
+    run_on: macos-15-amd64
+    tags: [integration, macos-15-amd64, macos, debug, shared, cxx11, csfle, "9.0", replica]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -2581,9 +2581,9 @@ tasks:
           REQUIRED_CXX_STANDARD: 11
           TEST_WITH_CSFLE: "ON"
       - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx11-csfle-9.0-sharded
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, csfle, "9.0", sharded]
+  - name: integration-macos-15-amd64-debug-shared-cxx11-csfle-9.0-sharded
+    run_on: macos-15-amd64
+    tags: [integration, macos-15-amd64, macos, debug, shared, cxx11, csfle, "9.0", sharded]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -2609,9 +2609,9 @@ tasks:
           REQUIRED_CXX_STANDARD: 11
           TEST_WITH_CSFLE: "ON"
       - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx11-csfle-9.0-single
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, csfle, "9.0", single]
+  - name: integration-macos-15-amd64-debug-shared-cxx11-csfle-9.0-single
+    run_on: macos-15-amd64
+    tags: [integration, macos-15-amd64, macos, debug, shared, cxx11, csfle, "9.0", single]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -2636,9 +2636,9 @@ tasks:
           REQUIRED_CXX_STANDARD: 11
           TEST_WITH_CSFLE: "ON"
       - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx11-csfle-latest-replica
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, csfle, latest, replica]
+  - name: integration-macos-15-amd64-debug-shared-cxx11-csfle-latest-replica
+    run_on: macos-15-amd64
+    tags: [integration, macos-15-amd64, macos, debug, shared, cxx11, csfle, latest, replica]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -2664,9 +2664,9 @@ tasks:
           REQUIRED_CXX_STANDARD: 11
           TEST_WITH_CSFLE: "ON"
       - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx11-csfle-latest-replica-mongocryptd
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, csfle, latest, replica, mongocryptd]
+  - name: integration-macos-15-amd64-debug-shared-cxx11-csfle-latest-replica-mongocryptd
+    run_on: macos-15-amd64
+    tags: [integration, macos-15-amd64, macos, debug, shared, cxx11, csfle, latest, replica, mongocryptd]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -2693,9 +2693,9 @@ tasks:
           TEST_WITH_CSFLE: "ON"
           use_mongocryptd: true
       - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx11-csfle-latest-sharded
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, csfle, latest, sharded]
+  - name: integration-macos-15-amd64-debug-shared-cxx11-csfle-latest-sharded
+    run_on: macos-15-amd64
+    tags: [integration, macos-15-amd64, macos, debug, shared, cxx11, csfle, latest, sharded]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -2721,9 +2721,9 @@ tasks:
           REQUIRED_CXX_STANDARD: 11
           TEST_WITH_CSFLE: "ON"
       - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx11-csfle-latest-single
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, csfle, latest, single]
+  - name: integration-macos-15-amd64-debug-shared-cxx11-csfle-latest-single
+    run_on: macos-15-amd64
+    tags: [integration, macos-15-amd64, macos, debug, shared, cxx11, csfle, latest, single]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -2748,9 +2748,9 @@ tasks:
           REQUIRED_CXX_STANDARD: 11
           TEST_WITH_CSFLE: "ON"
       - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx11-latest-replica
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, latest, replica]
+  - name: integration-macos-15-amd64-debug-shared-cxx11-latest-replica
+    run_on: macos-15-amd64
+    tags: [integration, macos-15-amd64, macos, debug, shared, cxx11, latest, replica]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -2775,9 +2775,9 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: replica
           REQUIRED_CXX_STANDARD: 11
       - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx11-latest-sharded
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, latest, sharded]
+  - name: integration-macos-15-amd64-debug-shared-cxx11-latest-sharded
+    run_on: macos-15-amd64
+    tags: [integration, macos-15-amd64, macos, debug, shared, cxx11, latest, sharded]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -2802,9 +2802,9 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: sharded
           REQUIRED_CXX_STANDARD: 11
       - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx11-latest-single
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx11, latest, single]
+  - name: integration-macos-15-amd64-debug-shared-cxx11-latest-single
+    run_on: macos-15-amd64
+    tags: [integration, macos-15-amd64, macos, debug, shared, cxx11, latest, single]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -2828,9 +2828,9 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: single
           REQUIRED_CXX_STANDARD: 11
       - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx17-6.0-replica
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, "6.0", replica]
+  - name: integration-macos-15-arm64-debug-shared-cxx11-6.0-replica
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx11, "6.0", replica]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -2846,18 +2846,18 @@ tasks:
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
+          REQUIRED_CXX_STANDARD: 11
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: csfle-setup
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
-          REQUIRED_CXX_STANDARD: 17
+          REQUIRED_CXX_STANDARD: 11
       - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx17-6.0-sharded
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, "6.0", sharded]
+  - name: integration-macos-15-arm64-debug-shared-cxx11-6.0-sharded
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx11, "6.0", sharded]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -2873,18 +2873,18 @@ tasks:
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
+          REQUIRED_CXX_STANDARD: 11
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: csfle-setup
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
-          REQUIRED_CXX_STANDARD: 17
+          REQUIRED_CXX_STANDARD: 11
       - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx17-6.0-single
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, "6.0", single]
+  - name: integration-macos-15-arm64-debug-shared-cxx11-6.0-single
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx11, "6.0", single]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -2899,18 +2899,18 @@ tasks:
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
+          REQUIRED_CXX_STANDARD: 11
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: csfle-setup
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
-          REQUIRED_CXX_STANDARD: 17
+          REQUIRED_CXX_STANDARD: 11
       - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx17-8.0-replica
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, "8.0", replica]
+  - name: integration-macos-15-arm64-debug-shared-cxx11-8.0-replica
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx11, "8.0", replica]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -2926,18 +2926,18 @@ tasks:
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
+          REQUIRED_CXX_STANDARD: 11
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: csfle-setup
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
-          REQUIRED_CXX_STANDARD: 17
+          REQUIRED_CXX_STANDARD: 11
       - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx17-8.0-sharded
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, "8.0", sharded]
+  - name: integration-macos-15-arm64-debug-shared-cxx11-8.0-sharded
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx11, "8.0", sharded]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -2953,18 +2953,18 @@ tasks:
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
+          REQUIRED_CXX_STANDARD: 11
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: csfle-setup
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
-          REQUIRED_CXX_STANDARD: 17
+          REQUIRED_CXX_STANDARD: 11
       - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx17-8.0-single
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, "8.0", single]
+  - name: integration-macos-15-arm64-debug-shared-cxx11-8.0-single
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx11, "8.0", single]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -2979,18 +2979,18 @@ tasks:
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
+          REQUIRED_CXX_STANDARD: 11
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: csfle-setup
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
-          REQUIRED_CXX_STANDARD: 17
+          REQUIRED_CXX_STANDARD: 11
       - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx17-9.0-replica
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, "9.0", replica]
+  - name: integration-macos-15-arm64-debug-shared-cxx11-9.0-replica
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx11, "9.0", replica]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -3006,18 +3006,18 @@ tasks:
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
+          REQUIRED_CXX_STANDARD: 11
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: csfle-setup
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
-          REQUIRED_CXX_STANDARD: 17
+          REQUIRED_CXX_STANDARD: 11
       - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx17-9.0-sharded
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, "9.0", sharded]
+  - name: integration-macos-15-arm64-debug-shared-cxx11-9.0-sharded
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx11, "9.0", sharded]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -3033,18 +3033,18 @@ tasks:
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
+          REQUIRED_CXX_STANDARD: 11
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: csfle-setup
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
-          REQUIRED_CXX_STANDARD: 17
+          REQUIRED_CXX_STANDARD: 11
       - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx17-9.0-single
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, "9.0", single]
+  - name: integration-macos-15-arm64-debug-shared-cxx11-9.0-single
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx11, "9.0", single]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -3059,18 +3059,18 @@ tasks:
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
+          REQUIRED_CXX_STANDARD: 11
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: csfle-setup
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
-          REQUIRED_CXX_STANDARD: 17
+          REQUIRED_CXX_STANDARD: 11
       - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx17-csfle-6.0-replica
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, csfle, "6.0", replica]
+  - name: integration-macos-15-arm64-debug-shared-cxx11-csfle-6.0-replica
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx11, csfle, "6.0", replica]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -3086,19 +3086,19 @@ tasks:
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
+          REQUIRED_CXX_STANDARD: 11
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: csfle-setup
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
-          REQUIRED_CXX_STANDARD: 17
+          REQUIRED_CXX_STANDARD: 11
           TEST_WITH_CSFLE: "ON"
       - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx17-csfle-6.0-sharded
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, csfle, "6.0", sharded]
+  - name: integration-macos-15-arm64-debug-shared-cxx11-csfle-6.0-sharded
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx11, csfle, "6.0", sharded]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -3114,19 +3114,19 @@ tasks:
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
+          REQUIRED_CXX_STANDARD: 11
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: csfle-setup
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
-          REQUIRED_CXX_STANDARD: 17
+          REQUIRED_CXX_STANDARD: 11
           TEST_WITH_CSFLE: "ON"
       - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx17-csfle-6.0-single
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, csfle, "6.0", single]
+  - name: integration-macos-15-arm64-debug-shared-cxx11-csfle-6.0-single
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx11, csfle, "6.0", single]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -3141,658 +3141,6 @@ tasks:
       - func: compile
         vars:
           ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: csfle-setup
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: single
-          REQUIRED_CXX_STANDARD: 17
-          TEST_WITH_CSFLE: "ON"
-      - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx17-csfle-8.0-replica
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, csfle, "8.0", replica]
-    exec_timeout_secs: 7200
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: replica_set
-          mongodb_version: "8.0"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: csfle-setup
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: replica
-          REQUIRED_CXX_STANDARD: 17
-          TEST_WITH_CSFLE: "ON"
-      - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx17-csfle-8.0-sharded
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, csfle, "8.0", sharded]
-    exec_timeout_secs: 7200
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: sharded_cluster
-          mongodb_version: "8.0"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: csfle-setup
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: sharded
-          REQUIRED_CXX_STANDARD: 17
-          TEST_WITH_CSFLE: "ON"
-      - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx17-csfle-8.0-single
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, csfle, "8.0", single]
-    exec_timeout_secs: 7200
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          mongodb_version: "8.0"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: csfle-setup
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: single
-          REQUIRED_CXX_STANDARD: 17
-          TEST_WITH_CSFLE: "ON"
-      - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx17-csfle-9.0-replica
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, csfle, "9.0", replica]
-    exec_timeout_secs: 7200
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: replica_set
-          mongodb_version: "9.0"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: csfle-setup
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: replica
-          REQUIRED_CXX_STANDARD: 17
-          TEST_WITH_CSFLE: "ON"
-      - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx17-csfle-9.0-sharded
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, csfle, "9.0", sharded]
-    exec_timeout_secs: 7200
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: sharded_cluster
-          mongodb_version: "9.0"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: csfle-setup
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: sharded
-          REQUIRED_CXX_STANDARD: 17
-          TEST_WITH_CSFLE: "ON"
-      - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx17-csfle-9.0-single
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, csfle, "9.0", single]
-    exec_timeout_secs: 7200
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          mongodb_version: "9.0"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: csfle-setup
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: single
-          REQUIRED_CXX_STANDARD: 17
-          TEST_WITH_CSFLE: "ON"
-      - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx17-csfle-latest-replica
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, csfle, latest, replica]
-    exec_timeout_secs: 7200
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: replica_set
-          mongodb_version: latest
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: csfle-setup
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: replica
-          REQUIRED_CXX_STANDARD: 17
-          TEST_WITH_CSFLE: "ON"
-      - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx17-csfle-latest-sharded
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, csfle, latest, sharded]
-    exec_timeout_secs: 7200
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: sharded_cluster
-          mongodb_version: latest
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: csfle-setup
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: sharded
-          REQUIRED_CXX_STANDARD: 17
-          TEST_WITH_CSFLE: "ON"
-      - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx17-csfle-latest-single
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, csfle, latest, single]
-    exec_timeout_secs: 7200
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          mongodb_version: latest
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: csfle-setup
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: single
-          REQUIRED_CXX_STANDARD: 17
-          TEST_WITH_CSFLE: "ON"
-      - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx17-latest-replica
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, latest, replica]
-    exec_timeout_secs: 7200
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: replica_set
-          mongodb_version: latest
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: csfle-setup
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: replica
-          REQUIRED_CXX_STANDARD: 17
-      - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx17-latest-sharded
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, latest, sharded]
-    exec_timeout_secs: 7200
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: sharded_cluster
-          mongodb_version: latest
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: csfle-setup
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: sharded
-          REQUIRED_CXX_STANDARD: 17
-      - func: csfle-teardown
-  - name: integration-macos-14-arm64-debug-shared-cxx17-latest-single
-    run_on: macos-14-arm64
-    tags: [integration, macos-14-arm64, macos, debug, shared, cxx17, latest, single]
-    exec_timeout_secs: 7200
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          mongodb_version: latest
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 17
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: csfle-setup
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: single
-          REQUIRED_CXX_STANDARD: 17
-      - func: csfle-teardown
-  - name: integration-macos-14-debug-shared-cxx11-4.2-replica
-    run_on: macos-14
-    tags: [integration, macos-14, macos, debug, shared, cxx11, "4.2", replica]
-    exec_timeout_secs: 7200
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: replica_set
-          mongodb_version: "4.2"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: csfle-setup
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: replica
-          REQUIRED_CXX_STANDARD: 11
-      - func: csfle-teardown
-  - name: integration-macos-14-debug-shared-cxx11-4.2-sharded
-    run_on: macos-14
-    tags: [integration, macos-14, macos, debug, shared, cxx11, "4.2", sharded]
-    exec_timeout_secs: 7200
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: sharded_cluster
-          mongodb_version: "4.2"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: csfle-setup
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: sharded
-          REQUIRED_CXX_STANDARD: 11
-      - func: csfle-teardown
-  - name: integration-macos-14-debug-shared-cxx11-4.2-single
-    run_on: macos-14
-    tags: [integration, macos-14, macos, debug, shared, cxx11, "4.2", single]
-    exec_timeout_secs: 7200
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          mongodb_version: "4.2"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: csfle-setup
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: single
-          REQUIRED_CXX_STANDARD: 11
-      - func: csfle-teardown
-  - name: integration-macos-14-debug-shared-cxx11-8.0-replica
-    run_on: macos-14
-    tags: [integration, macos-14, macos, debug, shared, cxx11, "8.0", replica]
-    exec_timeout_secs: 7200
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: replica_set
-          mongodb_version: "8.0"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: csfle-setup
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: replica
-          REQUIRED_CXX_STANDARD: 11
-      - func: csfle-teardown
-  - name: integration-macos-14-debug-shared-cxx11-8.0-sharded
-    run_on: macos-14
-    tags: [integration, macos-14, macos, debug, shared, cxx11, "8.0", sharded]
-    exec_timeout_secs: 7200
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: sharded_cluster
-          mongodb_version: "8.0"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: csfle-setup
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: sharded
-          REQUIRED_CXX_STANDARD: 11
-      - func: csfle-teardown
-  - name: integration-macos-14-debug-shared-cxx11-8.0-single
-    run_on: macos-14
-    tags: [integration, macos-14, macos, debug, shared, cxx11, "8.0", single]
-    exec_timeout_secs: 7200
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          mongodb_version: "8.0"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: csfle-setup
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: single
-          REQUIRED_CXX_STANDARD: 11
-      - func: csfle-teardown
-  - name: integration-macos-14-debug-shared-cxx11-9.0-replica
-    run_on: macos-14
-    tags: [integration, macos-14, macos, debug, shared, cxx11, "9.0", replica]
-    exec_timeout_secs: 7200
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: replica_set
-          mongodb_version: "9.0"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: csfle-setup
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: replica
-          REQUIRED_CXX_STANDARD: 11
-      - func: csfle-teardown
-  - name: integration-macos-14-debug-shared-cxx11-9.0-sharded
-    run_on: macos-14
-    tags: [integration, macos-14, macos, debug, shared, cxx11, "9.0", sharded]
-    exec_timeout_secs: 7200
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: sharded_cluster
-          mongodb_version: "9.0"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: csfle-setup
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: sharded
-          REQUIRED_CXX_STANDARD: 11
-      - func: csfle-teardown
-  - name: integration-macos-14-debug-shared-cxx11-9.0-single
-    run_on: macos-14
-    tags: [integration, macos-14, macos, debug, shared, cxx11, "9.0", single]
-    exec_timeout_secs: 7200
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          mongodb_version: "9.0"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: csfle-setup
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: single
-          REQUIRED_CXX_STANDARD: 11
-      - func: csfle-teardown
-  - name: integration-macos-14-debug-shared-cxx11-csfle-4.2-replica
-    run_on: macos-14
-    tags: [integration, macos-14, macos, debug, shared, cxx11, csfle, "4.2", replica]
-    exec_timeout_secs: 7200
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: replica_set
-          mongodb_version: "4.2"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: csfle-setup
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: replica
-          REQUIRED_CXX_STANDARD: 11
-          TEST_WITH_CSFLE: "ON"
-      - func: csfle-teardown
-  - name: integration-macos-14-debug-shared-cxx11-csfle-4.2-sharded
-    run_on: macos-14
-    tags: [integration, macos-14, macos, debug, shared, cxx11, csfle, "4.2", sharded]
-    exec_timeout_secs: 7200
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          TOPOLOGY: sharded_cluster
-          mongodb_version: "4.2"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
-          REQUIRED_CXX_STANDARD: 11
-          RUN_DISTCHECK: 1
-      - func: fetch-det
-      - func: csfle-setup
-      - func: test
-        vars:
-          MONGOCXX_TEST_TOPOLOGY: sharded
-          REQUIRED_CXX_STANDARD: 11
-          TEST_WITH_CSFLE: "ON"
-      - func: csfle-teardown
-  - name: integration-macos-14-debug-shared-cxx11-csfle-4.2-single
-    run_on: macos-14
-    tags: [integration, macos-14, macos, debug, shared, cxx11, csfle, "4.2", single]
-    exec_timeout_secs: 7200
-    commands:
-      - command: expansions.update
-        params:
-          updates:
-            - { key: build_type, value: Debug }
-      - func: setup
-      - func: start_mongod
-        vars:
-          mongodb_version: "4.2"
-      - func: install_c_driver
-      - func: compile
-        vars:
-          ENABLE_TESTS: "ON"
           REQUIRED_CXX_STANDARD: 11
           RUN_DISTCHECK: 1
       - func: fetch-det
@@ -3803,9 +3151,9 @@ tasks:
           REQUIRED_CXX_STANDARD: 11
           TEST_WITH_CSFLE: "ON"
       - func: csfle-teardown
-  - name: integration-macos-14-debug-shared-cxx11-csfle-8.0-replica
-    run_on: macos-14
-    tags: [integration, macos-14, macos, debug, shared, cxx11, csfle, "8.0", replica]
+  - name: integration-macos-15-arm64-debug-shared-cxx11-csfle-8.0-replica
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx11, csfle, "8.0", replica]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -3831,9 +3179,9 @@ tasks:
           REQUIRED_CXX_STANDARD: 11
           TEST_WITH_CSFLE: "ON"
       - func: csfle-teardown
-  - name: integration-macos-14-debug-shared-cxx11-csfle-8.0-sharded
-    run_on: macos-14
-    tags: [integration, macos-14, macos, debug, shared, cxx11, csfle, "8.0", sharded]
+  - name: integration-macos-15-arm64-debug-shared-cxx11-csfle-8.0-sharded
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx11, csfle, "8.0", sharded]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -3859,9 +3207,9 @@ tasks:
           REQUIRED_CXX_STANDARD: 11
           TEST_WITH_CSFLE: "ON"
       - func: csfle-teardown
-  - name: integration-macos-14-debug-shared-cxx11-csfle-8.0-single
-    run_on: macos-14
-    tags: [integration, macos-14, macos, debug, shared, cxx11, csfle, "8.0", single]
+  - name: integration-macos-15-arm64-debug-shared-cxx11-csfle-8.0-single
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx11, csfle, "8.0", single]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -3886,9 +3234,9 @@ tasks:
           REQUIRED_CXX_STANDARD: 11
           TEST_WITH_CSFLE: "ON"
       - func: csfle-teardown
-  - name: integration-macos-14-debug-shared-cxx11-csfle-9.0-replica
-    run_on: macos-14
-    tags: [integration, macos-14, macos, debug, shared, cxx11, csfle, "9.0", replica]
+  - name: integration-macos-15-arm64-debug-shared-cxx11-csfle-9.0-replica
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx11, csfle, "9.0", replica]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -3914,9 +3262,9 @@ tasks:
           REQUIRED_CXX_STANDARD: 11
           TEST_WITH_CSFLE: "ON"
       - func: csfle-teardown
-  - name: integration-macos-14-debug-shared-cxx11-csfle-9.0-sharded
-    run_on: macos-14
-    tags: [integration, macos-14, macos, debug, shared, cxx11, csfle, "9.0", sharded]
+  - name: integration-macos-15-arm64-debug-shared-cxx11-csfle-9.0-sharded
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx11, csfle, "9.0", sharded]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -3942,9 +3290,9 @@ tasks:
           REQUIRED_CXX_STANDARD: 11
           TEST_WITH_CSFLE: "ON"
       - func: csfle-teardown
-  - name: integration-macos-14-debug-shared-cxx11-csfle-9.0-single
-    run_on: macos-14
-    tags: [integration, macos-14, macos, debug, shared, cxx11, csfle, "9.0", single]
+  - name: integration-macos-15-arm64-debug-shared-cxx11-csfle-9.0-single
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx11, csfle, "9.0", single]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -3969,9 +3317,9 @@ tasks:
           REQUIRED_CXX_STANDARD: 11
           TEST_WITH_CSFLE: "ON"
       - func: csfle-teardown
-  - name: integration-macos-14-debug-shared-cxx11-csfle-latest-replica
-    run_on: macos-14
-    tags: [integration, macos-14, macos, debug, shared, cxx11, csfle, latest, replica]
+  - name: integration-macos-15-arm64-debug-shared-cxx11-csfle-latest-replica
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx11, csfle, latest, replica]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -3997,9 +3345,9 @@ tasks:
           REQUIRED_CXX_STANDARD: 11
           TEST_WITH_CSFLE: "ON"
       - func: csfle-teardown
-  - name: integration-macos-14-debug-shared-cxx11-csfle-latest-replica-mongocryptd
-    run_on: macos-14
-    tags: [integration, macos-14, macos, debug, shared, cxx11, csfle, latest, replica, mongocryptd]
+  - name: integration-macos-15-arm64-debug-shared-cxx11-csfle-latest-replica-mongocryptd
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx11, csfle, latest, replica, mongocryptd]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -4026,9 +3374,9 @@ tasks:
           TEST_WITH_CSFLE: "ON"
           use_mongocryptd: true
       - func: csfle-teardown
-  - name: integration-macos-14-debug-shared-cxx11-csfle-latest-sharded
-    run_on: macos-14
-    tags: [integration, macos-14, macos, debug, shared, cxx11, csfle, latest, sharded]
+  - name: integration-macos-15-arm64-debug-shared-cxx11-csfle-latest-sharded
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx11, csfle, latest, sharded]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -4054,9 +3402,9 @@ tasks:
           REQUIRED_CXX_STANDARD: 11
           TEST_WITH_CSFLE: "ON"
       - func: csfle-teardown
-  - name: integration-macos-14-debug-shared-cxx11-csfle-latest-single
-    run_on: macos-14
-    tags: [integration, macos-14, macos, debug, shared, cxx11, csfle, latest, single]
+  - name: integration-macos-15-arm64-debug-shared-cxx11-csfle-latest-single
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx11, csfle, latest, single]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -4081,9 +3429,9 @@ tasks:
           REQUIRED_CXX_STANDARD: 11
           TEST_WITH_CSFLE: "ON"
       - func: csfle-teardown
-  - name: integration-macos-14-debug-shared-cxx11-latest-replica
-    run_on: macos-14
-    tags: [integration, macos-14, macos, debug, shared, cxx11, latest, replica]
+  - name: integration-macos-15-arm64-debug-shared-cxx11-latest-replica
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx11, latest, replica]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -4108,9 +3456,9 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: replica
           REQUIRED_CXX_STANDARD: 11
       - func: csfle-teardown
-  - name: integration-macos-14-debug-shared-cxx11-latest-sharded
-    run_on: macos-14
-    tags: [integration, macos-14, macos, debug, shared, cxx11, latest, sharded]
+  - name: integration-macos-15-arm64-debug-shared-cxx11-latest-sharded
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx11, latest, sharded]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -4135,9 +3483,9 @@ tasks:
           MONGOCXX_TEST_TOPOLOGY: sharded
           REQUIRED_CXX_STANDARD: 11
       - func: csfle-teardown
-  - name: integration-macos-14-debug-shared-cxx11-latest-single
-    run_on: macos-14
-    tags: [integration, macos-14, macos, debug, shared, cxx11, latest, single]
+  - name: integration-macos-15-arm64-debug-shared-cxx11-latest-single
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx11, latest, single]
     exec_timeout_secs: 7200
     commands:
       - command: expansions.update
@@ -4160,6 +3508,658 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
           REQUIRED_CXX_STANDARD: 11
+      - func: csfle-teardown
+  - name: integration-macos-15-arm64-debug-shared-cxx17-6.0-replica
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx17, "6.0", replica]
+    exec_timeout_secs: 7200
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: "6.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: csfle-setup
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 17
+      - func: csfle-teardown
+  - name: integration-macos-15-arm64-debug-shared-cxx17-6.0-sharded
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx17, "6.0", sharded]
+    exec_timeout_secs: 7200
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "6.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: csfle-setup
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          REQUIRED_CXX_STANDARD: 17
+      - func: csfle-teardown
+  - name: integration-macos-15-arm64-debug-shared-cxx17-6.0-single
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx17, "6.0", single]
+    exec_timeout_secs: 7200
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "6.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: csfle-setup
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          REQUIRED_CXX_STANDARD: 17
+      - func: csfle-teardown
+  - name: integration-macos-15-arm64-debug-shared-cxx17-8.0-replica
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx17, "8.0", replica]
+    exec_timeout_secs: 7200
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: "8.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: csfle-setup
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 17
+      - func: csfle-teardown
+  - name: integration-macos-15-arm64-debug-shared-cxx17-8.0-sharded
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx17, "8.0", sharded]
+    exec_timeout_secs: 7200
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "8.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: csfle-setup
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          REQUIRED_CXX_STANDARD: 17
+      - func: csfle-teardown
+  - name: integration-macos-15-arm64-debug-shared-cxx17-8.0-single
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx17, "8.0", single]
+    exec_timeout_secs: 7200
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "8.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: csfle-setup
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          REQUIRED_CXX_STANDARD: 17
+      - func: csfle-teardown
+  - name: integration-macos-15-arm64-debug-shared-cxx17-9.0-replica
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx17, "9.0", replica]
+    exec_timeout_secs: 7200
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: "9.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: csfle-setup
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 17
+      - func: csfle-teardown
+  - name: integration-macos-15-arm64-debug-shared-cxx17-9.0-sharded
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx17, "9.0", sharded]
+    exec_timeout_secs: 7200
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "9.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: csfle-setup
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          REQUIRED_CXX_STANDARD: 17
+      - func: csfle-teardown
+  - name: integration-macos-15-arm64-debug-shared-cxx17-9.0-single
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx17, "9.0", single]
+    exec_timeout_secs: 7200
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "9.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: csfle-setup
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          REQUIRED_CXX_STANDARD: 17
+      - func: csfle-teardown
+  - name: integration-macos-15-arm64-debug-shared-cxx17-csfle-6.0-replica
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx17, csfle, "6.0", replica]
+    exec_timeout_secs: 7200
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: "6.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: csfle-setup
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 17
+          TEST_WITH_CSFLE: "ON"
+      - func: csfle-teardown
+  - name: integration-macos-15-arm64-debug-shared-cxx17-csfle-6.0-sharded
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx17, csfle, "6.0", sharded]
+    exec_timeout_secs: 7200
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "6.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: csfle-setup
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          REQUIRED_CXX_STANDARD: 17
+          TEST_WITH_CSFLE: "ON"
+      - func: csfle-teardown
+  - name: integration-macos-15-arm64-debug-shared-cxx17-csfle-6.0-single
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx17, csfle, "6.0", single]
+    exec_timeout_secs: 7200
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "6.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: csfle-setup
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          REQUIRED_CXX_STANDARD: 17
+          TEST_WITH_CSFLE: "ON"
+      - func: csfle-teardown
+  - name: integration-macos-15-arm64-debug-shared-cxx17-csfle-8.0-replica
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx17, csfle, "8.0", replica]
+    exec_timeout_secs: 7200
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: "8.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: csfle-setup
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 17
+          TEST_WITH_CSFLE: "ON"
+      - func: csfle-teardown
+  - name: integration-macos-15-arm64-debug-shared-cxx17-csfle-8.0-sharded
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx17, csfle, "8.0", sharded]
+    exec_timeout_secs: 7200
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "8.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: csfle-setup
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          REQUIRED_CXX_STANDARD: 17
+          TEST_WITH_CSFLE: "ON"
+      - func: csfle-teardown
+  - name: integration-macos-15-arm64-debug-shared-cxx17-csfle-8.0-single
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx17, csfle, "8.0", single]
+    exec_timeout_secs: 7200
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "8.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: csfle-setup
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          REQUIRED_CXX_STANDARD: 17
+          TEST_WITH_CSFLE: "ON"
+      - func: csfle-teardown
+  - name: integration-macos-15-arm64-debug-shared-cxx17-csfle-9.0-replica
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx17, csfle, "9.0", replica]
+    exec_timeout_secs: 7200
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: "9.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: csfle-setup
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 17
+          TEST_WITH_CSFLE: "ON"
+      - func: csfle-teardown
+  - name: integration-macos-15-arm64-debug-shared-cxx17-csfle-9.0-sharded
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx17, csfle, "9.0", sharded]
+    exec_timeout_secs: 7200
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "9.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: csfle-setup
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          REQUIRED_CXX_STANDARD: 17
+          TEST_WITH_CSFLE: "ON"
+      - func: csfle-teardown
+  - name: integration-macos-15-arm64-debug-shared-cxx17-csfle-9.0-single
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx17, csfle, "9.0", single]
+    exec_timeout_secs: 7200
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "9.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: csfle-setup
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          REQUIRED_CXX_STANDARD: 17
+          TEST_WITH_CSFLE: "ON"
+      - func: csfle-teardown
+  - name: integration-macos-15-arm64-debug-shared-cxx17-csfle-latest-replica
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx17, csfle, latest, replica]
+    exec_timeout_secs: 7200
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: csfle-setup
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 17
+          TEST_WITH_CSFLE: "ON"
+      - func: csfle-teardown
+  - name: integration-macos-15-arm64-debug-shared-cxx17-csfle-latest-sharded
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx17, csfle, latest, sharded]
+    exec_timeout_secs: 7200
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: csfle-setup
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          REQUIRED_CXX_STANDARD: 17
+          TEST_WITH_CSFLE: "ON"
+      - func: csfle-teardown
+  - name: integration-macos-15-arm64-debug-shared-cxx17-csfle-latest-single
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx17, csfle, latest, single]
+    exec_timeout_secs: 7200
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: csfle-setup
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          REQUIRED_CXX_STANDARD: 17
+          TEST_WITH_CSFLE: "ON"
+      - func: csfle-teardown
+  - name: integration-macos-15-arm64-debug-shared-cxx17-latest-replica
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx17, latest, replica]
+    exec_timeout_secs: 7200
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: csfle-setup
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          REQUIRED_CXX_STANDARD: 17
+      - func: csfle-teardown
+  - name: integration-macos-15-arm64-debug-shared-cxx17-latest-sharded
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx17, latest, sharded]
+    exec_timeout_secs: 7200
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: csfle-setup
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          REQUIRED_CXX_STANDARD: 17
+      - func: csfle-teardown
+  - name: integration-macos-15-arm64-debug-shared-cxx17-latest-single
+    run_on: macos-15-arm64
+    tags: [integration, macos-15-arm64, macos, debug, shared, cxx17, latest, single]
+    exec_timeout_secs: 7200
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          ENABLE_TESTS: "ON"
+          REQUIRED_CXX_STANDARD: 17
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: csfle-setup
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          REQUIRED_CXX_STANDARD: 17
       - func: csfle-teardown
   - name: integration-rhel8-arm64-latest-debug-shared-cxx11-4.4-replica
     run_on: rhel8-arm64-latest-large
@@ -17677,9 +17677,9 @@ tasks:
           BSONCXX_POLYFILL: impls
           CXX_STANDARD: 17
       - func: upload scan artifacts
-  - name: uninstall-check-macos-14-arm64-clang-debug-shared
-    run_on: macos-14-arm64
-    tags: [uninstall-check, macos-14-arm64, clang, debug, shared]
+  - name: uninstall-check-macos-15-arm64-clang-debug-shared
+    run_on: macos-15-arm64
+    tags: [uninstall-check, macos-15-arm64, clang, debug, shared]
     commands:
       - func: setup
       - func: fetch_c_driver_source
@@ -17689,9 +17689,9 @@ tasks:
           cc_compiler: clang
           cxx_compiler: clang++
       - func: uninstall-check
-  - name: uninstall-check-macos-14-arm64-clang-debug-static
-    run_on: macos-14-arm64
-    tags: [uninstall-check, macos-14-arm64, clang, debug, static]
+  - name: uninstall-check-macos-15-arm64-clang-debug-static
+    run_on: macos-15-arm64
+    tags: [uninstall-check, macos-15-arm64, clang, debug, static]
     commands:
       - func: setup
       - func: fetch_c_driver_source
@@ -17701,9 +17701,9 @@ tasks:
           cc_compiler: clang
           cxx_compiler: clang++
       - func: uninstall-check
-  - name: uninstall-check-macos-14-arm64-clang-release-shared
-    run_on: macos-14-arm64
-    tags: [uninstall-check, macos-14-arm64, clang, release, shared]
+  - name: uninstall-check-macos-15-arm64-clang-release-shared
+    run_on: macos-15-arm64
+    tags: [uninstall-check, macos-15-arm64, clang, release, shared]
     commands:
       - func: setup
       - func: fetch_c_driver_source
@@ -17713,9 +17713,9 @@ tasks:
           cc_compiler: clang
           cxx_compiler: clang++
       - func: uninstall-check
-  - name: uninstall-check-macos-14-arm64-clang-release-static
-    run_on: macos-14-arm64
-    tags: [uninstall-check, macos-14-arm64, clang, release, static]
+  - name: uninstall-check-macos-15-arm64-clang-release-static
+    run_on: macos-15-arm64
+    tags: [uninstall-check, macos-15-arm64, clang, release, static]
     commands:
       - func: setup
       - func: fetch_c_driver_source
@@ -18079,9 +18079,9 @@ tasks:
           disable_slow_tests: 1
           use_mongocryptd: true
       - func: csfle-teardown
-  - name: versioned-api-one-required-macos-14-arm64-debug-shared
-    run_on: macos-14-arm64
-    tags: [versioned-api, macos-14-arm64, debug, shared]
+  - name: versioned-api-one-required-macos-15-arm64-debug-shared
+    run_on: macos-15-arm64
+    tags: [versioned-api, macos-15-arm64, debug, shared]
     commands:
       - func: setup
       - func: start_mongod
@@ -18152,9 +18152,9 @@ tasks:
           generator: Visual Studio 17 2022
           platform: x64
       - func: csfle-teardown
-  - name: versioned-api-two-accepted-macos-14-arm64-debug-shared
-    run_on: macos-14-arm64
-    tags: [versioned-api, macos-14-arm64, debug, shared]
+  - name: versioned-api-two-accepted-macos-15-arm64-debug-shared
+    run_on: macos-15-arm64
+    tags: [versioned-api, macos-15-arm64, debug, shared]
     commands:
       - func: setup
       - func: start_mongod
