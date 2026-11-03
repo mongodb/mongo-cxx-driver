@@ -25,6 +25,8 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
     overrides, applied per-client and per-pool via
     `structured_logging_opts()`.
 
+## 4.6.2
+
 ### Fixed
 
 - Fix unconditionally-dangling references returned by `get_<type>()` accessors for `bsoncxx::v_noabi::types::bson_value::value`.
