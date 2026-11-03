@@ -1,0 +1,5 @@
+var searchData=
+[
+  ['level_0',['level',['../classmongocxx_1_1v1_1_1read__concern.html#ac3831a4dfac48307df9e14c0c39ca972',1,'mongocxx::v1::read_concern::level'],['../classmongocxx_1_1v1_1_1write__concern.html#af523a84248d61400478524ef22eb7a95',1,'mongocxx::v1::write_concern::level'],['../classmongocxx_1_1v__noabi_1_1read__concern.html#a795c8037f826a1e64e052997fde61407',1,'mongocxx::v_noabi::read_concern::level'],['../classmongocxx_1_1v__noabi_1_1write__concern.html#a756cc9e4f51467924887b2ceda9c8856',1,'mongocxx::v_noabi::write_concern::level'],['../classmongocxx_1_1read__concern.html#a795c8037f826a1e64e052997fde61407',1,'mongocxx::read_concern::level'],['../classmongocxx_1_1write__concern.html#a756cc9e4f51467924887b2ceda9c8856',1,'mongocxx::write_concern::level']]],
+  ['log_5flevel_1',['log_level',['../namespacemongocxx_1_1v1.html#a9e12b572b5adaa5d5848c32e1ab2c6a1',1,'mongocxx::v1::log_level'],['../namespacemongocxx_1_1v__noabi.html#a9e12b572b5adaa5d5848c32e1ab2c6a1',1,'mongocxx::v_noabi::log_level'],['../namespacemongocxx.html#a9e12b572b5adaa5d5848c32e1ab2c6a1',1,'mongocxx::log_level']]]
+];

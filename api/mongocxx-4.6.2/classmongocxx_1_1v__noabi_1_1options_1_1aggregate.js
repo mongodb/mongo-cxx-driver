@@ -1,0 +1,28 @@
+var classmongocxx_1_1v__noabi_1_1options_1_1aggregate =
+[
+    [ "aggregate", "classmongocxx_1_1v__noabi_1_1options_1_1aggregate.html#a6ede30c0fe1d31175b66ea5818db4853", null ],
+    [ "aggregate", "classmongocxx_1_1v__noabi_1_1options_1_1aggregate.html#ad470cd6c143b219da62b11dfcbabdf86", null ],
+    [ "allow_disk_use", "classmongocxx_1_1v__noabi_1_1options_1_1aggregate.html#a3fce66f95f40922b7a55900549ffff49", null ],
+    [ "allow_disk_use", "classmongocxx_1_1v__noabi_1_1options_1_1aggregate.html#ad860dc9abbe11378bafa04c24c7a052e", null ],
+    [ "batch_size", "classmongocxx_1_1v__noabi_1_1options_1_1aggregate.html#a419c444d6d389fde7ad4d55813562d05", null ],
+    [ "batch_size", "classmongocxx_1_1v__noabi_1_1options_1_1aggregate.html#a54544953375a0db13dc5efe8741284ef", null ],
+    [ "bypass_document_validation", "classmongocxx_1_1v__noabi_1_1options_1_1aggregate.html#ac5a6ba15b5090414877f3d0f929a9051", null ],
+    [ "bypass_document_validation", "classmongocxx_1_1v__noabi_1_1options_1_1aggregate.html#a1b9eb22506a76a25f75cb79196232d3e", null ],
+    [ "collation", "classmongocxx_1_1v__noabi_1_1options_1_1aggregate.html#a8caebf93716c59c2317550825f4dc007", null ],
+    [ "collation", "classmongocxx_1_1v__noabi_1_1options_1_1aggregate.html#a93b7774809483e7380d4ac319371a7a8", null ],
+    [ "comment", "classmongocxx_1_1v__noabi_1_1options_1_1aggregate.html#a882af449244e487bcaeca18becbe0a7e", null ],
+    [ "comment", "classmongocxx_1_1v__noabi_1_1options_1_1aggregate.html#a7e373d46ba980d407f54685c2696b726", null ],
+    [ "hint", "classmongocxx_1_1v__noabi_1_1options_1_1aggregate.html#a37ae22c1e4f0d7f8d010ef7c33278751", null ],
+    [ "hint", "classmongocxx_1_1v__noabi_1_1options_1_1aggregate.html#ac3900c4a79e880a85f25a84f5020ad1b", null ],
+    [ "let", "classmongocxx_1_1v__noabi_1_1options_1_1aggregate.html#a8196a5588e044c13dfda140e2679b138", null ],
+    [ "let", "classmongocxx_1_1v__noabi_1_1options_1_1aggregate.html#a055e7691761efc89fb15f743f74b0d3a", null ],
+    [ "max_time", "classmongocxx_1_1v__noabi_1_1options_1_1aggregate.html#a321c30819a93e0504701dd79c4d8e821", null ],
+    [ "max_time", "classmongocxx_1_1v__noabi_1_1options_1_1aggregate.html#a50e6cec05ea8c7b571a780469ec30751", null ],
+    [ "operator v1::aggregate_options", "classmongocxx_1_1v__noabi_1_1options_1_1aggregate.html#abbf5c85f8b8cc64af2c2f6aca15b9732", null ],
+    [ "read_concern", "classmongocxx_1_1v__noabi_1_1options_1_1aggregate.html#a43f42a5444b2d0b2644752707b3f8294", null ],
+    [ "read_concern", "classmongocxx_1_1v__noabi_1_1options_1_1aggregate.html#af44473913ce25771687d745e21e0cf2d", null ],
+    [ "read_preference", "classmongocxx_1_1v__noabi_1_1options_1_1aggregate.html#a7975cfbba432173a197b8ee2093e08c6", null ],
+    [ "read_preference", "classmongocxx_1_1v__noabi_1_1options_1_1aggregate.html#a7c2af1ab802aa044f297c27abd72a129", null ],
+    [ "write_concern", "classmongocxx_1_1v__noabi_1_1options_1_1aggregate.html#abe6933db19c8b4abfd541357b202a9f1", null ],
+    [ "write_concern", "classmongocxx_1_1v__noabi_1_1options_1_1aggregate.html#ac5741b0b86d22dd964c0782cf40ccf04", null ]
+];
