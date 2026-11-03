@@ -22,6 +22,10 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
   - This affected BSON type values: string, symbol, code, dbpointer, and codewscope.
   - This did not affect string-like values when set to a non-empty value.
 
+### Changed
+
+- Bump the minimum required C Driver version to [2.5.8](https://github.com/mongodb/mongo-c-driver/releases/tag/2.5.8).
+
 ## 4.6.1
 
 ### Fixed
