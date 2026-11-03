@@ -120,7 +120,7 @@ TEST_CASE("exceptions", "[bsoncxx][v1][types][value]") {
 
     SECTION("invalid_length_u32") {
         try {
-            auto const size = std::size_t{UINT32_MAX} + 1u;
+            auto const size = std::size_t{UINT32_MAX};
             auto const data = bsoncxx::make_unique_for_overwrite<unsigned char[]>(size);
 
             auto const big_string = bsoncxx::v1::stdx::string_view{reinterpret_cast<char const*>(data.get()), size};
@@ -129,6 +129,16 @@ TEST_CASE("exceptions", "[bsoncxx][v1][types][value]") {
 
             SECTION("b_string") {
                 auto const expr = [&] { value v{b_string{big_string}}; };
+                CHECK_THROWS_WITH_CODE(expr(), code::invalid_length_u32);
+            }
+
+            SECTION("b_regex (regex)") {
+                auto const expr = [&] { value v{b_regex{big_string, {}}}; };
+                CHECK_THROWS_WITH_CODE(expr(), code::invalid_length_u32);
+            }
+
+            SECTION("b_regex (options)") {
+                auto const expr = [&] { value v{b_regex{{}, big_string}}; };
                 CHECK_THROWS_WITH_CODE(expr(), code::invalid_length_u32);
             }
 
@@ -149,6 +159,11 @@ TEST_CASE("exceptions", "[bsoncxx][v1][types][value]") {
 
             SECTION("b_codewscope") {
                 auto const expr = [&] { value v{b_codewscope{big_string, bsoncxx::v1::document::view{}}}; };
+                CHECK_THROWS_WITH_CODE(expr(), code::invalid_length_u32);
+            }
+
+            SECTION("view") {
+                auto const expr = [&] { value v{bsoncxx::v1::types::view{bsoncxx::v1::types::b_string{big_string}}}; };
                 CHECK_THROWS_WITH_CODE(expr(), code::invalid_length_u32);
             }
 
@@ -335,6 +350,21 @@ TEST_CASE("get_bson_value", "[bsoncxx][v1][types][value][internal]") {
         CHECK(bson_value.value.v_utf8.str == nullptr);
     }
 
+    SECTION("non-null empty string") {
+        value v{b_string{bsoncxx::v1::stdx::string_view{""}}};
+
+        REQUIRE(v.type_id() == id::k_string);
+        CHECK(v.get_string().value.empty());
+        CHECK(v.get_string().value.data() == nullptr); // Default-initialized string view.
+
+        auto& bson_value = value::internal::get_bson_value(v);
+
+        REQUIRE(bson_value.value_type == BSON_TYPE_UTF8);
+        CHECK(bson_value.value.v_utf8.len == 0u);
+        REQUIRE(bson_value.value.v_utf8.str != nullptr); // bson_value_t preserves the not-null invariant.
+        CHECK(bson_value.value.v_utf8.str[0] == '\0');
+    }
+
     SECTION("empty binary") {
         value v{b_binary{}};
 
@@ -349,6 +379,71 @@ TEST_CASE("get_bson_value", "[bsoncxx][v1][types][value][internal]") {
         CHECK(bson_value.value.v_binary.subtype == BSON_SUBTYPE_BINARY);
         CHECK(bson_value.value.v_binary.data_len == 0u);
         CHECK(bson_value.value.v_binary.data == nullptr);
+    }
+
+    SECTION("non-null empty binary") {
+        std::uint8_t const bytes = {};
+        value v{b_binary{binary_subtype::k_binary, 0u, &bytes}};
+
+        REQUIRE(v.type_id() == id::k_binary);
+        CHECK(v.get_binary().size == 0u);
+        CHECK(v.get_binary().bytes == nullptr);
+
+        auto& bson_value = value::internal::get_bson_value(v);
+
+        REQUIRE(bson_value.value_type == BSON_TYPE_BINARY);
+        CHECK(bson_value.value.v_binary.data == nullptr);
+        CHECK(bson_value.value.v_binary.data_len == 0u);
+    }
+
+    SECTION("empty document") {
+        value v{b_document{}};
+
+        REQUIRE(v.type_id() == id::k_document);
+        CHECK(v.get_document().value.data() != nullptr);
+        CHECK(v.get_document().value.size() == 5u);
+
+        auto& bson_value = value::internal::get_bson_value(v);
+
+        REQUIRE(bson_value.value_type == BSON_TYPE_DOCUMENT);
+        CHECK(bson_value.value.v_doc.data != nullptr);
+        CHECK(bson_value.value.v_doc.data_len == 5u);
+    }
+
+    SECTION("null copies") {
+        // BSONCXX_V1_TYPES_XMACRO: update below.
+        view const views[] = {
+            b_string{},
+            b_document{},
+            b_array{},
+            b_binary{},
+            b_regex{},
+            b_dbpointer{},
+            b_code{},
+            b_symbol{},
+            b_codewscope{},
+            b_codewscope{bsoncxx::v1::stdx::string_view{"abc"}, bsoncxx::v1::document::view{}},
+        };
+        // BSONCXX_V1_TYPES_XMACRO: update above.
+
+#pragma push_macro("X")
+#undef X
+#define X(_name, _value)                   \
+    case id::k_##_name: {                  \
+        value const orig{v.get_##_name()}; \
+        value const copy{orig};            \
+        CHECK(orig == copy);               \
+    } break;
+
+        for (auto const& v : views) {
+            switch (v.type_id()) {
+                BSONCXX_V1_TYPES_XMACRO(X)
+
+                default:
+                    FAIL();
+            }
+        }
+#pragma pop_macro("X")
     }
 }
 

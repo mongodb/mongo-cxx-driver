@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Changes prior to 3.9.0 are documented as [release notes on GitHub](https://github.com/mongodb/mongo-cxx-driver/releases).
 
+## 4.6.2
+
+### Fixed
+
+- Fix unconditionally-dangling references returned by `get_<type>()` accessors for `bsoncxx::v_noabi::types::bson_value::value`.
+  - The unusable `T const&` reference return type is replaced with a `T` by-value return type to satisfy the API's documented behavior.
+- Do not convert empty string-like BSON type values into null strings in v_noabi API.
+  - This occurred whenever the BSON type value was accessed as a `types::view` or `types::value`, e.g. via `element::get_*()`.
+  - This affected BSON type values: string, symbol, code, regex, dbpointer, and codewscope.
+  - This does not affect v1 API, where an empty string is always represented as a default-initialized string view.
+- Do not invoke undefined behavior when copying or assigning null string-like BSON type values in v1 API.
+  - This occurred on copy construction and copy assignment of `v1::types::value` given a null string-like BSON type value.
+  - This affected BSON type values: string, symbol, code, dbpointer, and codewscope.
+  - This did not affect string-like values when set to a non-empty value.
+
+### Changed
+
+- Bump the minimum required C Driver version to [2.5.8](https://github.com/mongodb/mongo-c-driver/releases/tag/2.5.8).
+
 ## 4.6.1
 
 ### Fixed
