@@ -177,6 +177,16 @@ bsoncxx::document::value _make_tls_opts() {
     return tls_opts.extract();
 }
 
+bsoncxx::document::value _make_aws_kms_tls_opts() {
+    bsoncxx::builder::basic::document tls_opts;
+
+    tls_opts.append(kvp("aws", [&](sub_document subdoc) {
+        subdoc.append(kvp("tlsCAFile", test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CA_FILE")));
+    }));
+
+    return tls_opts.extract();
+}
+
 void _add_client_encrypted_opts(
     options::client* client_opts,
     bsoncxx::document::view_or_value schema_map,
@@ -1655,13 +1665,10 @@ TEST_CASE("KMS TLS expired certificate", "[client_side_encryption]") {
         SKIP("libmongoc version is < 1.20.0 (CDRIVER-3927)");
     }
 
-    // Required CA certificates may not be registered on system. See BUILD-14068.
-    if (std::getenv("MONGOCXX_TEST_SKIP_KMS_TLS_TESTS")) {
-        SKIP("KMS TLS tests disabled (BUILD-14068)");
-    }
-
     options::client_encryption cse_opts;
     _add_cse_opts(&cse_opts, &setup_client);
+    // Set CA file to trust mock KMS.
+    cse_opts.tls_opts(_make_aws_kms_tls_opts());
     client_encryption client_encryption{std::move(cse_opts)};
     options::data_key data_key_opts;
 
@@ -1704,13 +1711,10 @@ TEST_CASE("KMS TLS wrong host certificate", "[client_side_encryption]") {
         SKIP("libmongoc version is < 1.20.0 (CDRIVER-3927)");
     }
 
-    // Required CA certificates may not be registered on system. See BUILD-14068.
-    if (std::getenv("MONGOCXX_TEST_SKIP_KMS_TLS_TESTS")) {
-        SKIP("KMS TLS tests disabled (BUILD-14068)");
-    }
-
     options::client_encryption cse_opts;
     _add_cse_opts(&cse_opts, &setup_client);
+    // Set CA file to trust mock KMS.
+    cse_opts.tls_opts(_make_aws_kms_tls_opts());
     client_encryption client_encryption{std::move(cse_opts)};
     options::data_key data_key_opts;
 
@@ -1755,7 +1759,7 @@ bsoncxx::document::value make_kms_providers_with_custom_endpoints(
     return kms_doc.extract();
 }
 
-enum struct with_certs { none, ca_only, cert_only, both };
+enum struct with_certs { ca_only, cert_only, both };
 
 bsoncxx::document::value make_tls_opts_with_certs(with_certs with) {
     bsoncxx::builder::basic::document tls_opts;
@@ -1802,11 +1806,6 @@ TEST_CASE("KMS TLS Options Tests", "[client_side_encryption]") {
     // available in libmongoc 1.20.0 and newer (CDRIVER-3927).
     if (!mongoc_check_version(1, 20, 0)) {
         SKIP("libmongoc version is < 1.20.0 (CDRIVER-3927)");
-    }
-
-    // Required CA certificates may not be registered on system. See BUILD-14068.
-    if (std::getenv("MONGOCXX_TEST_SKIP_KMS_TLS_TESTS")) {
-        SKIP("KMS TLS tests disabled (BUILD-14068)");
     }
 
     auto client_encryption_no_client_cert =
