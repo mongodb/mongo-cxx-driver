@@ -150,32 +150,6 @@ else
 
   set -o errexit
 
-  # Register CA certificate required by KMS TLS connections.
-  echo "Registering CA certificate for KMS TLS tests..."
-  register_ca_cert() {
-    case "${OSTYPE:?}" in
-    cygwin*)
-      certutil.exe -addstore "Root" "${DRIVERS_TOOLS:?}\.evergreen\x509gen\ca.pem"
-      ;;
-    darwin*)
-      sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain "${DRIVERS_TOOLS:?}/.evergreen/x509gen/ca.pem"
-      ;;
-    *)
-      if [ -f /etc/redhat-release ]; then
-        # CSE KMS TLS tests are disabled on RHEL due to sudo permissions. See BUILD-14068.
-        # sudo cp -v ${DRIVERS_TOOLS:?}/.evergreen/x509gen/ca.pem /usr/share/pki/ca-trust-source/anchors/cdriver.crt
-        # sudo update-ca-trust extract --verbose
-        export MONGOCXX_TEST_SKIP_KMS_TLS_TESTS=1
-      else
-        sudo cp -v "${DRIVERS_TOOLS:?}/.evergreen/x509gen/ca.pem" /usr/local/share/ca-certificates/cdriver.crt
-        sudo update-ca-certificates --verbose
-      fi
-      ;;
-    esac
-  } >/dev/null
-  register_ca_cert
-  echo "Registering CA certificate for KMS TLS tests... done."
-
   # Ensure mock KMS servers are running before starting tests.
   wait_for_kms_server() {
     port="${1:?}"

@@ -18,7 +18,7 @@ TAG = 'uninstall-check'
 # fmt: off
 MATRIX = [
     ('rhel80',            'gcc',       ['Debug', 'Release'], ['shared', 'static']),
-    ('macos-14-arm64',    'clang',     ['Debug', 'Release'], ['shared', 'static']),
+    ('macos-15-arm64',    'clang',     ['Debug', 'Release'], ['shared', 'static']),
     ('windows-vsCurrent', 'vs2017x64', ['Debug', 'Release'], ['shared', 'static']),
 ]
 # fmt: on

@@ -174,7 +174,7 @@ darwin*)
   cc_flags+=("${cc_flags_init[@]}")
   cxx_flags+=("${cxx_flags_init[@]}" -stdlib=libc++)
 
-  if [[ "${distro_id:?}" == macos-14* ]]; then
+  if [[ "${distro_id:?}" == macos-15* ]]; then
     cxx_flags+=(-Wno-align-mismatch)
   fi
   ;;
