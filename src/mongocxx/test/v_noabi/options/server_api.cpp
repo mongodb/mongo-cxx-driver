@@ -16,7 +16,7 @@
 
 //
 
-#include <bsoncxx/test/v1/stdx/optional.hh>
+#include <bsoncxx/v1/stdx/optional.hpp>
 
 #include <bsoncxx/test/catch.hh>
 

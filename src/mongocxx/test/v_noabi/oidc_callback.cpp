@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/test/private/scoped_bson.hh>
 #include <mongocxx/test/v_noabi/catch_helpers.hh>
 #include <mongocxx/test/v_noabi/client_helpers.hh>
 
@@ -29,6 +28,8 @@
 #include <mongocxx/v_noabi/mongocxx/exception/exception.hpp>
 #include <mongocxx/v_noabi/mongocxx/pool.hpp>
 #include <mongocxx/v_noabi/mongocxx/uri.hpp>
+
+#include <mongocxx/private/scoped_bson.hh>
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>

@@ -16,6 +16,11 @@
 
 //
 
+#include <bsoncxx/v1/array/view.hpp>
+#include <bsoncxx/v1/document/value.hpp>
+#include <bsoncxx/v1/document/view.hpp>
+#include <bsoncxx/v1/stdx/string_view.hpp>
+
 #include <mongocxx/v1/aggregate_options.hpp>
 #include <mongocxx/v1/pipeline.hpp>
 #include <mongocxx/v1/server_error.hpp>
@@ -31,12 +36,6 @@
 #include <mongocxx/v1/read_preference.hh>
 #include <mongocxx/v1/write_concern.hh>
 
-#include <bsoncxx/test/v1/array/view.hh>
-#include <bsoncxx/test/v1/document/view.hh>
-#include <bsoncxx/test/v1/stdx/string_view.hh>
-
-#include <mongocxx/test/private/scoped_bson.hh>
-
 #include <cstddef>
 #include <cstdint>
 #include <functional>
@@ -47,6 +46,7 @@
 #include <bsoncxx/private/bson.hh>
 
 #include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/scoped_bson.hh>
 
 #include <bsoncxx/test/system_error.hh>
 

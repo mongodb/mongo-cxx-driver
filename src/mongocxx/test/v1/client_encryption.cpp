@@ -24,8 +24,6 @@
 #include <mongocxx/v1/client.hh>
 #include <mongocxx/v1/exception.hh>
 
-#include <mongocxx/test/private/scoped_bson.hh>
-
 #include <cstdint>
 #include <utility>
 
@@ -33,6 +31,7 @@
 
 #include <mongocxx/private/mock.hh>
 #include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/scoped_bson.hh>
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>

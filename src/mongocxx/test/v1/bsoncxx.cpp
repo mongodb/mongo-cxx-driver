@@ -12,11 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/test/v1/document/view.hh> // IWYU pragma: keep: Catch::StringMaker<bsoncxx::v1::document::view>
+#include <bsoncxx/v1/document/view.hpp>
 
-#include <mongocxx/test/private/scoped_bson.hh>
-
-#include <bsoncxx/test/stringify.hh>
+#include <mongocxx/private/scoped_bson.hh>
 
 #include <catch2/catch_test_macros.hpp>
 

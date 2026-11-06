@@ -12,19 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/test/v1/exception.hh>
+#include <mongocxx/v1/exception.hpp>
 
 //
+
+#include <bsoncxx/v1/document/value.hpp>
+#include <bsoncxx/v1/document/view.hpp>
+#include <bsoncxx/v1/exception.hpp>
 
 #include <mongocxx/v1/server_error.hpp>
 
 #include <mongocxx/v1/exception.hh>
-
-#include <bsoncxx/test/v1/document/value.hh>
-#include <bsoncxx/test/v1/document/view.hh>
-#include <bsoncxx/test/v1/exception.hh>
-
-#include <mongocxx/test/private/scoped_bson.hh>
 
 #include <cstdint>
 #include <system_error>
@@ -33,6 +31,7 @@
 #include <bsoncxx/private/bson.hh>
 
 #include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/scoped_bson.hh>
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>

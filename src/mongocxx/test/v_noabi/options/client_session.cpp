@@ -16,9 +16,9 @@
 
 //
 
-#include <mongocxx/v1/transaction_options.hpp>
+#include <bsoncxx/v1/stdx/optional.hpp>
 
-#include <bsoncxx/test/v1/stdx/optional.hh>
+#include <mongocxx/v1/transaction_options.hpp>
 
 #include <mongocxx/options/transaction.hpp>
 

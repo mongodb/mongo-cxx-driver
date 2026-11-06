@@ -16,8 +16,8 @@
 
 //
 
-#include <bsoncxx/test/v1/document/value.hh>
-#include <bsoncxx/test/v1/stdx/optional.hh>
+#include <bsoncxx/v1/document/value.hpp>
+#include <bsoncxx/v1/stdx/optional.hpp>
 
 #include <string>
 
