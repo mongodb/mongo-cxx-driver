@@ -14,17 +14,9 @@
 
 #pragma once
 
-#include <bsoncxx/v1/detail/macros.hpp>
+#include <bsoncxx/test/v_noabi/to_string.hh> // IWYU pragma: keep: backward compatibility, to be removed.
 
-#include <bsoncxx/test/v1/stdx/optional.hh>
-#include <bsoncxx/test/v1/stdx/string_view.hh>
-#include <bsoncxx/test/v_noabi/to_string.hh>
-
-#include <bsoncxx/document/view_or_value.hpp>
-#include <bsoncxx/json.hpp>
-#include <bsoncxx/oid.hpp>
-#include <bsoncxx/stdx/operators.hpp>
-#include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/json.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 
 #include <bsoncxx/test/stringify.hh>    // IWYU pragma: export
 #include <bsoncxx/test/system_error.hh> // IWYU pragma: export
