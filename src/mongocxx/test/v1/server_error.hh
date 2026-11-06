@@ -18,4 +18,4 @@
 
 //
 
-#include <mongocxx/test/v1/exception.hh> // IWYU pragma: export
+#include <mongocxx/v1/exception.hpp> // IWYU pragma: export

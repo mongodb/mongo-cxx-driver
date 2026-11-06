@@ -18,75 +18,7 @@
 
 #include <bsoncxx/json.hpp> // IWYU pragma: keep: backward compatibility, to be removed.
 
-#include <bsoncxx/test/stringify.hh>    // IWYU pragma: export
 #include <bsoncxx/test/system_error.hh> // IWYU pragma: export
 
 #include <catch2/catch_test_macros.hpp> // IWYU pragma: export: TEST_CASE, SECTION, CHECK, etc.
 #include <catch2/catch_tostring.hpp>    // IWYU pragma: export: Catch::StringMaker
-
-namespace Catch {
-
-template <>
-struct StringMaker<bsoncxx::oid> {
-    static std::string convert(bsoncxx::oid const& value) {
-        return value.to_string();
-    }
-};
-
-template <>
-struct StringMaker<bsoncxx::document::view> {
-    static std::string convert(bsoncxx::document::view const& value) {
-        return bsoncxx::to_json(value, bsoncxx::ExtendedJsonMode::k_relaxed);
-    }
-};
-
-template <>
-struct StringMaker<bsoncxx::document::view_or_value> {
-    static std::string convert(bsoncxx::document::view_or_value const& value) {
-        return bsoncxx::test::stringify(value.view());
-    }
-};
-
-template <>
-struct StringMaker<bsoncxx::document::value> {
-    static std::string convert(bsoncxx::document::value const& value) {
-        return bsoncxx::test::stringify(value.view());
-    }
-};
-
-template <>
-struct StringMaker<bsoncxx::types::bson_value::view> {
-    static std::string convert(bsoncxx::types::bson_value::view const& value) {
-        using bsoncxx::to_string;
-        return '{' + to_string(value.type()) + ": " + to_string(value) + '}';
-    }
-};
-
-template <>
-struct StringMaker<bsoncxx::types::bson_value::value> {
-    static std::string convert(bsoncxx::types::bson_value::value const& value) {
-        return bsoncxx::test::stringify(value.view());
-    }
-};
-
-template <>
-struct StringMaker<bsoncxx::types::bson_value::view_or_value> {
-    static std::string convert(bsoncxx::types::bson_value::view_or_value const& value) {
-        return bsoncxx::test::stringify(value.view());
-    }
-};
-
-template <>
-struct StringMaker<bsoncxx::detail::strong_ordering> {
-    static std::string convert(bsoncxx::detail::strong_ordering o) {
-        if (o < nullptr) {
-            return "[less-than]";
-        } else if (o > nullptr) {
-            return "[greater-than]";
-        } else {
-            return "[equal/equivalent]";
-        }
-    }
-};
-
-} // namespace Catch

@@ -16,11 +16,11 @@
 
 //
 
+#include <bsoncxx/v1/types/value.hpp>
+
 #include <mongocxx/v1/range_options.hpp>
 #include <mongocxx/v1/string_options.hpp>
 #include <mongocxx/v1/text_options.hpp>
-
-#include <bsoncxx/test/v1/types/value.hh>
 
 #include <cstdint>
 #include <string>

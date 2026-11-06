@@ -16,12 +16,11 @@
 
 //
 
+#include <bsoncxx/v1/document/value.hpp>
+#include <bsoncxx/v1/types/value.hpp>
+
 #include <mongocxx/v1/exception.hpp>
 #include <mongocxx/v1/write_concern.hpp>
-
-#include <bsoncxx/test/v1/types/value.hh>
-
-#include <mongocxx/test/private/scoped_bson.hh>
 
 #include <chrono>
 #include <cstdint>
@@ -30,6 +29,7 @@
 #include <utility>
 
 #include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/scoped_bson.hh>
 
 #include <bsoncxx/test/system_error.hh>
 

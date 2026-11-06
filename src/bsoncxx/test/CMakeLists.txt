@@ -50,13 +50,10 @@ set(bsoncxx_test_sources_v_noabi
 
 set(bsoncxx_test_sources_v1
     v1/array/value.cpp
-    v1/array/view_string_maker.cpp
     v1/array/view.cpp
     v1/decimal128.cpp
     v1/document/value.cpp
-    v1/document/view_string_maker.cpp
     v1/document/view.cpp
-    v1/element/view_string_maker.cpp
     v1/element/view.cpp
     v1/exception.cpp
     v1/oid.cpp
@@ -72,6 +69,7 @@ set(bsoncxx_test_sources
     ${bsoncxx_test_sources_private}
     ${bsoncxx_test_sources_v_noabi}
     ${bsoncxx_test_sources_v1}
+    string_maker.cpp
     catch.cpp
     exception_guard.cpp
 )
@@ -99,6 +97,13 @@ target_include_directories(bsoncxx_test_properties INTERFACE
 )
 # Use `__vectorcall` by default with MSVC to catch missing `__cdecl`.
 target_compile_options(bsoncxx_test_properties INTERFACE "$<$<CXX_COMPILER_ID:MSVC>:/Gv>")
+
+# Unconditionally include `Catch::StringMaker<T>` explicit specialization declarations in all test components.
+set(enable_string_maker_always_include "$<NOT:$<BOOL:$<TARGET_PROPERTY:DISABLE_STRING_MAKER_ALWAYS_INCLUDE>>>")
+target_compile_options(bsoncxx_test_properties INTERFACE
+    "$<$<AND:${enable_string_maker_always_include},$<CXX_COMPILER_ID:MSVC>>:/FIbsoncxx/test/string_maker.hh>"
+    "$<$<AND:${enable_string_maker_always_include},$<NOT:$<CXX_COMPILER_ID:MSVC>>>:-include;bsoncxx/test/string_maker.hh>"
+)
 add_library(bsoncxx::test_properties ALIAS bsoncxx_test_properties)
 
 # Avoid redundant recompilation of catch/main.cpp.

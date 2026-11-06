@@ -16,6 +16,9 @@
 
 //
 
+#include <bsoncxx/v1/document/value.hpp>
+#include <bsoncxx/v1/types/value.hpp>
+
 #include <mongocxx/v1/apm.hpp>
 #include <mongocxx/v1/exception.hpp>
 #include <mongocxx/v1/pipeline.hpp>
@@ -33,11 +36,6 @@
 #include <mongocxx/v1/tls.hh>
 #include <mongocxx/v1/uri.hh>
 
-#include <bsoncxx/test/v1/document/value.hh>
-#include <bsoncxx/test/v1/types/value.hh>
-
-#include <mongocxx/test/private/scoped_bson.hh>
-
 #include <array>
 #include <chrono>
 #include <cstddef>
@@ -53,6 +51,7 @@
 #include <bsoncxx/private/bson.hh>
 
 #include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/scoped_bson.hh>
 #include <mongocxx/private/ssl.hh>
 
 #include <bsoncxx/test/system_error.hh>

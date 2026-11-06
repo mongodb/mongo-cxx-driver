@@ -16,12 +16,13 @@
 
 //
 
-#include <bsoncxx/test/v1/types/view.hh>
-
-#include <mongocxx/test/private/scoped_bson.hh>
+#include <bsoncxx/v1/document/value.hpp>
+#include <bsoncxx/v1/types/view.hpp>
 
 #include <string>
 #include <utility>
+
+#include <mongocxx/private/scoped_bson.hh>
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>

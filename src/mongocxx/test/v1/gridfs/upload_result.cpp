@@ -16,7 +16,7 @@
 
 //
 
-#include <bsoncxx/test/v1/types/value.hh>
+#include <bsoncxx/v1/types/value.hpp>
 
 #include <utility>
 

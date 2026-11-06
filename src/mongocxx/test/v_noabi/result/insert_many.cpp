@@ -16,13 +16,13 @@
 
 //
 
+#include <bsoncxx/v1/array/value.hpp>
+#include <bsoncxx/v1/types/value.hpp>
+
 #include <mongocxx/v1/bulk_write.hh>
 #include <mongocxx/v1/insert_many_result.hh>
 
-#include <bsoncxx/test/v1/array/value.hh>
-#include <bsoncxx/test/v1/types/value.hh>
-
-#include <mongocxx/test/private/scoped_bson.hh>
+#include <mongocxx/private/scoped_bson.hh>
 
 #include <catch2/catch_test_macros.hpp>
 

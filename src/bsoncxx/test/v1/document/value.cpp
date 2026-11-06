@@ -12,16 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/test/v1/document/value.hh>
+#include <bsoncxx/v1/document/value.hpp>
 
 //
 
 #include <bsoncxx/v1/detail/macros.hpp>
-
-#include <bsoncxx/test/v1/document/view.hh>
-#include <bsoncxx/test/v1/stdx/optional.hh>
-#include <bsoncxx/test/v1/stdx/string_view.hh>
-#include <bsoncxx/test/v1/types/view.hh>
+#include <bsoncxx/v1/document/view.hpp>
+#include <bsoncxx/v1/stdx/optional.hpp>
+#include <bsoncxx/v1/stdx/string_view.hpp>
+#include <bsoncxx/v1/types/view.hpp>
 
 #include <cstdint>
 #include <cstring>
@@ -35,7 +34,6 @@
 
 #include <bsoncxx/private/type_traits.hh>
 
-#include <bsoncxx/test/stringify.hh>
 #include <bsoncxx/test/system_error.hh>
 
 #include <catch2/catch_test_macros.hpp>
