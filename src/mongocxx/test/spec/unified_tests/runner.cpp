@@ -1600,6 +1600,15 @@ TEST_CASE("CRUD unified format spec automated tests", "[unified_format_specs]") 
     run_unified_format_tests_in_env_dir("CRUD_UNIFIED_TESTS_PATH");
 }
 
+TEST_CASE("write concern error unified format spec automated tests", "[unified_format_specs]") {
+    std::set<bsoncxx::stdx::string_view> const unsupported_tests = {
+        // mongocxx does not have a mapReduce helper.
+        "mapReduce.json",
+    };
+
+    run_unified_format_tests_in_env_dir("WRITE_CONCERN_ERRORS_TESTS_PATH", unsupported_tests);
+}
+
 TEST_CASE("change streams unified format spec automated tests", "[unified_format_specs]") {
     std::set<bsoncxx::stdx::string_view> const unsupported_tests = {
         // Waiting on CXX-2493 (showExpandedEvents).
