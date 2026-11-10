@@ -67,7 +67,7 @@ class alignas(BSONCXX_PRIVATE_MAX_ALIGN_T) view::impl {
     std::array<unsigned char, _padding_size> _padding = {}; // Reserved.
     BSONCXX_PRIVATE_WARNINGS_POP();
 
-    bool _is_valid = {}; // Last byte.
+    std::uint8_t _is_valid = {}; // Last byte.
 
    public:
     impl() = default;
@@ -77,7 +77,7 @@ class alignas(BSONCXX_PRIVATE_MAX_ALIGN_T) view::impl {
         std::uint32_t length,
         std::uint32_t offset,
         std::uint32_t keylen,
-        bool is_valid = true)
+        std::uint8_t is_valid = true)
         : _raw{raw}, _length{length}, _offset{offset}, _keylen{keylen}, _is_valid{is_valid} {}
 
     void check() const;
