@@ -317,6 +317,31 @@ bool compatible_with_server(bsoncxx::array::element const& requirement) {
         }
     }
 
+    if (auto const csfle = requirement["csfle"]) {
+        bool csfle_required = false;
+
+        if (csfle.type() == bsoncxx::type::k_bool) {
+            csfle_required = csfle.get_bool().value;
+        } else if (csfle.type() == bsoncxx::type::k_document) {
+            // The document form may also specify a minimum libmongocrypt version.
+            csfle_required = true;
+        } else {
+            FAIL("unexpected type for \"csfle\" runOnRequirement: " << to_json(requirement.get_document().value));
+        }
+
+        if (csfle_required) {
+#if defined(MONGOC_ENABLE_CLIENT_SIDE_ENCRYPTION)
+            // CSFLE tests also require the CSE test environment to be configured.
+            if (test_util::client_side_encryption_enabled_or_skip_impl() != test_util::cseeos_result::enable) {
+                return false;
+            }
+#else
+            // libmongoc was not built with client-side encryption support.
+            return false;
+#endif
+        }
+    }
+
     return true;
 }
 
