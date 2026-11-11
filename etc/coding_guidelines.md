@@ -144,6 +144,30 @@ src/<library>/
   retain `[test]` for test-utility tests and remove it from library-API tests.
   Do not copy or remove it indiscriminately based on neighboring test cases.
 
+### Catch2 Stringification
+
+- Declare `Catch::StringMaker<T>` explicit specializations for library and
+  test-utility types in `<library>/test/string_maker.hh` and define them
+  out-of-line in the associated `string_maker.cpp` file. Test implementation
+  files MUST NOT declare or define additional `StringMaker<T>` specializations
+  for library and test-utility types.
+- `<library>/test/string_maker.hh` is unconditionally included in all test
+  components (see the `<library>_test_properties` targets in the test
+  `CMakeLists.txt`), which guarantees explicit specializations are declared
+  before their first use in every test translation unit, as required to avoid
+  one-definition-rule violations.
+- Define specializations for enumeration types with `CATCH_REGISTER_ENUM` and
+  partial specializations of class templates (e.g.
+  `bsoncxx::v1::stdx::optional<T>`) in-header. A value type's specialization may
+  simply inherit its corresponding view type's specialization (e.g.
+  `StringMaker<bsoncxx::v1::document::value> : StringMaker<bsoncxx::v1::document::view> {};`).
+- Guard polyfill-dependent specializations (e.g. `bsoncxx::v1::stdx::string_view`
+  under `BSONCXX_POLY_USE_IMPLS`) on the polyfill configuration macro and
+  include the header that defines it (`<bsoncxx/v1/config/config.hpp>`) from
+  `string_maker.hh` itself.
+- Set the `DISABLE_STRING_MAKER_ALWAYS_INCLUDE` target property when
+  unconditional inclusion is undesirable, e.g. in macro guard tests.
+
 ### Namespaces
 
 The library root namespace declares ABI namespaces (e.g. `mongocxx::v_noabi`,
