@@ -50,8 +50,8 @@ MATRIX = [
     ('rhel8-power',   None, [11, 17]),
     ('rhel8-zseries', None, [11, 17]),
 
-    ('macos-14-arm64', None, [11, 17]),
-    ('macos-14',       None, [11, 17]),
+    ('macos-15-arm64', None, [11, 17]),
+    ('macos-15-amd64', None, [11, 17]),
 ]
 # fmt: on
 # pylint: enable=line-too-long
