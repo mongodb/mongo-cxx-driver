@@ -1,6 +1,6 @@
 {
   "description": "retryable writes handshake failures",
-  "schemaVersion": "1.3",
+  "schemaVersion": "1.4",
   "runOnRequirements": [
     {
       "minServerVersion": "4.2",
@@ -22,7 +22,10 @@
           "commandStartedEvent",
           "commandSucceededEvent",
           "commandFailedEvent"
-        ]
+        ],
+        "uriOptions": {
+          "appName": "retryableWriteHandshakeTest"
+        }
       }
     },
     {
@@ -54,6 +57,226 @@
   ],
   "tests": [
     {
+      "description": "client.clientBulkWrite succeeds after retryable handshake network error",
+      "runOnRequirements": [
+        {
+          "minServerVersion": "8.0",
+          "serverless": "forbid"
+        }
+      ],
+      "operations": [
+        {
+          "name": "failPoint",
+          "object": "testRunner",
+          "arguments": {
+            "client": "client",
+            "failPoint": {
+              "configureFailPoint": "failCommand",
+              "mode": {
+                "times": 2
+              },
+              "data": {
+                "failCommands": [
+                  "ping",
+                  "saslContinue"
+                ],
+                "closeConnection": true,
+                "appName": "retryableWriteHandshakeTest"
+              }
+            }
+          }
+        },
+        {
+          "name": "runCommand",
+          "object": "database",
+          "arguments": {
+            "commandName": "ping",
+            "command": {
+              "ping": 1
+            }
+          },
+          "expectError": {
+            "isError": true
+          }
+        },
+        {
+          "name": "clientBulkWrite",
+          "object": "client",
+          "arguments": {
+            "models": [
+              {
+                "insertOne": {
+                  "namespace": "retryable-writes-handshake-tests.coll",
+                  "document": {
+                    "_id": 8,
+                    "x": 88
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "expectEvents": [
+        {
+          "client": "client",
+          "eventType": "cmap",
+          "events": [
+            {
+              "connectionCheckOutStartedEvent": {}
+            },
+            {
+              "connectionCheckOutStartedEvent": {}
+            },
+            {
+              "connectionCheckOutStartedEvent": {}
+            },
+            {
+              "connectionCheckOutStartedEvent": {}
+            }
+          ]
+        },
+        {
+          "client": "client",
+          "events": [
+            {
+              "commandStartedEvent": {
+                "command": {
+                  "ping": 1
+                },
+                "databaseName": "retryable-writes-handshake-tests"
+              }
+            },
+            {
+              "commandFailedEvent": {
+                "commandName": "ping"
+              }
+            },
+            {
+              "commandStartedEvent": {
+                "commandName": "bulkWrite"
+              }
+            },
+            {
+              "commandSucceededEvent": {
+                "commandName": "bulkWrite"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "client.clientBulkWrite succeeds after retryable handshake server error (ShutdownInProgress)",
+      "runOnRequirements": [
+        {
+          "minServerVersion": "8.0",
+          "serverless": "forbid"
+        }
+      ],
+      "operations": [
+        {
+          "name": "failPoint",
+          "object": "testRunner",
+          "arguments": {
+            "client": "client",
+            "failPoint": {
+              "configureFailPoint": "failCommand",
+              "mode": {
+                "times": 2
+              },
+              "data": {
+                "failCommands": [
+                  "ping",
+                  "saslContinue"
+                ],
+                "closeConnection": true,
+                "appName": "retryableWriteHandshakeTest"
+              }
+            }
+          }
+        },
+        {
+          "name": "runCommand",
+          "object": "database",
+          "arguments": {
+            "commandName": "ping",
+            "command": {
+              "ping": 1
+            }
+          },
+          "expectError": {
+            "isError": true
+          }
+        },
+        {
+          "name": "clientBulkWrite",
+          "object": "client",
+          "arguments": {
+            "models": [
+              {
+                "insertOne": {
+                  "namespace": "retryable-writes-handshake-tests.coll",
+                  "document": {
+                    "_id": 8,
+                    "x": 88
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "expectEvents": [
+        {
+          "client": "client",
+          "eventType": "cmap",
+          "events": [
+            {
+              "connectionCheckOutStartedEvent": {}
+            },
+            {
+              "connectionCheckOutStartedEvent": {}
+            },
+            {
+              "connectionCheckOutStartedEvent": {}
+            },
+            {
+              "connectionCheckOutStartedEvent": {}
+            }
+          ]
+        },
+        {
+          "client": "client",
+          "events": [
+            {
+              "commandStartedEvent": {
+                "command": {
+                  "ping": 1
+                },
+                "databaseName": "retryable-writes-handshake-tests"
+              }
+            },
+            {
+              "commandFailedEvent": {
+                "commandName": "ping"
+              }
+            },
+            {
+              "commandStartedEvent": {
+                "commandName": "bulkWrite"
+              }
+            },
+            {
+              "commandSucceededEvent": {
+                "commandName": "bulkWrite"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "description": "collection.insertOne succeeds after retryable handshake network error",
       "operations": [
         {
@@ -71,7 +294,8 @@
                   "ping",
                   "saslContinue"
                 ],
-                "closeConnection": true
+                "closeConnection": true,
+                "appName": "retryableWriteHandshakeTest"
               }
             }
           }
@@ -167,7 +391,8 @@
                   "ping",
                   "saslContinue"
                 ],
-                "closeConnection": true
+                "closeConnection": true,
+                "appName": "retryableWriteHandshakeTest"
               }
             }
           }
@@ -263,7 +488,8 @@
                   "ping",
                   "saslContinue"
                 ],
-                "closeConnection": true
+                "closeConnection": true,
+                "appName": "retryableWriteHandshakeTest"
               }
             }
           }
@@ -361,7 +587,8 @@
                   "ping",
                   "saslContinue"
                 ],
-                "closeConnection": true
+                "closeConnection": true,
+                "appName": "retryableWriteHandshakeTest"
               }
             }
           }
@@ -459,7 +686,8 @@
                   "ping",
                   "saslContinue"
                 ],
-                "closeConnection": true
+                "closeConnection": true,
+                "appName": "retryableWriteHandshakeTest"
               }
             }
           }
@@ -552,7 +780,8 @@
                   "ping",
                   "saslContinue"
                 ],
-                "closeConnection": true
+                "closeConnection": true,
+                "appName": "retryableWriteHandshakeTest"
               }
             }
           }
@@ -645,7 +874,8 @@
                   "ping",
                   "saslContinue"
                 ],
-                "closeConnection": true
+                "closeConnection": true,
+                "appName": "retryableWriteHandshakeTest"
               }
             }
           }
@@ -741,7 +971,8 @@
                   "ping",
                   "saslContinue"
                 ],
-                "closeConnection": true
+                "closeConnection": true,
+                "appName": "retryableWriteHandshakeTest"
               }
             }
           }
@@ -837,7 +1068,8 @@
                   "ping",
                   "saslContinue"
                 ],
-                "closeConnection": true
+                "closeConnection": true,
+                "appName": "retryableWriteHandshakeTest"
               }
             }
           }
@@ -935,7 +1167,8 @@
                   "ping",
                   "saslContinue"
                 ],
-                "closeConnection": true
+                "closeConnection": true,
+                "appName": "retryableWriteHandshakeTest"
               }
             }
           }
@@ -1033,7 +1266,8 @@
                   "ping",
                   "saslContinue"
                 ],
-                "closeConnection": true
+                "closeConnection": true,
+                "appName": "retryableWriteHandshakeTest"
               }
             }
           }
@@ -1126,7 +1360,8 @@
                   "ping",
                   "saslContinue"
                 ],
-                "closeConnection": true
+                "closeConnection": true,
+                "appName": "retryableWriteHandshakeTest"
               }
             }
           }
@@ -1219,7 +1454,8 @@
                   "ping",
                   "saslContinue"
                 ],
-                "closeConnection": true
+                "closeConnection": true,
+                "appName": "retryableWriteHandshakeTest"
               }
             }
           }
@@ -1315,7 +1551,8 @@
                   "ping",
                   "saslContinue"
                 ],
-                "closeConnection": true
+                "closeConnection": true,
+                "appName": "retryableWriteHandshakeTest"
               }
             }
           }
@@ -1411,7 +1648,8 @@
                   "ping",
                   "saslContinue"
                 ],
-                "closeConnection": true
+                "closeConnection": true,
+                "appName": "retryableWriteHandshakeTest"
               }
             }
           }
@@ -1509,7 +1747,8 @@
                   "ping",
                   "saslContinue"
                 ],
-                "closeConnection": true
+                "closeConnection": true,
+                "appName": "retryableWriteHandshakeTest"
               }
             }
           }
@@ -1607,7 +1846,8 @@
                   "ping",
                   "saslContinue"
                 ],
-                "closeConnection": true
+                "closeConnection": true,
+                "appName": "retryableWriteHandshakeTest"
               }
             }
           }
@@ -1709,7 +1949,8 @@
                   "ping",
                   "saslContinue"
                 ],
-                "closeConnection": true
+                "closeConnection": true,
+                "appName": "retryableWriteHandshakeTest"
               }
             }
           }
