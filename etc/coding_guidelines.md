@@ -82,7 +82,6 @@ src/<library>/
 │   ├── foo.hh  (Internal / Private Header, optional)
 │   └── foo.cpp (Implementation / Source File)
 ├── test/v<abi>/
-│   ├── foo.hh  (Test Header, optional)
 │   └── foo.cpp (Test Implementation / Source File)
 └── ...
 ```
@@ -105,17 +104,13 @@ src/<library>/
     - The internal (or normal) header must be the first include directive in the
       implementation file.
     - The internal (or normal) header must be the first include directive in the
-      test header.
-    - The test (or internal, or normal) header must be the first include
-      directive in the test implementation file.
+      test implementation file.
 - Each header must annotate its first include with `// IWYU pragma: export` so
   that consumers need not separately include the exported header:
     - `foo.hpp` exports `foo-fwd.hpp` — including `foo.hpp` satisfies any IWYU
       requirement for `foo-fwd.hpp`.
-    - `foo.hh` (lib) exports `foo.hpp` — including `foo.hh` satisfies any IWYU
+    - `foo.hh` exports `foo.hpp` — including `foo.hh` satisfies any IWYU
       requirement for `foo.hpp` (and transitively `foo-fwd.hpp`).
-    - `foo.hh` (test) exports `foo.hpp` or `foo.hh` (lib) — including the test
-      header satisfies any IWYU requirement for whichever it exports.
 - The forward header declares (but does not define) class types.
     - Root namespace redeclarations for class types belong here.
 - The normal header declares functions, declares variables, defines class types,
@@ -125,9 +120,6 @@ src/<library>/
     - `BSONCXX_ABI_EXPORT_CDECL_TESTING` may be required to use internal
       interfaces in test components.
 - The implementation file defines all declared functions and declared variables.
-- The test header defines Catch2 `StringMaker<T>` specializations.
-    - Tests MUST include the test header (containing `StringMaker<T>`
-      specializations) when one exists instead of the declaration header.
 - The test implementation file defines test cases for all related component
   interfaces.
     - Test implementation files MAY include internal headers for components
