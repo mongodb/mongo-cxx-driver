@@ -811,34 +811,6 @@ git remote add origin git@github.com:<username>/mongo-cxx-driver.git
 git push -u origin post-release-changes
 ```
 
-### Announce on Community Forums
-
-Post an announcement to the [Developer Community Forum](https://www.mongodb.com/community/forums/tags/c/announcements/driver-releases/110/cxx) under "Product & Driver Announcements > Driver Releases" and include the "production" and "cxx" tags.
-
-Template Title:
-
-```
-MongoDB C++11 Driver X.Y.Z Released
-```
-
-Template Body:
-
-```md
-The MongoDB C++ Driver Team is pleased to announce the availability of [MongoDB C++ Driver X.Y.Z](https://github.com/mongodb/mongo-cxx-driver/releases/tag/rX.Y.Z).
-
-Please note that this version of mongocxx requires [MongoDB C Driver A.B.C](https://github.com/mongodb/mongo-c-driver/releases/tag/A.B.C) or newer.
-
-See the [MongoDB C++ Driver Manual](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/) and the [Driver Installation Instructions](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/installation/) for more details on downloading, installing, and using this driver.
-
-NOTE: ABI stability is NOT supported for entities declared in the `v_noabi` namespace.
-
-Please feel free to post any questions on [Stack Overflow](https://stackoverflow.com/questions/tagged/mongodb%20c++). Bug reports should be filed against the [CXX](https://jira.mongodb.org/projects/CXX) project in the MongoDB JIRA. Your feedback on the C++11 driver is greatly appreciated.
-
-Sincerely,
-
-The C++ Driver Team
-```
-
 ### Update the Release Info Spreadsheet
 
 Add an entry to the [C/C++ Release Info](https://docs.google.com/spreadsheets/d/1yHfGmDnbA5-Qt8FX4tKWC5xk9AhzYZx1SKF4AD36ecY) spreadsheet documenting the date, release version, author (of the release), and additional comments.
