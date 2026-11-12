@@ -2420,9 +2420,11 @@ document::value operations::run(
             auto const view_on = arguments["viewOn"];
             auto const pipeline = arguments["pipeline"];
 
-            // Both fields must be present as a pair.
-            if (view_on && pipeline) {
+            if (view_on) {
                 opts.append(builder::basic::kvp("viewOn", view_on.get_string().value));
+            }
+
+            if (pipeline) {
                 opts.append(builder::basic::kvp("pipeline", pipeline.get_array().value));
             }
         }
