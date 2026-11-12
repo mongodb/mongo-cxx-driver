@@ -16,11 +16,11 @@
 
 //
 
+#include <bsoncxx/v1/stdx/string_view.hpp>
+#include <bsoncxx/v1/types/value.hpp>
+
 #include <mongocxx/v1/read_concern.hpp>
 #include <mongocxx/v1/write_concern.hpp>
-
-#include <bsoncxx/test/v1/stdx/string_view.hh>
-#include <bsoncxx/test/v1/types/value.hh>
 
 #include <utility>
 

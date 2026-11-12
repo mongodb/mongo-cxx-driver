@@ -12,15 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/test/v1/write_concern.hh>
+#include <mongocxx/v1/write_concern.hpp>
 
 //
 
-#include <bsoncxx/test/v1/document/value.hh>
-#include <bsoncxx/test/v1/stdx/optional.hh>
-#include <bsoncxx/test/v1/stdx/string_view.hh>
-
-#include <mongocxx/test/private/scoped_bson.hh>
+#include <bsoncxx/v1/document/value.hpp>
+#include <bsoncxx/v1/stdx/optional.hpp>
+#include <bsoncxx/v1/stdx/string_view.hpp>
 
 #include <chrono>
 #include <cstdint>
@@ -28,6 +26,8 @@
 #include <utility>
 
 #include <bsoncxx/private/bson.hh>
+
+#include <mongocxx/private/scoped_bson.hh>
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>

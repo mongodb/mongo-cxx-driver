@@ -12,20 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
-
-#include <bsoncxx/v1/types/value.hpp> // IWYU pragma: export
+#include <mongocxx/test/string_maker.hh>
 
 //
 
-#include <bsoncxx/test/v1/types/view.hh> // IWYU pragma: export
+#include <string>
 
-#include <catch2/catch_tostring.hpp>
+#include <mongocxx/private/scoped_bson.hh>
 
-CATCH_REGISTER_ENUM(
-    bsoncxx::v1::types::value::errc,
-    bsoncxx::v1::types::value::errc::zero,
-    bsoncxx::v1::types::value::errc::invalid_length_u32)
-
-template <>
-struct Catch::StringMaker<bsoncxx::v1::types::value> : StringMaker<bsoncxx::v1::types::view> {};
+std::string Catch::StringMaker<mongocxx::scoped_bson>::convert(mongocxx::scoped_bson const& value) {
+    return bsoncxx::test::stringify(value.view());
+}

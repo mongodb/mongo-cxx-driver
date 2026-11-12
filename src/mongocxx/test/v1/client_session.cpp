@@ -16,6 +16,9 @@
 
 //
 
+#include <bsoncxx/v1/document/view.hpp>
+#include <bsoncxx/v1/types/view.hpp>
+
 #include <mongocxx/v1/client.hpp>
 #include <mongocxx/v1/read_concern.hpp>    // IWYU pragma: keep: v1::transaction_options
 #include <mongocxx/v1/read_preference.hpp> // IWYU pragma: keep: v1::transaction_options
@@ -25,11 +28,6 @@
 #include <mongocxx/v1/exception.hh>
 #include <mongocxx/v1/server_error.hh>
 #include <mongocxx/v1/transaction_options.hh>
-
-#include <bsoncxx/test/v1/document/view.hh>
-#include <bsoncxx/test/v1/types/view.hh>
-
-#include <mongocxx/test/private/scoped_bson.hh>
 
 #include <cstdint>
 #include <functional>
@@ -42,6 +40,7 @@
 #include <bsoncxx/private/bson.hh>
 
 #include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/scoped_bson.hh>
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>

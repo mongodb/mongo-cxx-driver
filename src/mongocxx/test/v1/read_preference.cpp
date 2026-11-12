@@ -12,20 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/test/v1/read_preference.hh>
+#include <mongocxx/v1/read_preference.hpp>
 
 //
 
-#include <bsoncxx/test/v1/document/view.hh>
-#include <bsoncxx/test/v1/stdx/string_view.hh>
-
-#include <mongocxx/test/private/scoped_bson.hh>
+#include <bsoncxx/v1/document/view.hpp>
+#include <bsoncxx/v1/stdx/string_view.hpp>
 
 #include <chrono>
 #include <tuple>
 #include <utility>
 
 #include <bsoncxx/private/suppress_deprecation_warnings.hh>
+
+#include <mongocxx/private/scoped_bson.hh>
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>

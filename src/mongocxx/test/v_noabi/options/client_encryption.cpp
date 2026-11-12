@@ -18,12 +18,14 @@
 
 #include <mongocxx/v1/client-fwd.hpp>
 
-#include <bsoncxx/test/v1/document/value.hh>
-#include <bsoncxx/test/v1/stdx/optional.hh>
+#include <bsoncxx/v1/document/value.hpp>
+#include <bsoncxx/v1/stdx/optional.hpp>
 
 #include <mongocxx/client-fwd.hpp>
 
 #include <bsoncxx/document/view.hpp>
+
+#include <bsoncxx/test/catch.hh>
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>

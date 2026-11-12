@@ -16,11 +16,6 @@
 
 #include <bsoncxx/v1/detail/macros.hpp>
 
-#include <string>
-#include <system_error>
-
-#include <bsoncxx/test/stringify.hh>
-
 #include <catch2/catch_test_macros.hpp> // IWYU pragma: export
 #include <catch2/catch_tostring.hpp>
 
@@ -47,23 +42,3 @@
 
 #define CHECK_THROWS_WITH_CODE(_expr, _code) THROWS_WITH_CODE_IMPL(CHECK, _expr, _code)
 #define REQUIRE_THROWS_WITH_CODE(_expr, _code) THROWS_WITH_CODE_IMPL(REQUIRE, _expr, _code)
-
-template <>
-struct Catch::StringMaker<std::error_category> {
-    static std::string convert(std::error_category const& value) {
-        return value.name();
-    }
-};
-
-template <>
-struct Catch::StringMaker<std::error_condition> {
-    static std::string convert(std::error_condition const& value) {
-        std::string res;
-
-        res += value.category().name();
-        res += ':';
-        res += bsoncxx::test::stringify(value.value());
-
-        return res;
-    }
-};
