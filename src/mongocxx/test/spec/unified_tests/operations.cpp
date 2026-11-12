@@ -973,6 +973,10 @@ create_change_stream(entity::map& map, client_session* session, std::string cons
         options.full_document_before_change(full_document_before_change.get_string().value);
     }
 
+    if (auto const show_expanded_events = args["showExpandedEvents"]) {
+        options.show_expanded_events(show_expanded_events.get_bool().value);
+    }
+
     auto const save_result_as_entity = operation["saveResultAsEntity"];
     auto const key =
         save_result_as_entity ? string::to_string(save_result_as_entity.get_string().value) : std::string();

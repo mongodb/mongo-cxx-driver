@@ -93,6 +93,10 @@ class change_stream {
             ret.resume_after(bsoncxx::v1::document::value{to_v1(_resume_after->view())});
         }
 
+        if (_show_expanded_events) {
+            ret.show_expanded_events(*_show_expanded_events);
+        }
+
         if (_start_after) {
             ret.start_after(bsoncxx::v1::document::value{to_v1(_start_after->view())});
         }
@@ -266,6 +270,37 @@ class change_stream {
     }
 
     ///
+    /// Sets the showExpandedEvents option for the $changeStream.
+    ///
+    /// When set to true, the change stream event document will include additional fields
+    /// describing the change event (such as "nsType" and "disambiguatedPaths") and additional
+    /// event types (such as "createIndexes", "dropIndexes", and "modify") will be reported.
+    ///
+    /// Requires MongoDB 6.0 or newer.
+    ///
+    /// @param show_expanded_events
+    ///   The showExpandedEvents option to use on this stream.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called. This facilitates
+    ///   method chaining.
+    ///
+    change_stream& show_expanded_events(bool show_expanded_events) {
+        _show_expanded_events = show_expanded_events;
+        return *this;
+    }
+
+    ///
+    /// Gets the current showExpandedEvents option.
+    ///
+    /// @return
+    ///   The current showExpandedEvents option.
+    ///
+    bsoncxx::v_noabi::stdx::optional<bool> const& show_expanded_events() const {
+        return _show_expanded_events;
+    }
+
+    ///
     /// Specifies the logical starting point of the new change stream. The new stream will
     /// return the first notification after the given token.
     ///
@@ -386,6 +421,7 @@ class change_stream {
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _resume_after;
+    bsoncxx::v_noabi::stdx::optional<bool> _show_expanded_events;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _start_after;
     bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> _max_await_time;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::b_timestamp> _start_at_operation_time;

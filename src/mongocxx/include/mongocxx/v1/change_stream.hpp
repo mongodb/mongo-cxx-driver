@@ -164,6 +164,7 @@ class change_stream {
 /// - full_document_before_change ("fullDocumentBeforeChange")
 /// - max_await_time ("maxAwaitTimeMS")
 /// - resume_after ("resumeAfter")
+/// - show_expanded_events ("showExpandedEvents")
 /// - start_after ("startAfter")
 /// - start_at_operation_time ("startAtOperationTime")
 ///
@@ -286,6 +287,18 @@ class change_stream::options {
     /// @returns Empty optional when the "resumeAfter" option is unset.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view>) resume_after() const;
+
+    ///
+    /// Set the "showExpandedEvents" option.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(options&) show_expanded_events(bool v);
+
+    ///
+    /// Return the current "showExpandedEvents" option.
+    ///
+    /// @returns Empty optional when the "showExpandedEvents" option is unset.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v1::stdx::optional<bool>) show_expanded_events() const;
 
     ///
     /// Set the "startAfter" option.

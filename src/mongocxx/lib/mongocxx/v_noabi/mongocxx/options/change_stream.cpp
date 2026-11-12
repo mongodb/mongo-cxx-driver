@@ -53,6 +53,7 @@ change_stream::change_stream(v1::change_stream::options opts)
           }
           return {};
       }()},
+      _show_expanded_events{opts.show_expanded_events()},
       _start_after{[&]() -> decltype(_start_after) {
           if (auto& opt = v1::change_stream::options::internal::start_after(opts)) {
               return bsoncxx::v_noabi::from_v1(std::move(*opt));
@@ -90,6 +91,7 @@ bsoncxx::v_noabi::document::value change_stream::internal::to_document(change_st
     append_if(out, "fullDocument", self._full_document);
     append_if(out, "fullDocumentBeforeChange", self._full_document_before_change);
     append_if(out, "resumeAfter", self._resume_after);
+    append_if(out, "showExpandedEvents", self._show_expanded_events);
     append_if(out, "startAfter", self._start_after);
     append_if(out, "batchSize", self._batch_size);
     append_if(out, "collation", self._collation);

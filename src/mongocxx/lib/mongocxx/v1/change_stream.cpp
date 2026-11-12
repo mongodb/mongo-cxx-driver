@@ -215,6 +215,7 @@ class change_stream::options::impl {
     bsoncxx::v1::stdx::optional<std::string> _full_document_before_change;
     bsoncxx::v1::stdx::optional<std::chrono::milliseconds> _max_await_time;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _resume_after;
+    bsoncxx::v1::stdx::optional<bool> _show_expanded_events;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> _start_after;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::types::b_timestamp> _start_at_operation_time;
 
@@ -329,6 +330,15 @@ change_stream::options& change_stream::options::resume_after(bsoncxx::v1::docume
 
 bsoncxx::v1::stdx::optional<bsoncxx::v1::document::view> change_stream::options::resume_after() const {
     return impl::with(this)->_resume_after;
+}
+
+change_stream::options& change_stream::options::show_expanded_events(bool v) {
+    impl::with(this)->_show_expanded_events = std::move(v);
+    return *this;
+}
+
+bsoncxx::v1::stdx::optional<bool> change_stream::options::show_expanded_events() const {
+    return impl::with(this)->_show_expanded_events;
 }
 
 change_stream::options& change_stream::options::start_after(bsoncxx::v1::document::value v) {
@@ -473,6 +483,10 @@ bsoncxx::v1::document::value change_stream::options::internal::to_document(v1::c
 
     if (auto const opt = opts.max_await_time()) {
         bson += scoped_bson{BCON_NEW("maxAwaitTimeMS", BCON_INT64(opt->count()))};
+    }
+
+    if (auto const opt = opts.show_expanded_events()) {
+        bson += scoped_bson{BCON_NEW("showExpandedEvents", BCON_BOOL(*opt))};
     }
 
     return std::move(bson).value();

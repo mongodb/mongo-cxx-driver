@@ -633,6 +633,7 @@ TEST_CASE("fields", "[mongocxx][v1][change_stream][options]") {
         CHECK_FALSE(opts.full_document_before_change().has_value());
         CHECK_FALSE(opts.max_await_time().has_value());
         CHECK_FALSE(opts.resume_after().has_value());
+        CHECK_FALSE(opts.show_expanded_events().has_value());
         CHECK_FALSE(opts.start_after().has_value());
         CHECK_FALSE(opts.start_at_operation_time().has_value());
     }
@@ -652,6 +653,7 @@ TEST_CASE("fields", "[mongocxx][v1][change_stream][options]") {
         SET_AND_CHECK(opts, full_document_before_change, "full_document_before_change");
         SET_AND_CHECK(opts, max_await_time, std::chrono::milliseconds{123});
         SET_AND_CHECK(opts, resume_after, scoped_bson{R"({"resume_after": 1})"}.value());
+        SET_AND_CHECK(opts, show_expanded_events, true);
         SET_AND_CHECK(opts, start_after, scoped_bson{R"({"start_after": 1})"}.value());
         SET_AND_CHECK(opts, start_at_operation_time, (bsoncxx::v1::types::b_timestamp{123, 456}));
 

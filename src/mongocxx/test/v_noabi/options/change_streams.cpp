@@ -48,6 +48,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][change_streams]") {
     bsoncxx::v1::stdx::optional<bsoncxx::v1::types::value> comment;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> collation;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> resume_after;
+    bsoncxx::v1::stdx::optional<bool> show_expanded_events;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::document::value> start_after;
     bsoncxx::v1::stdx::optional<std::chrono::milliseconds> max_await_time;
     bsoncxx::v1::stdx::optional<bsoncxx::v1::types::b_timestamp> start_at_operation_time;
@@ -59,6 +60,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][change_streams]") {
         comment.emplace();
         collation.emplace();
         resume_after.emplace();
+        show_expanded_events.emplace();
         start_after.emplace();
         max_await_time.emplace();
         start_at_operation_time.emplace();
@@ -77,6 +79,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][change_streams]") {
             from.comment(*comment);
             from.collation(*collation);
             from.resume_after(*resume_after);
+            from.show_expanded_events(*show_expanded_events);
             from.start_after(*start_after);
             from.max_await_time(*max_await_time);
             from.start_at_operation_time(*start_at_operation_time);
@@ -91,6 +94,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][change_streams]") {
             CHECK(to.comment().value() == *comment);
             CHECK(to.collation().value() == collation->view());
             CHECK(to.resume_after() == resume_after->view());
+            CHECK(to.show_expanded_events() == *show_expanded_events);
             CHECK(to.start_after() == start_after->view());
             CHECK(to.max_await_time() == *max_await_time);
             CHECK(to.start_at_operation_time() == from_v1(*start_at_operation_time));
@@ -101,6 +105,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][change_streams]") {
             CHECK_FALSE(to.comment().has_value());
             CHECK_FALSE(to.collation().has_value());
             CHECK_FALSE(to.resume_after().has_value());
+            CHECK_FALSE(to.show_expanded_events().has_value());
             CHECK_FALSE(to.start_after().has_value());
             CHECK_FALSE(to.max_await_time().has_value());
             CHECK_FALSE(to.start_at_operation_time().has_value());
@@ -117,6 +122,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][change_streams]") {
             from.comment(from_v1(comment->view()));
             from.collation(from_v1(collation->view()));
             from.resume_after(from_v1(resume_after->view()));
+            from.show_expanded_events(*show_expanded_events);
             from.start_after(from_v1(start_after->view()));
             from.max_await_time(*max_await_time);
             from.start_at_operation_time(from_v1(*start_at_operation_time));
@@ -131,6 +137,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][change_streams]") {
             CHECK(to.comment().value() == *comment);
             CHECK(to.collation().value() == collation->view());
             CHECK(to.resume_after() == resume_after->view());
+            CHECK(to.show_expanded_events() == *show_expanded_events);
             CHECK(to.start_after() == start_after->view());
             CHECK(to.max_await_time() == *max_await_time);
             CHECK(to.start_at_operation_time() == *start_at_operation_time);
@@ -141,6 +148,7 @@ TEST_CASE("v1", "[mongocxx][v_noabi][options][change_streams]") {
             CHECK_FALSE(to.comment().has_value());
             CHECK_FALSE(to.collation().has_value());
             CHECK_FALSE(to.resume_after().has_value());
+            CHECK_FALSE(to.show_expanded_events().has_value());
             CHECK_FALSE(to.start_after().has_value());
             CHECK_FALSE(to.max_await_time().has_value());
             CHECK_FALSE(to.start_at_operation_time().has_value());
