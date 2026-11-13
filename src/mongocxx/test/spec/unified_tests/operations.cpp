@@ -1364,11 +1364,13 @@ bool collection_exists(document::view op) {
 document::value create_index(collection& coll, client_session* session, document::view const& operation) {
     auto arguments = operation["arguments"];
 
-    auto name = arguments["name"].get_string().value;
     auto keys = arguments["keys"].get_document().value;
 
     bsoncxx::builder::basic::document opts;
-    opts.append(bsoncxx::builder::basic::kvp("name", name));
+
+    // The "name" argument is optional; if omitted, the server generates an index name.
+    if (auto const name = arguments["name"])
+        opts.append(bsoncxx::builder::basic::kvp("name", name.get_string().value));
 
     if (session)
         return make_document(kvp("result", coll.create_index(*session, keys, opts.extract())));
@@ -1436,6 +1438,57 @@ document::value upload(entity::map& map, document::view op) {
     }
 
     return make_document(kvp("result", id));
+}
+
+// Implements the unified test format GridFS "rename" operation. mongocxx::gridfs::bucket does not
+// expose a rename API, so the file document in the files collection is updated directly. The
+// "_id" is matched with "$eq" so that a file id containing a query operator does not match any
+// documents (see the GridFS spec, "rename uses $eq to update the files collection document").
+document::value rename_file(entity::map& map, std::string const& object, document::view op) {
+    auto const arguments = op["arguments"];
+    auto& bucket = map.get_bucket(object);
+    auto& db = map.get_database_by_name(map.bucket_database_name(object));
+    auto files = db.collection(string::to_string(bucket.bucket_name()) + ".files");
+
+    files.update_one(
+        make_document(kvp("_id", make_document(kvp("$eq", arguments["id"].get_value())))),
+        make_document(kvp("$set", make_document(kvp("filename", arguments["newFilename"].get_string().value)))));
+
+    return make_document();
+}
+
+// Implements the unified test format GridFS "renameByName" operation, which renames all files
+// with the given filename. See rename_file() regarding direct access to the files collection.
+document::value rename_file_by_name(entity::map& map, std::string const& object, document::view op) {
+    auto const arguments = op["arguments"];
+    auto& bucket = map.get_bucket(object);
+    auto& db = map.get_database_by_name(map.bucket_database_name(object));
+    auto files = db.collection(string::to_string(bucket.bucket_name()) + ".files");
+
+    files.update_many(
+        make_document(kvp("filename", arguments["filename"].get_string().value)),
+        make_document(kvp("$set", make_document(kvp("filename", arguments["newFilename"].get_string().value)))));
+
+    return make_document();
+}
+
+// Implements the unified test format GridFS "deleteByName" operation. mongocxx::gridfs::bucket
+// does not expose a deleteByName API, so the files with the given filename are found and each is
+// deleted by its id.
+document::value delete_file_by_name(entity::map& map, std::string const& object, document::view op) {
+    auto const arguments = op["arguments"];
+    auto& bucket = map.get_bucket(object);
+    auto const filename = arguments["filename"].get_string().value;
+
+    std::vector<types::bson_value::value> file_ids;
+    for (auto&& file : bucket.find(make_document(kvp("filename", filename)))) {
+        file_ids.emplace_back(file["_id"].get_value());
+    }
+    for (auto const& file_id : file_ids) {
+        bucket.delete_file(file_id);
+    }
+
+    return make_document();
 }
 
 document::value delete_one(collection& coll, client_session* session, document::view operation) {
@@ -2395,6 +2448,18 @@ document::value operations::run(
         }
         return empty_doc;
     }
+    if (name == "dropDatabase") {
+        auto const db_name = string::to_string(op["arguments"]["database"].get_string().value);
+        auto& client = entity_map.get_client(object);
+        auto db = client.database(db_name);
+        auto* session = get_session(op_view, entity_map);
+        if (session) {
+            db.drop(*session);
+        } else {
+            db.drop();
+        }
+        return empty_doc;
+    }
     if (name == "createCollection") {
         auto const coll_name = string::to_string(op["arguments"]["collection"].get_string().value);
         auto& db = entity_map.get_database(object);
@@ -2469,6 +2534,27 @@ document::value operations::run(
         }
         return create_index(coll, nullptr, op_view);
     }
+    if (name == "dropIndex") {
+        auto& coll = entity_map.get_collection(object);
+        auto const index_name = op["arguments"]["name"].get_string().value;
+        auto* session = get_session(op_view, entity_map);
+        if (session) {
+            coll.indexes().drop_one(*session, index_name);
+        } else {
+            coll.indexes().drop_one(index_name);
+        }
+        return empty_doc;
+    }
+    if (name == "dropIndexes") {
+        auto& coll = entity_map.get_collection(object);
+        auto* session = get_session(op_view, entity_map);
+        if (session) {
+            coll.indexes().drop_all(*session);
+        } else {
+            coll.indexes().drop_all();
+        }
+        return empty_doc;
+    }
     if (name == "assertIndexNotExists") {
         REQUIRE_FALSE(index_exists(op_view));
         return empty_doc;
@@ -2488,16 +2574,26 @@ document::value operations::run(
     }
     if (name == "rename") {
         auto const& type = entity_map.type(object);
-        if (type != typeid(mongocxx::collection)) {
-            FAIL("rename operation requested on object with type " << type.name());
+        if (type == typeid(mongocxx::collection)) {
+            return rename(entity_map.get_collection(object), op_view);
         }
-        return rename(entity_map.get_collection(object), op_view);
+        if (type == typeid(mongocxx::gridfs::bucket)) {
+            return rename_file(entity_map, object, op_view);
+        }
+        FAIL("rename operation requested on object with type " << type.name());
+        return empty_doc;
+    }
+    if (name == "renameByName") {
+        return rename_file_by_name(entity_map, object, op_view);
     }
     if (name == "delete") {
         auto& bucket = entity_map.get_bucket(object);
         auto arguments = op["arguments"];
         bucket.delete_file(arguments.get_document().view()["id"].get_value());
         return empty_doc;
+    }
+    if (name == "deleteByName") {
+        return delete_file_by_name(entity_map, object, op_view);
     }
     if (name == "download") {
         auto& bucket = entity_map.get_bucket(object);

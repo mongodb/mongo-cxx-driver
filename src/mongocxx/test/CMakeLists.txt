@@ -409,6 +409,7 @@ set_property(TEST unified_format_specs APPEND PROPERTY ENVIRONMENT
     "TRANSACTIONS_UNIFIED_TESTS_PATH=${DATA_SOURCE_DIR}/transactions/unified"
     "UNIFIED_FORMAT_TESTS_PATH=${DATA_SOURCE_DIR}/unified-format"
     "VERSIONED_API_TESTS_PATH=${DATA_SOURCE_DIR}/versioned-api"
+    "WRITE_CONCERN_ERRORS_TESTS_PATH=${DATA_SOURCE_DIR}/read-write-concern/write-concern-errors"
 )
 
 if(MONGOCXX_ENABLE_SLOW_TESTS)

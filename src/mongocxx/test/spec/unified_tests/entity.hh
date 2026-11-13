@@ -61,6 +61,12 @@ class map {
 
     database& get_database_by_name(bsoncxx::stdx::string_view name);
 
+    // Records the name of the database containing the given bucket entity's files/chunks
+    // collections. Unified test GridFS operations like "rename" require direct access to the
+    // files collection, which mongocxx::gridfs::bucket does not expose.
+    void register_bucket_database(key_type const& bucket_key, std::string database_name);
+    std::string const& bucket_database_name(key_type const& bucket_key);
+
     void clear() noexcept;
     std::type_info const& type(key_type const& key);
 
@@ -83,6 +89,7 @@ class map {
     std::unordered_map<key_type, bsoncxx::types::bson_value::value> _value_map;
     std::unordered_map<key_type, mongocxx::cursor> _cursor_map;
     std::unordered_map<key_type, mongocxx::client_encryption> _client_encryption_map;
+    std::unordered_map<key_type, std::string> _bucket_database_names;
 };
 
 } // namespace entity
