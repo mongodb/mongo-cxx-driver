@@ -537,7 +537,7 @@ namespace static_assertions {
 BSONCXX_PRIVATE_WARNINGS_PUSH();
 BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wunused-function"));
 BSONCXX_PRIVATE_WARNINGS_DISABLE(Clang("-Wunused-template"));
-BSONCXX_PRIVATE_WARNINGS_DISABLE(Clang("-Wunneeded-member-function"));
+BSONCXX_PRIVATE_WARNINGS_DISABLE(Clang("-Wunused-member-function"));
 
 #define IMPLIES(a, b) ((!(a)) || (b))
 

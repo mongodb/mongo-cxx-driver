@@ -102,7 +102,6 @@ struct is_hashable : std::false_type {};
 BSONCXX_PRIVATE_WARNINGS_PUSH();
 BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wunused"));
 BSONCXX_PRIVATE_WARNINGS_DISABLE(Clang("-Wunused-member-function"));
-BSONCXX_PRIVATE_WARNINGS_DISABLE(Clang("-Wunneeded-member-function"));
 
 struct not_default_constructible {
     explicit not_default_constructible(int);
@@ -658,7 +657,7 @@ TEST_CASE("Optional: Hashing") {
 }
 
 BSONCXX_PRIVATE_WARNINGS_PUSH();
-BSONCXX_PRIVATE_WARNINGS_DISABLE(Clang("-Wunneeded-member-function"));
+BSONCXX_PRIVATE_WARNINGS_DISABLE(Clang("-Wunused-member-function"));
 struct in_place_convertible {
     bool constructed_from_in_place = false;
     in_place_convertible() = default;
