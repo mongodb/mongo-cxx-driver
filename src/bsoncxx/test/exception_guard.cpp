@@ -172,11 +172,8 @@ TEST_CASE("bsoncxx::test::exception_guard", "[test]") {
         };
 
         {
-            std::atomic_int counter;
-            std::atomic_bool latch;
-
-            std::atomic_init(&counter, 0);
-            std::atomic_init(&latch, false);
+            std::atomic_int counter{0};
+            std::atomic_bool latch{false};
 
             auto fn = [&] {
                 // A simple latch to maximize parallelism.
