@@ -17,8 +17,7 @@
 //
 
 #include <bsoncxx/v1/detail/bit.hpp>
-
-#include <bsoncxx/test/v1/oid.hh>
+#include <bsoncxx/v1/oid.hpp>
 
 #include <cstdint>
 #include <cstring>
@@ -27,6 +26,7 @@
 
 #include <bsoncxx/exception/error_code.hpp>
 
+#include <bsoncxx/test/catch.hh>
 #include <bsoncxx/test/system_error.hh>
 
 namespace {

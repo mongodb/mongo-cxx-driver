@@ -16,8 +16,8 @@
 
 //
 
-#include <bsoncxx/test/v1/stdx/optional.hh>
-#include <bsoncxx/test/v1/types/value.hh>
+#include <bsoncxx/v1/stdx/optional.hpp>
+#include <bsoncxx/v1/types/value.hpp>
 
 #include <cstdint>
 

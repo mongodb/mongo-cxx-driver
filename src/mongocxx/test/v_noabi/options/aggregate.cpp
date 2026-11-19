@@ -16,14 +16,14 @@
 
 //
 
+#include <bsoncxx/v1/document/value.hpp>
+#include <bsoncxx/v1/stdx/optional.hpp>
+#include <bsoncxx/v1/types/value.hpp>
+
 #include <mongocxx/v1/hint.hpp>
 #include <mongocxx/v1/read_concern.hpp>
 #include <mongocxx/v1/read_preference.hpp>
 #include <mongocxx/v1/write_concern.hpp>
-
-#include <bsoncxx/test/v1/document/value.hh>
-#include <bsoncxx/test/v1/stdx/optional.hh>
-#include <bsoncxx/test/v1/types/value.hh>
 
 #include <mongocxx/test/v_noabi/catch_helpers.hh>
 

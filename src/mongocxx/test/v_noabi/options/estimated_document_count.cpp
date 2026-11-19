@@ -16,10 +16,10 @@
 
 //
 
-#include <mongocxx/v1/read_preference.hpp>
+#include <bsoncxx/v1/stdx/optional.hpp>
+#include <bsoncxx/v1/types/value.hpp>
 
-#include <bsoncxx/test/v1/stdx/optional.hh>
-#include <bsoncxx/test/v1/types/value.hh>
+#include <mongocxx/v1/read_preference.hpp>
 
 #include <chrono>
 

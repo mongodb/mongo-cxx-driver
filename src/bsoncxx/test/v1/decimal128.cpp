@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/test/v1/decimal128.hh>
+#include <bsoncxx/v1/decimal128.hpp>
 
 //
 
-#include <bsoncxx/test/v1/exception.hh>
-#include <bsoncxx/test/v1/stdx/string_view.hh>
+#include <bsoncxx/v1/exception.hpp>
+#include <bsoncxx/v1/stdx/string_view.hpp>
 
 #include <climits>
 #include <cstddef>
@@ -28,7 +28,6 @@
 
 #include <bsoncxx/private/make_unique.hh>
 
-#include <bsoncxx/test/stringify.hh>
 #include <bsoncxx/test/system_error.hh>
 
 #include <catch2/matchers/catch_matchers_string.hpp>

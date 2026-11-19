@@ -4,7 +4,7 @@
     prelude/postlude headers.
 
     Usage:
-	
+
 	    add_macro_guard_test(
 	        PROJECT_NAME <name>
 	        PROJECT_TEST_PROPERTIES_TARGET <target>
@@ -12,20 +12,20 @@
 	        [EXCLUDE_REGEXES [pattern...]]
 	        GUARDED_MACROS [macro...]
 	    )
-	
+
 	PROJECT_NAME
 	    Either "bsoncxx" or "mongocxx".
-	
+
 	PROJECT_TEST_PROPERTIES_TARGET
 	    Either the bsoncxx_test_properties or mongocxx_test_properties target.
-	
+
 	GUARDED_MACROS
 	    List of macros that should be guarded by prelude/postlude headers.
-	
+
 	INCLUDE_PATTERNS
 	    List of regex filters for headers to be added to the tests. Must be
         relative to PROJECT_SOURCE_DIR.
-	
+
 	EXCLUDE_REGEXES
 	    List of regex filters for headers to be excluded. Applied after
         INCLUDE_PATTERNS.
@@ -87,6 +87,9 @@ function(add_macro_guard_test)
 
     add_library(test_${PARSED_PROJECT_NAME}_macro_guards STATIC EXCLUDE_FROM_ALL)
     target_link_libraries(test_${PARSED_PROJECT_NAME}_macro_guards PRIVATE ${PARSED_PROJECT_TEST_PROPERTIES_TARGET})
+
+    # Exclude (otherwise always-included) string_maker.hh to avoid polluting macro guard tests.
+    set_property(TARGET test_${PARSED_PROJECT_NAME}_macro_guards PROPERTY DISABLE_STRING_MAKER_ALWAYS_INCLUDE ON)
 
     # Avoid noisy warnings.
     target_compile_options(test_${PARSED_PROJECT_NAME}_macro_guards PRIVATE

@@ -12,16 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/test/v1/document/view.hh>
+#include <bsoncxx/v1/document/view.hpp>
 
 //
 
-#include <bsoncxx/test/v1/element/view.hh>
-#include <bsoncxx/test/v1/exception.hh>
-#include <bsoncxx/test/v1/stdx/string_view.hh>
-#include <bsoncxx/test/v1/types/id.hh>
-#include <bsoncxx/test/v1/types/value.hh>
-#include <bsoncxx/test/v1/types/view.hh>
+#include <bsoncxx/v1/element/view.hpp>
+#include <bsoncxx/v1/exception.hpp>
+#include <bsoncxx/v1/stdx/string_view.hpp>
+#include <bsoncxx/v1/types/id.hpp>
+#include <bsoncxx/v1/types/value.hpp>
+#include <bsoncxx/v1/types/view.hpp>
 
 #include <climits>
 #include <cstddef>
@@ -34,7 +34,6 @@
 
 #include <bsoncxx/private/make_unique.hh>
 
-#include <bsoncxx/test/stringify.hh>
 #include <bsoncxx/test/system_error.hh>
 
 #include <catch2/matchers/catch_matchers_string.hpp>

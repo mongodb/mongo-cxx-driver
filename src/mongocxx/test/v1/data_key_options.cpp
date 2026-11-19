@@ -16,13 +16,11 @@
 
 //
 
+#include <bsoncxx/v1/document/value.hpp>
+#include <bsoncxx/v1/stdx/optional.hpp>
+#include <bsoncxx/v1/stdx/string_view.hpp>
+
 #include <mongocxx/v1/data_key_options.hh>
-
-#include <bsoncxx/test/v1/document/value.hh>
-#include <bsoncxx/test/v1/stdx/optional.hh>
-#include <bsoncxx/test/v1/stdx/string_view.hh>
-
-#include <mongocxx/test/private/scoped_bson.hh>
 
 #include <cstdint>
 #include <string>
@@ -34,6 +32,7 @@
 
 #include <mongocxx/private/mock.hh>
 #include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/scoped_bson.hh>
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>

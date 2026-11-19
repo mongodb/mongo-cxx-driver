@@ -16,6 +16,8 @@
 
 //
 
+#include <bsoncxx/v1/stdx/optional.hpp>
+
 #include <mongocxx/v1/client.hpp>
 #include <mongocxx/v1/collection.hpp>
 #include <mongocxx/v1/database.hpp>
@@ -25,14 +27,12 @@
 #include <mongocxx/v1/pool.hpp>
 #include <mongocxx/v1/uri.hpp>
 
-#include <bsoncxx/test/v1/stdx/optional.hh>
-
-#include <mongocxx/test/private/scoped_bson.hh>
-
 #include <atomic>
 #include <cstdint>
 #include <fstream>
 #include <thread>
+
+#include <mongocxx/private/scoped_bson.hh>
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>

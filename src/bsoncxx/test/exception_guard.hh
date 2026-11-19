@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <bsoncxx/test/v1/stdx/string_view.hh>
+#include <bsoncxx/v1/stdx/string_view.hpp>
 
 #include <cstddef>
 #include <exception>

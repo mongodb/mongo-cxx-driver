@@ -16,6 +16,8 @@
 
 //
 
+#include <bsoncxx/v1/stdx/optional.hpp>
+
 #include <mongocxx/v1/config/export.hpp>
 #include <mongocxx/v1/events/command_failed.hpp>
 #include <mongocxx/v1/events/command_started.hpp>
@@ -29,8 +31,6 @@
 #include <mongocxx/v1/events/topology_closed.hpp>
 #include <mongocxx/v1/events/topology_description_changed.hpp>
 #include <mongocxx/v1/events/topology_opening.hpp>
-
-#include <bsoncxx/test/v1/stdx/optional.hh>
 
 #include <functional>
 #include <utility>

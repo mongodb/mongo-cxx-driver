@@ -17,16 +17,14 @@
 //
 
 #include <mongocxx/v1/exception.hpp>
-#include <mongocxx/v1/read_concern.hpp>    // IWYU pragma: keep
+#include <mongocxx/v1/read_concern.hpp> // IWYU pragma: keep
+#include <mongocxx/v1/read_concern.hpp>
 #include <mongocxx/v1/read_preference.hpp> // IWYU pragma: keep
-#include <mongocxx/v1/write_concern.hpp>   // IWYU pragma: keep
+#include <mongocxx/v1/read_preference.hpp>
+#include <mongocxx/v1/write_concern.hpp> // IWYU pragma: keep
+#include <mongocxx/v1/write_concern.hpp>
 
 #include <mongocxx/v1/collection.hh>
-
-#include <mongocxx/test/private/scoped_bson.hh>
-#include <mongocxx/test/v1/read_concern.hh>
-#include <mongocxx/test/v1/read_preference.hh>
-#include <mongocxx/test/v1/write_concern.hh>
 
 #include <cstdint>
 #include <string>
@@ -34,6 +32,9 @@
 #include <utility>
 
 #include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/scoped_bson.hh>
+
+#include <bsoncxx/test/system_error.hh>
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>

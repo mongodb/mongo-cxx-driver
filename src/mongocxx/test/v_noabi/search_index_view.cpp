@@ -12,9 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/test/v1/stdx/optional.hh>
+#include <bsoncxx/v1/stdx/optional.hpp>
 
-#include <mongocxx/test/private/scoped_bson.hh>
 #include <mongocxx/test/v_noabi/client_helpers.hh>
 
 #include <chrono>
@@ -31,6 +30,8 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/search_index_model.hpp>
 #include <mongocxx/search_index_view.hpp>
+
+#include <mongocxx/private/scoped_bson.hh>
 
 #include <bsoncxx/test/catch.hh>
 

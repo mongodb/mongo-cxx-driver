@@ -19,9 +19,11 @@
 #include <mongocxx/v1/client-fwd.hpp>
 #include <mongocxx/v1/pool-fwd.hpp>
 
-#include <mongocxx/test/private/scoped_bson.hh>
+#include <bsoncxx/v1/document/value.hpp>
 
 #include <utility>
+
+#include <mongocxx/private/scoped_bson.hh>
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>

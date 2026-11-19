@@ -12,14 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/test/v1/instance.hh>
+#include <mongocxx/v1/instance.hpp>
 
 //
 
-#include <bsoncxx/test/v1/stdx/string_view.hh>
+#include <bsoncxx/v1/stdx/string_view.hpp>
+
+#include <mongocxx/v1/logger.hpp>
 
 #include <mongocxx/test/v1/capture_stderr.hh>
-#include <mongocxx/test/v1/logger.hh>
 
 #include <functional>
 #include <string>
@@ -29,8 +30,6 @@
 #include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/private/mongoc.hh>
-
-#include <bsoncxx/test/stringify.hh>
 
 #include <mongocxx/test/subprocess.hh>
 

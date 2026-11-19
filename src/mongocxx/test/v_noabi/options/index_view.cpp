@@ -16,12 +16,14 @@
 
 //
 
+#include <bsoncxx/v1/document/value.hpp>
+#include <bsoncxx/v1/stdx/optional.hpp>
+
 #include <mongocxx/v1/write_concern.hpp>
 
-#include <bsoncxx/test/v1/document/value.hh>
-#include <bsoncxx/test/v1/stdx/optional.hh>
-
 #include <chrono>
+
+#include <bsoncxx/test/catch.hh>
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>

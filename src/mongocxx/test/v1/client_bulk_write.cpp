@@ -16,6 +16,9 @@
 
 //
 
+#include <bsoncxx/v1/array/value.hpp>
+#include <bsoncxx/v1/types/value.hpp>
+
 #include <mongocxx/v1/hint.hpp>
 #include <mongocxx/v1/write_concern.hpp>
 
@@ -23,15 +26,13 @@
 
 #include <mongocxx/v1/write_concern.hh>
 
-#include <bsoncxx/test/v1/array/value.hh>
-#include <bsoncxx/test/v1/types/value.hh>
-
-#include <mongocxx/test/private/scoped_bson.hh>
-
 #include <cstdint>
 #include <utility>
 
 #include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/scoped_bson.hh>
+
+#include <bsoncxx/test/system_error.hh>
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>

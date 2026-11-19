@@ -39,12 +39,11 @@ target_link_libraries(mongocxx_mocked PUBLIC bsoncxx_testing)
 target_compile_definitions(mongocxx_mocked PUBLIC MONGOCXX_TESTING)
 
 set(mongocxx_test_bsoncxx
-    ${PROJECT_SOURCE_DIR}/../bsoncxx/test/v1/array/view_string_maker.cpp
-    ${PROJECT_SOURCE_DIR}/../bsoncxx/test/v1/document/view_string_maker.cpp
-    ${PROJECT_SOURCE_DIR}/../bsoncxx/test/v1/element/view_string_maker.cpp
+    ${PROJECT_SOURCE_DIR}/../bsoncxx/test/string_maker.cpp
 )
 
 set(mongocxx_test_sources_private
+    private/string_maker.cpp
     private/scoped_bson.cpp
     private/mongoc_version.cpp
 )
@@ -237,11 +236,13 @@ add_executable(test_driver
 target_link_libraries(test_driver PRIVATE spec_test_common client_helpers)
 
 add_executable(test_instance
+    ${mongocxx_test_bsoncxx}
     subprocess.cpp
     v_noabi/instance.cpp
     v_noabi/logging.cpp
     v1/capture_stderr.cpp
     v1/instance.cpp
+    private/string_maker.cpp
 )
 target_compile_definitions(test_instance PRIVATE MONGOCXX_TEST_DISABLE_MAIN_INSTANCE)
 
@@ -306,6 +307,13 @@ target_include_directories(mongocxx_test_properties INTERFACE
 )
 # Use `__vectorcall` by default with MSVC to catch missing `__cdecl`.
 target_compile_options(mongocxx_test_properties INTERFACE "$<$<CXX_COMPILER_ID:MSVC>:/Gv>")
+
+# Unconditionally include `Catch::StringMaker<T>` explicit specialization declarations in all test components.
+set(enable_string_maker_always_include "$<NOT:$<BOOL:$<TARGET_PROPERTY:DISABLE_STRING_MAKER_ALWAYS_INCLUDE>>>")
+target_compile_options(mongocxx_test_properties INTERFACE
+    "$<$<AND:${enable_string_maker_always_include},$<CXX_COMPILER_ID:MSVC>>:/FImongocxx/test/string_maker.hh>"
+    "$<$<AND:${enable_string_maker_always_include},$<NOT:$<CXX_COMPILER_ID:MSVC>>>:-include;mongocxx/test/string_maker.hh>"
+)
 add_library(mongocxx::test_properties ALIAS mongocxx_test_properties)
 
 add_library(mongocxx_test_properties_with_main INTERFACE)

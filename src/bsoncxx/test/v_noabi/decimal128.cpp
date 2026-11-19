@@ -16,7 +16,7 @@
 
 //
 
-#include <bsoncxx/test/v1/decimal128.hh>
+#include <bsoncxx/v1/decimal128.hpp>
 
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>

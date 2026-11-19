@@ -16,7 +16,7 @@
 
 //
 
-#include <bsoncxx/test/v1/stdx/string_view.hh>
+#include <bsoncxx/v1/stdx/string_view.hpp>
 
 #include <atomic>
 #include <chrono>

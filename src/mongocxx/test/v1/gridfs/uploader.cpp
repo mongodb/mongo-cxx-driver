@@ -16,13 +16,13 @@
 
 //
 
+#include <bsoncxx/v1/stdx/optional.hpp>
+#include <bsoncxx/v1/types/value.hpp>
+
 #include <mongocxx/v1/exception.hpp>
 #include <mongocxx/v1/gridfs/upload_result.hpp> // IWYU pragma: keep
 
 #include <mongocxx/v1/collection.hh>
-
-#include <bsoncxx/test/v1/stdx/optional.hh>
-#include <bsoncxx/test/v1/types/value.hh>
 
 #include <cstdint>
 #include <string>
@@ -32,6 +32,8 @@
 #include <bsoncxx/private/bson.hh>
 
 #include <mongocxx/private/mongoc.hh>
+
+#include <bsoncxx/test/system_error.hh>
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>

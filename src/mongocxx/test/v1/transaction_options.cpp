@@ -16,9 +16,9 @@
 
 //
 
-#include <mongocxx/test/v1/read_concern.hh>
-#include <mongocxx/test/v1/read_preference.hh>
-#include <mongocxx/test/v1/write_concern.hh>
+#include <mongocxx/v1/read_concern.hpp>
+#include <mongocxx/v1/read_preference.hpp>
+#include <mongocxx/v1/write_concern.hpp>
 
 #include <chrono>
 #include <utility>

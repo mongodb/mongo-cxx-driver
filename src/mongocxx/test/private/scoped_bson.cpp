@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/test/private/scoped_bson.hh>
+#include <mongocxx/private/scoped_bson.hh>
 
 //
 
-#include <bsoncxx/test/v1/document/value.hh>
+#include <bsoncxx/v1/document/value.hpp>
 
 #include <cstdint>
 #include <stdexcept>
@@ -24,8 +24,6 @@
 
 #include <bsoncxx/private/bson.hh>
 #include <bsoncxx/private/make_unique.hh>
-
-#include <bsoncxx/test/stringify.hh>
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>

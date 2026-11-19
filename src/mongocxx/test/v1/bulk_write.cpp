@@ -16,21 +16,18 @@
 
 //
 
+#include <bsoncxx/v1/array/value.hpp>
 #include <bsoncxx/v1/detail/macros.hpp>
 #include <bsoncxx/v1/detail/type_traits.hpp>
+#include <bsoncxx/v1/document/value.hpp>
+#include <bsoncxx/v1/stdx/string_view.hpp>
+#include <bsoncxx/v1/types/value.hpp>
 
 #include <mongocxx/v1/exception.hpp>
 #include <mongocxx/v1/hint.hpp>
 #include <mongocxx/v1/read_concern.hpp>
 #include <mongocxx/v1/server_error.hpp>
 #include <mongocxx/v1/write_concern.hpp>
-
-#include <bsoncxx/test/v1/array/value.hh>
-#include <bsoncxx/test/v1/document/value.hh>
-#include <bsoncxx/test/v1/stdx/string_view.hh>
-#include <bsoncxx/test/v1/types/value.hh>
-
-#include <mongocxx/test/private/scoped_bson.hh>
 
 #include <array>
 #include <cstddef>
@@ -41,6 +38,7 @@
 #include <bsoncxx/private/bson.hh>
 
 #include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/scoped_bson.hh>
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>

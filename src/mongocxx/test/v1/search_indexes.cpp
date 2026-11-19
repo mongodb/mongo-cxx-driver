@@ -16,11 +16,10 @@
 
 //
 
-#include <mongocxx/test/private/scoped_bson.hh>
-
 #include <utility>
 
 #include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/scoped_bson.hh>
 
 #include <catch2/catch_test_macros.hpp>
 

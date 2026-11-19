@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/test/v1/oid.hh>
+#include <bsoncxx/v1/oid.hpp>
 
 //
 
-#include <bsoncxx/test/v1/exception.hh>
+#include <bsoncxx/v1/exception.hpp>
 
 #include <cstdint>
 #include <ctime>
@@ -24,7 +24,6 @@
 #include <system_error>
 #include <vector>
 
-#include <bsoncxx/test/stringify.hh>
 #include <bsoncxx/test/system_error.hh>
 
 #include <catch2/matchers/catch_matchers_string.hpp>

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/test/v1/exception.hh>
+#include <bsoncxx/v1/exception.hpp>
 
 //
 

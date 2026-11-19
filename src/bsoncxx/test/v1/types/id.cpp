@@ -12,13 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/test/v1/types/id.hh>
+#include <bsoncxx/v1/types/id.hpp>
 
 //
 
 #include <cstdint>
-
-#include <bsoncxx/test/stringify.hh>
 
 #include <catch2/catch_test_macros.hpp>
 

@@ -18,11 +18,10 @@
 
 #include <bsoncxx/v1/stdx/string_view.hpp>
 
-#include <mongocxx/test/private/scoped_bson.hh>
-
 #include <bsoncxx/private/bson.hh>
 
 #include <mongocxx/private/mongoc.hh>
+#include <mongocxx/private/scoped_bson.hh>
 
 #include <catch2/catch_test_macros.hpp>
 

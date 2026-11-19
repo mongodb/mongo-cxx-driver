@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/test/v1/stdx/string_view.hh>
+#include <bsoncxx/v1/stdx/string_view.hpp>
 
 //
 
@@ -34,7 +34,6 @@
 #include <bsoncxx/v1/detail/compare.hpp>
 #include <bsoncxx/v1/detail/type_traits.hpp>
 
-#include <bsoncxx/test/stringify.hh>
 #include <bsoncxx/test/system_error.hh>
 
 namespace {

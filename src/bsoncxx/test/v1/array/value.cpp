@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/test/v1/array/value.hh>
+#include <bsoncxx/v1/array/value.hpp>
 
 //
 
-#include <bsoncxx/test/v1/stdx/optional.hh>
-#include <bsoncxx/test/v1/types/view.hh>
+#include <bsoncxx/v1/stdx/optional.hpp>
+#include <bsoncxx/v1/types/view.hpp>
 
 #include <cstddef>
 #include <cstdint>
@@ -26,7 +26,6 @@
 #include <memory>
 #include <utility>
 
-#include <bsoncxx/test/stringify.hh>
 #include <bsoncxx/test/system_error.hh>
 
 #include <catch2/catch_test_macros.hpp>

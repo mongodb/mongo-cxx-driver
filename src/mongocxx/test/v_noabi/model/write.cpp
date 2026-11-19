@@ -12,13 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/v1/array/value.hpp>
+#include <bsoncxx/v1/stdx/optional.hpp>
+#include <bsoncxx/v1/types/view.hpp>
+
 #include <mongocxx/v1/bulk_write.hpp>
 #include <mongocxx/v1/hint.hpp>
-
-#include <bsoncxx/test/v1/array/value.hh>
-#include <bsoncxx/test/v1/stdx/optional.hh>
-
-#include <mongocxx/test/private/scoped_bson.hh>
 
 #include <array>
 #include <cstddef>
@@ -39,6 +38,10 @@
 #include <mongocxx/model/update_one.hpp>
 #include <mongocxx/model/write.hpp>
 #include <mongocxx/write_type.hpp>
+
+#include <mongocxx/private/scoped_bson.hh>
+
+#include <bsoncxx/test/catch.hh>
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>

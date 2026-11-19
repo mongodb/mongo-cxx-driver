@@ -16,19 +16,19 @@
 
 //
 
+#include <bsoncxx/v1/types/value.hpp>
+
 #include <mongocxx/v1/cursor.hpp>
 #include <mongocxx/v1/hint.hpp>
 #include <mongocxx/v1/read_concern.hpp>
 #include <mongocxx/v1/read_preference.hpp>
 
-#include <bsoncxx/test/v1/types/value.hh>
-
-#include <mongocxx/test/private/scoped_bson.hh>
-
 #include <chrono>
 #include <cstdint>
 #include <string>
 #include <utility>
+
+#include <mongocxx/private/scoped_bson.hh>
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>
