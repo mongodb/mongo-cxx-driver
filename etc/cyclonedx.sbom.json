@@ -1,16 +1,16 @@
 {
   "components": [
     {
-      "bom-ref": "pkg:github/mongodb/mongo-c-driver@2.5.8",
+      "bom-ref": "pkg:github/mongodb/mongo-c-driver@2.5.9",
       "copyright": "Copyright 2009-present MongoDB, Inc.",
       "externalReferences": [
         {
           "type": "distribution",
-          "url": "https://github.com/mongodb/mongo-c-driver/archive/2.5.8.tar.gz"
+          "url": "https://github.com/mongodb/mongo-c-driver/archive/2.5.9.tar.gz"
         },
         {
           "type": "website",
-          "url": "https://github.com/mongodb/mongo-c-driver/tree/2.5.8"
+          "url": "https://github.com/mongodb/mongo-c-driver/tree/2.5.9"
         }
       ],
       "group": "mongodb",
@@ -22,14 +22,14 @@
         }
       ],
       "name": "mongo-c-driver",
-      "purl": "pkg:github/mongodb/mongo-c-driver@2.5.8",
+      "purl": "pkg:github/mongodb/mongo-c-driver@2.5.9",
       "type": "library",
-      "version": "2.5.8"
+      "version": "2.5.9"
     }
   ],
   "dependencies": [
     {
-      "ref": "pkg:github/mongodb/mongo-c-driver@2.5.8"
+      "ref": "pkg:github/mongodb/mongo-c-driver@2.5.9"
     }
   ],
   "metadata": {
