@@ -102,7 +102,6 @@ struct is_hashable : std::false_type {};
 BSONCXX_PRIVATE_WARNINGS_PUSH();
 BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wunused"));
 BSONCXX_PRIVATE_WARNINGS_DISABLE(Clang("-Wunused-member-function"));
-BSONCXX_PRIVATE_WARNINGS_DISABLE(Clang("-Wunneeded-member-function"));
 
 struct not_default_constructible {
     explicit not_default_constructible(int);
@@ -133,7 +132,6 @@ BSONCXX_PRIVATE_WARNINGS_POP();
 
 // Improve quality of error messages on failure (in particular for MSVC).
 #define STATIC_ASSERT_EXPR(expr) static_assert((expr), "expected: " #expr)
-#define STATIC_ASSERT_EXPR_EQUAL(a, b) static_assert((a) == (b), "expected: " #a " == " #b)
 
 BSONCXX_PRIVATE_WARNINGS_PUSH();
 BSONCXX_PRIVATE_WARNINGS_DISABLE(GNU("-Wunused-macros"));
@@ -145,6 +143,7 @@ BSONCXX_PRIVATE_WARNINGS_POP();
 // behavior.
 #define STATIC_ASSERT_EXPR_ALIKE(a, b) STATIC_ASSERT_EXPR_IMPLIES(a, b)
 #else
+#define STATIC_ASSERT_EXPR_EQUAL(a, b) static_assert((a) == (b), "expected: " #a " == " #b)
 #define STATIC_ASSERT_EXPR_ALIKE(a, b) STATIC_ASSERT_EXPR_EQUAL(a, b)
 #endif
 
@@ -658,7 +657,7 @@ TEST_CASE("Optional: Hashing") {
 }
 
 BSONCXX_PRIVATE_WARNINGS_PUSH();
-BSONCXX_PRIVATE_WARNINGS_DISABLE(Clang("-Wunneeded-member-function"));
+BSONCXX_PRIVATE_WARNINGS_DISABLE(Clang("-Wunused-member-function"));
 struct in_place_convertible {
     bool constructed_from_in_place = false;
     in_place_convertible() = default;
