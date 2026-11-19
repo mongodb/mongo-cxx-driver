@@ -25,6 +25,10 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
     overrides, applied per-client and per-pool via
     `structured_logging_opts()`.
 
+### Changed
+
+- Bump the minimum required C Driver version to [2.5.9](https://github.com/mongodb/mongo-c-driver/releases/tag/2.5.9).
+
 ## 4.6.2
 
 ### Fixed
