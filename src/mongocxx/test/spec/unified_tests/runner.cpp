@@ -101,49 +101,56 @@ auto const kLocalMasterKey =
     "\x4f\x69\x37\x36\x36\x4a\x7a\x58\x5a\x42\x64\x42\x64\x62\x64\x4d\x75\x72"
     "\x64\x6f\x6e\x4a\x31\x64";
 
-bsoncxx::document::value get_kms_values() {
-    char key_storage[96];
-    memcpy(&(key_storage[0]), kLocalMasterKey, 96);
-    bsoncxx::types::b_binary const local_master_key{
-        bsoncxx::binary_sub_type::k_binary, 96, reinterpret_cast<uint8_t const*>(&key_storage)};
+// Returns the credential values for the given KMS provider. Credentials are read from the
+// environment on demand so that only providers referenced by a test file's "kmsProviders" require
+// the corresponding environment variables to be set (e.g. a test file using only the "local"
+// provider does not require any KMS credentials).
+bsoncxx::document::value get_kms_values(bsoncxx::stdx::string_view provider) {
+    if (provider == "aws") {
+        return make_document(
+            kvp("accessKeyId", test_util::getenv_or_fail("MONGOCXX_TEST_AWS_ACCESS_KEY_ID")),
+            kvp("secretAccessKey", test_util::getenv_or_fail("MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY")));
+    }
+    if (provider == "azure") {
+        return make_document(
+            kvp("tenantId", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_TENANT_ID")),
+            kvp("clientId", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_ID")),
+            kvp("clientSecret", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_SECRET")),
+            kvp("accessToken", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_ACCESS_TOKEN")));
+    }
+    if (provider == "gcp") {
+        return make_document(
+            kvp("email", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_EMAIL")),
+            kvp("privateKey", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_PRIVATEKEY")),
+            kvp("accessToken", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_ACCESS_TOKEN")));
+    }
+    if (provider == "kmip") {
+        return make_document(kvp("endpoint", "localhost:5698"));
+    }
+    if (provider == "local") {
+        char key_storage[96];
+        memcpy(&(key_storage[0]), kLocalMasterKey, 96);
+        bsoncxx::types::b_binary const local_master_key{
+            bsoncxx::binary_sub_type::k_binary, 96, reinterpret_cast<uint8_t const*>(&key_storage)};
+        return make_document(kvp("key", local_master_key));
+    }
 
-    auto kms_doc = make_document(
-        kvp("aws",
-            make_document(
-                kvp("accessKeyId", test_util::getenv_or_fail("MONGOCXX_TEST_AWS_ACCESS_KEY_ID")),
-                kvp("secretAccessKey", test_util::getenv_or_fail("MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY")))),
-        kvp("azure",
-            make_document(
-                kvp("tenantId", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_TENANT_ID")),
-                kvp("clientId", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_ID")),
-                kvp("clientSecret", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_SECRET")),
-                kvp("accessToken", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_ACCESS_TOKEN")))),
-        kvp("gcp",
-            make_document(
-                kvp("email", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_EMAIL")),
-                kvp("privateKey", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_PRIVATEKEY")),
-                kvp("accessToken", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_ACCESS_TOKEN")))),
-        kvp("kmip", make_document(kvp("endpoint", "localhost:5698"))),
-        kvp("local", make_document(kvp("key", local_master_key))));
-
-    return kms_doc;
+    FAIL("FAIL: got unexpected KMS provider: " << provider);
+    return make_document();
 }
 
 bsoncxx::document::value parse_kms_doc(bsoncxx::document::view_or_value test_kms_doc) {
-    auto const kms_values = get_kms_values();
     auto doc = bsoncxx::builder::basic::document{};
     auto const test_kms_doc_view = test_kms_doc.view();
     for (auto const& it : test_kms_doc_view) {
         auto const provider = it.key();
-        if (!kms_values[provider]) {
-            FAIL("FAIL: got unexpected KMS provider: " << provider);
-        }
+        auto const provider_values = get_kms_values(provider);
         auto variables_doc = bsoncxx::builder::basic::document{};
         auto const variables = test_kms_doc_view[provider].get_document().view();
         for (auto const& i : variables) {
             auto const variable = i.key();
-            auto const actual_value = kms_values[provider][variable];
-            if (!kms_values[provider][variable]) {
+            auto const actual_value = provider_values[variable];
+            if (!actual_value) {
                 FAIL(
                     "FAIL: expecting to find variable: '" << variable << "' in KMS doc for provider: '" << provider
                                                           << "'");
@@ -307,6 +314,31 @@ bool compatible_with_server(bsoncxx::array::element const& requirement) {
                 // Test environment not configured for OIDC.
                 return false;
             }
+        }
+    }
+
+    if (auto const csfle = requirement["csfle"]) {
+        bool csfle_required = false;
+
+        if (csfle.type() == bsoncxx::type::k_bool) {
+            csfle_required = csfle.get_bool().value;
+        } else if (csfle.type() == bsoncxx::type::k_document) {
+            // The document form may also specify a minimum libmongocrypt version.
+            csfle_required = true;
+        } else {
+            FAIL("unexpected type for \"csfle\" runOnRequirement: " << to_json(requirement.get_document().value));
+        }
+
+        if (csfle_required) {
+#if defined(MONGOC_ENABLE_CLIENT_SIDE_ENCRYPTION)
+            // CSFLE tests also require the CSE test environment to be configured.
+            if (test_util::client_side_encryption_enabled_or_skip_impl() != test_util::cseeos_result::enable) {
+                return false;
+            }
+#else
+            // libmongoc was not built with client-side encryption support.
+            return false;
+#endif
         }
     }
 
@@ -652,8 +684,8 @@ options::client_encryption get_client_encryption_options(document::view object) 
     ce_opts.key_vault_namespace({db, coll});
     ce_opts.kms_providers(parse_kms_doc(providers));
 
-    if (!providers.empty()) {
-        // Configure TLS options.
+    if (providers["kmip"]) {
+        // Configure TLS options for KMIP, the only provider that requires TLS.
         auto tls_opts = make_document(
             kvp("kmip",
                 make_document(
@@ -666,14 +698,18 @@ options::client_encryption get_client_encryption_options(document::view object) 
 }
 
 gridfs::bucket create_bucket(document::view object) {
-    auto const id = string::to_string(object["database"].get_string().value);
+    auto const database_id = string::to_string(object["database"].get_string().value);
     auto& map = get_entity_map();
-    auto& db = map.get_database(id);
+    auto& db = map.get_database(database_id);
+
+    // Record the database containing this bucket's files/chunks collections for unified test
+    // GridFS operations that require direct access to the files collection (e.g. "rename").
+    map.register_bucket_database(string::to_string(object["id"].get_string().value), string::to_string(db.name()));
 
     auto const opts = get_bucket_options(object);
     auto const bucket = db.gridfs_bucket(opts);
 
-    CAPTURE(id);
+    CAPTURE(database_id);
     return bucket;
 }
 
@@ -739,8 +775,8 @@ options::auto_encryption get_auto_encryption_options(document::view auto_encrypt
             auto const providers = element.get_document().value;
             auto_encrypt_opts.kms_providers(parse_kms_doc(providers));
 
-            if (!providers.empty()) {
-                // Configure TLS options.
+            if (providers["kmip"]) {
+                // Configure TLS options for KMIP, the only provider that requires TLS.
                 auto tls_opts = make_document(
                     kvp("kmip",
                         make_document(
@@ -1598,6 +1634,15 @@ TEST_CASE("session unified format spec automated tests", "[unified_format_specs]
 
 TEST_CASE("CRUD unified format spec automated tests", "[unified_format_specs]") {
     run_unified_format_tests_in_env_dir("CRUD_UNIFIED_TESTS_PATH");
+}
+
+TEST_CASE("write concern error unified format spec automated tests", "[unified_format_specs]") {
+    std::set<bsoncxx::stdx::string_view> const unsupported_tests = {
+        // mongocxx does not have a mapReduce helper.
+        "mapReduce.json",
+    };
+
+    run_unified_format_tests_in_env_dir("WRITE_CONCERN_ERRORS_TESTS_PATH", unsupported_tests);
 }
 
 TEST_CASE("change streams unified format spec automated tests", "[unified_format_specs]") {

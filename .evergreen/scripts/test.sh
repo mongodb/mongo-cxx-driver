@@ -82,6 +82,7 @@ export UNIFIED_FORMAT_TESTS_PATH="${data_dir}/unified-format"
 export URI_OPTIONS_TESTS_PATH="${data_dir}/uri-options"
 export VERSIONED_API_TESTS_PATH="${data_dir}/versioned-api"
 export WITH_TRANSACTION_TESTS_PATH="${data_dir}/with_transaction"
+export WRITE_CONCERN_ERRORS_TESTS_PATH="${data_dir}/read-write-concern/write-concern-errors"
 export INDEX_MANAGEMENT_TESTS_PATH="${data_dir}/index-management"
 export AUTH_TESTS_PATH="${data_dir}/auth/unified"
 

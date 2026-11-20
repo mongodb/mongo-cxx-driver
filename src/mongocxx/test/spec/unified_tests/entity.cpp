@@ -129,6 +129,17 @@ database& map::get_database_by_name(bsoncxx::stdx::string_view name) {
     throw std::logic_error{"database name {" + bsoncxx::string::to_string(name) + "} not found."};
 }
 
+void map::register_bucket_database(key_type const& bucket_key, std::string database_name) {
+    _bucket_database_names[bucket_key] = std::move(database_name);
+}
+
+std::string const& map::bucket_database_name(key_type const& bucket_key) {
+    auto const iter = _bucket_database_names.find(bucket_key);
+    if (iter == _bucket_database_names.end())
+        throw std::logic_error{"no database registered for bucket {" + bucket_key + "}"};
+    return iter->second;
+}
+
 void map::clear() noexcept {
     // Clients must outlive the entities created from it.
     // @see: https://isocpp.org/wiki/faq/dtors#order-dtors-for-members
@@ -141,6 +152,7 @@ void map::clear() noexcept {
     _client_map.clear();
     _cursor_map.clear();
     _client_encryption_map.clear();
+    _bucket_database_names.clear();
 }
 
 void map::erase(key_type const& key) {

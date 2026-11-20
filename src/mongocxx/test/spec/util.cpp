@@ -17,6 +17,7 @@
 #include <fstream>
 #include <set>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include <bsoncxx/builder/basic/array.hpp>
@@ -238,7 +239,10 @@ struct fail_point_guard_type {
 };
 
 void disable_fail_point(std::string uri_string, options::client client_opts, bsoncxx::stdx::string_view fail_point) {
-    mongocxx::client client = {uri{uri_string}, client_opts};
+    // Fail points are configured by clients using the test server API (see `add_test_server_api`).
+    // Test servers configured to require an API version (e.g. `requireApiVersion`) reject
+    // `configureFailPoint` commands that omit it, leaving the fail point enabled for later tests.
+    auto const client = mongocxx::client{uri{uri_string}, test_util::add_test_server_api(std::move(client_opts))};
     disable_fail_point(client, fail_point);
 }
 
